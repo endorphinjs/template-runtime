@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Injector from '../lib/injector';
+import { createInjector } from '../runtime';
 import ElementShim from './assets/element-shim';
 
 describe('Injector', () => {
@@ -14,7 +14,7 @@ describe('Injector', () => {
 
 	it('flat blocks', () => {
 		const parent = new ElementShim();
-		const injector = new Injector(parent);
+		const injector = createInjector(parent);
 		const content1 = () => {
 			injector.insert(3);
 			injector.insert(4);
@@ -74,7 +74,7 @@ describe('Injector', () => {
 
 	it('nested blocks', () => {
 		const parent = new ElementShim();
-		const injector = new Injector(parent);
+		const injector = createInjector(parent);
 		const content1 = () => {
 			injector.insert(1);
 		};
