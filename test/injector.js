@@ -1,16 +1,14 @@
 import assert from 'assert';
 import ElementShim from './assets/element-shim';
-import { createInjector, enter, exit, insert, block, dispose, move } from '../lib/injector';
+import { createInjector, run, insert, block, dispose, move } from '../lib/injector';
 
 describe('Injector', () => {
-	const run = (injector, block, fn) => {
-		enter(injector, block);
-		if (typeof fn === 'function') {
-			fn();
-		}
-		return exit(injector);
+	const noop = () => {};
+	const render = (injector, fn) => {
+		const b = block(injector);
+		run(injector, b, fn || noop);
+		return b;
 	};
-	const render = (injector, fn) => run(injector, block(injector), fn);
 
 	it('flat blocks', () => {
 		const parent = new ElementShim();
