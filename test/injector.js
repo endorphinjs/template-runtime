@@ -1,43 +1,43 @@
 import assert from 'assert';
-import { createInjector } from '../runtime';
 import ElementShim from './assets/element-shim';
+import { createInjector, enter, exit, insert, block, dispose, move } from '../lib/injector';
 
 describe('Injector', () => {
 	const run = (injector, block, fn) => {
-		injector.enter(block);
+		enter(injector, block);
 		if (typeof fn === 'function') {
 			fn();
 		}
-		return injector.exit();
+		return exit(injector);
 	};
-	const render = (injector, fn) => run(injector, injector.block(), fn);
+	const render = (injector, fn) => run(injector, block(injector), fn);
 
 	it('flat blocks', () => {
 		const parent = new ElementShim();
 		const injector = createInjector(parent);
 		const content1 = () => {
-			injector.insert(3);
-			injector.insert(4);
-			injector.insert(5);
+			insert(injector, 3);
+			insert(injector, 4);
+			insert(injector, 5);
 		};
 
 		const content2 = () => {
-			injector.insert(6);
-			injector.insert(7);
+			insert(injector, 6);
+			insert(injector, 7);
 		};
 
 		const content3 = () => {
-			injector.insert(8);
+			insert(injector, 8);
 		};
 
-		injector.insert(1);
-		injector.insert(2);
+		insert(injector, 1);
+		insert(injector, 2);
 
 		const block1 = render(injector, content1);
 		const block2 = render(injector);
 		const block3 = render(injector, content3);
 
-		injector.insert(9);
+		insert(injector, 9);
 
 		assert.deepEqual(parent.childNodes, [1, 2, 3, 4, 5, 8, 9]);
 		assert.equal(block1.size, 3);
@@ -45,14 +45,14 @@ describe('Injector', () => {
 		assert.equal(block3.size, 1);
 
 		// Dispose rendered block
-		run(injector, block1, () => injector.dispose());
+		dispose(injector, block1);
 
 		assert.deepEqual(parent.childNodes, [1, 2, 8, 9]);
 		assert.equal(block1.size, 0);
 		assert.equal(block2.size, 0);
 		assert.equal(block3.size, 1);
 
-		run(injector, block3, () => injector.dispose());
+		dispose(injector, block3);
 		assert.deepEqual(parent.childNodes, [1, 2, 9]);
 		assert.equal(block1.size, 0);
 		assert.equal(block2.size, 0);
@@ -76,16 +76,16 @@ describe('Injector', () => {
 		const parent = new ElementShim();
 		const injector = createInjector(parent);
 		const content1 = () => {
-			injector.insert(1);
+			insert(injector, 1);
 		};
 
 		const content2 = () => {
-			injector.insert(2);
-			injector.insert(3);
+			insert(injector, 2);
+			insert(injector, 3);
 		};
 
 		const content3 = () => {
-			injector.insert(4);
+			insert(injector, 4);
 		};
 
 		let block1, block2, block3;
@@ -106,7 +106,7 @@ describe('Injector', () => {
 		// Dispose deepest block
 		run(injector, block1, () => {
 			run(injector, block2, () => {
-				run(injector, block3, () => injector.dispose());
+				dispose(injector, block3);
 			});
 		});
 
@@ -119,7 +119,7 @@ describe('Injector', () => {
 		assert(injector.items.includes(block3));
 
 		// Dispose outer block
-		run(injector, block1, () => injector.dispose());
+		dispose(injector, block1);
 
 		assert.deepEqual(parent.childNodes, []);
 		assert.equal(block1.size, 0);
@@ -134,16 +134,16 @@ describe('Injector', () => {
 		const parent = new ElementShim();
 		const injector = createInjector(parent);
 		const content1 = () => {
-			injector.insert(1);
+			insert(injector, 1);
 		};
 
 		const content2 = () => {
-			injector.insert(2);
-			injector.insert(3);
+			insert(injector, 2);
+			insert(injector, 3);
 		};
 
 		const content3 = () => {
-			injector.insert(4);
+			insert(injector, 4);
 		};
 
 		let block1, block2, block3;
@@ -164,7 +164,7 @@ describe('Injector', () => {
 		// Dispose deepest block
 		run(injector, block1, () => {
 			run(injector, block2, () => {
-				run(injector, block3, () => injector.dispose());
+				dispose(injector, block3);
 			});
 		});
 
@@ -178,9 +178,7 @@ describe('Injector', () => {
 
 		// Completely remove second block
 		run(injector, block1, () => {
-			run(injector, block2, () => {
-				injector.dispose(true);
-			});
+			dispose(injector, block2, true);
 		});
 
 		assert.deepEqual(parent.childNodes, [1]);
@@ -196,23 +194,23 @@ describe('Injector', () => {
 		const parent = new ElementShim();
 		const injector = createInjector(parent);
 		const content1 = () => {
-			injector.insert(1);
+			insert(injector, 1);
 		};
 
 		const content2 = () => {
-			injector.insert(2);
-			injector.insert(3);
+			insert(injector, 2);
+			insert(injector, 3);
 		};
 
 		const content3 = () => {
-			injector.insert(4);
-			injector.insert(5);
+			insert(injector, 4);
+			insert(injector, 5);
 		};
 
 		const content4 = () => {
-			injector.insert(6);
-			injector.insert(7);
-			injector.insert(8);
+			insert(injector, 6);
+			insert(injector, 7);
+			insert(injector, 8);
 		};
 
 		const block1 = render(injector, content1);
@@ -222,10 +220,10 @@ describe('Injector', () => {
 
 		assert.deepEqual(parent.childNodes, [1, 2, 3, 4, 5, 6, 7, 8]);
 
-		injector.move(block4, injector.items.indexOf(block1));
+		move(injector, block4, injector.items.indexOf(block1));
 		assert.deepEqual(parent.childNodes, [6, 7, 8, 1, 2, 3, 4, 5]);
 
-		injector.move(block2, injector.items.length);
+		move(injector, block2, injector.items.length);
 		assert.deepEqual(parent.childNodes, [6, 7, 8, 1, 4, 5, 2, 3]);
 	});
 });

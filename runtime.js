@@ -1,5 +1,5 @@
-import createInjector from './lib/injector';
-import renderBlock from './lib/block';
+export { default as renderBlock } from './lib/block';
+export * from './lib/injector';
 
 /**
  * Creates element with given tag name
@@ -55,5 +55,3 @@ export function get(ctx) {
 
 	return ctx;
 }
-
-export { createInjector, renderBlock };

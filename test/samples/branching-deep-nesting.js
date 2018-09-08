@@ -1,4 +1,4 @@
-import { createInjector, renderBlock, text, get } from '../../runtime';
+import { createInjector, renderBlock, text, get, insert } from '../../runtime';
 
 export default function template(ctx, target) {
 	const injector = createInjector(target);
@@ -32,5 +32,5 @@ function ifContent2(ctx, injector) {
 }
 
 function ifContent3(ctx, injector) {
-	injector.insert(text('test'));
+	insert(injector, text('test'));
 }
