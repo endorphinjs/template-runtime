@@ -1,13 +1,13 @@
 import assert from 'assert';
 import read from './assets/read-file';
 import document from './assets/document';
-import iterate from './samples/iterate';
+import keyIterate from './samples/key-iterate';
 
-describe('Iterate', () => {
+describe('Key iterate', () => {
 	before(() => global.document = document);
 	after(() => delete global.document);
 
-	it('basic', () => {
+	it('keyed', () => {
 		let prev, cur;
 		const target = document.createElement('div');
 		const listNodes = () => Array.from(target.childNodes[2].childNodes);
@@ -19,13 +19,14 @@ describe('Iterate', () => {
 				{ id: 4, marked: true }
 			]
 		};
-		const update = iterate(state, target);
+		const update = keyIterate(state, target);
 
-		assert.equal(target.innerHTML, read('fixtures/iterate1.html'));
+		assert.equal(target.innerHTML, read('fixtures/key-iterate1.html'));
 
-		// Render same content but in different order: must keep the same `<li>`
-		// nodes in original order and update its contents
+		// Render same content but in different order: must keep the same `<li>` nodes,
+		// but they should be reordered
 		prev = listNodes();
+
 		update({
 			items: [
 				{ id: 3, marked: false },
@@ -35,10 +36,20 @@ describe('Iterate', () => {
 			]
 		});
 
-		assert.equal(target.innerHTML, read('fixtures/iterate2.html'));
+		assert.equal(target.innerHTML, read('fixtures/key-iterate2.html'));
 
 		cur = listNodes();
-		cur.forEach((node, i) => assert.strictEqual(node, prev[i]));
+
+		assert.strictEqual(cur[0], prev[2]);
+		assert.strictEqual(cur[1], prev[1]);
+		assert.strictEqual(cur[2], prev[0]);
+		assert.strictEqual(cur[4], prev[4]);
+
+		// Both 2 and 3 should be reordered (detached and attached)
+		assert(cur[0].attached > cur[2].attached);
+		assert(cur[0].detached > cur[2].detached);
+		assert(cur[0].attached === cur[1].attached);
+		assert(cur[0].detached === cur[1].detached);
 
 		// Render less elements
 		update({
@@ -49,7 +60,7 @@ describe('Iterate', () => {
 		});
 
 		cur = listNodes();
-		assert.equal(target.innerHTML, read('fixtures/iterate3.html'));
+		assert.equal(target.innerHTML, read('fixtures/key-iterate3.html'));
 		assert.strictEqual(cur[0], prev[0]);
 		assert.strictEqual(cur[1], prev[1]);
 
@@ -64,8 +75,10 @@ describe('Iterate', () => {
 		});
 
 		cur = listNodes();
-		assert.equal(target.innerHTML, read('fixtures/iterate2.html'));
-		assert.strictEqual(cur[0], prev[0]);
-		assert.strictEqual(cur[1], prev[1]);
+		assert.equal(target.innerHTML, read('fixtures/key-iterate2.html'));
+		assert(cur[1] === prev[1]);
+		assert(cur[2] === prev[0]);
+		assert(cur[0] !== prev[2]);
+		assert(cur[3] !== prev[3]);
 	});
 });

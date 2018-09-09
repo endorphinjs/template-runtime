@@ -3,10 +3,9 @@ import ElementShim from './assets/element-shim';
 import { createInjector, run, insert, block, dispose, move } from '../lib/injector';
 
 describe('Injector', () => {
-	const noop = () => {};
 	const render = (injector, fn) => {
 		const b = block(injector);
-		run(injector, b, fn || noop);
+		run(injector, b, fn);
 		return b;
 	};
 

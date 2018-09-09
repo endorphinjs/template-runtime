@@ -6,6 +6,7 @@ export default class ElementShim {
 	appendChild(item) {
 		this._remove(item);
 		this.childNodes.push(item);
+		return item;
 	}
 
 	insertBefore(newNode, refNode) {
@@ -16,6 +17,7 @@ export default class ElementShim {
 		this._remove(newNode);
 		const ix = this.childNodes.indexOf(refNode);
 		this.childNodes.splice(ix, 0, newNode);
+		return newNode;
 	}
 
 	removeChild(node) {
