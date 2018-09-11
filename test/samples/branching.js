@@ -1,82 +1,83 @@
 import {
 	createInjector, renderBlock, elem, elemWithText,
-	text, get, insert
+	text, insert, createScope, getProp
 } from '../../runtime';
 
-export default function(ctx, target) {
-	const injector = createInjector(target);
+export default function(component, target) {
+	const scope = createScope(component);
+	const injector = createInjector(target || component);
 	insert(injector, elemWithText('h1', 'Hello world'));
-	const block1 = renderBlock(ctx, injector, ifBlock1);
+	const block1 = renderBlock(scope, injector, ifBlock1);
 
 	const elem1 = insert(injector, elem('blockquote'));
 	const injector2 = createInjector(elem1);
 	insert(injector2, elemWithText('p', 'Lorem ipsum 1'));
-	const block2 = renderBlock(ctx, injector2, chooseBlock1);
+	const block2 = renderBlock(scope, injector2, chooseBlock1);
 	insert(injector2, elemWithText('p', 'Lorem ipsum 2'));
 
-	return ctx => {
-		block1(ctx);
-		block2(ctx);
+	return () => {
+		block1();
+		block2();
 	};
 }
 
-function ifBlock1(ctx) {
-	if (get(ctx, 'expr1')) {
+function ifBlock1(scope) {
+	if (getProp(scope, 'expr1')) {
 		return ifContent1;
 	}
 }
 
-function ifBlock2(ctx) {
-	if (get(ctx, 'expr2')) {
+function ifBlock2(scope) {
+	if (getProp(scope, 'expr2')) {
 		return ifContent2;
 	}
 }
 
-function ifBlock3(ctx) {
-	if (get(ctx, 'expr3')) {
+function ifBlock3(scope) {
+	if (getProp(scope, 'expr3')) {
 		return ifContent3;
 	}
 }
 
-function chooseBlock1(ctx) {
-	if (get(ctx, 'expr1') === 1) {
+function chooseBlock1(scope) {
+	if (getProp(scope, 'expr1') === 1) {
 		return chooseContent1;
-	} else if (get(ctx, 'expr1') === 2) {
+	} else if (getProp(scope, 'expr1') === 2) {
 		return chooseContent2;
 	} else {
 		return chooseContent3;
 	}
 }
 
-function ifContent1(ctx, injector) {
+function ifContent1(scope, injector) {
 	const p = insert(injector, elem('p'));
 	p.appendChild(elemWithText('strong', 'top 1'));
-	const block1 = renderBlock(ctx, injector, ifBlock2);
-	const block2 = renderBlock(ctx, injector, ifBlock3);
+	const block1 = renderBlock(scope, injector, ifBlock2);
+	const block2 = renderBlock(scope, injector, ifBlock3);
 
-	return ctx => {
-		block1(ctx);
-		block2(ctx);
+	return () => {
+		block1();
+		block2();
 	};
 }
 
-function ifContent2(ctx, injector) {
+function ifContent2(scope, injector) {
 	insert(injector, elemWithText('div', 'top 2'));
 }
 
-function ifContent3(ctx, injector) {
+function ifContent3(scope, injector) {
 	insert(injector, elemWithText('div', 'top 3'));
 	insert(injector, text('top 3.1'));
 }
 
-function chooseContent1(ctx, injector) {
+function chooseContent1(scope, injector) {
 	insert(injector, elemWithText('div', 'sub 1'));
 }
 
-function chooseContent2(ctx, injector) {
+function chooseContent2(scope, injector) {
 	insert(injector, elemWithText('div', 'sub 2'));
 }
 
-function chooseContent3(ctx, injector) {
+function chooseContent3(scope, injector) {
 	insert(injector, elemWithText('div', 'sub 3'));
 }

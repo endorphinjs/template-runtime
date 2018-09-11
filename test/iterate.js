@@ -2,7 +2,7 @@ import assert from 'assert';
 import read from './assets/read-file';
 import document from './assets/document';
 import iterate from './samples/iterate';
-import { renderIterator, createInjector } from '../runtime';
+import { renderIterator, createInjector, createScope } from '../runtime';
 import ElementShim from './assets/element-shim';
 
 describe('Iterate', () => {
@@ -12,23 +12,23 @@ describe('Iterate', () => {
 	it('basic', () => {
 		let prev, cur;
 		const target = document.createElement('div');
-		const listNodes = () => Array.from(target.childNodes[2].childNodes);
-		const state = {
+		target.setProps({
 			items: [
 				{ id: 1, marked: true },
 				{ id: 2, marked: false },
 				{ id: 3, marked: false },
 				{ id: 4, marked: true }
 			]
-		};
-		const update = iterate(state, target);
+		});
+		const listNodes = () => Array.from(target.childNodes[2].childNodes);
+		const update = iterate(target);
 
 		assert.equal(target.innerHTML, read('fixtures/iterate1.html'));
 
 		// Render same content but in different order: must keep the same `<li>`
 		// nodes in original order and update its contents
 		prev = listNodes();
-		update({
+		target.setProps({
 			items: [
 				{ id: 3, marked: false },
 				{ id: 2, marked: false },
@@ -36,6 +36,7 @@ describe('Iterate', () => {
 				{ id: 4, marked: true }
 			]
 		});
+		update();
 
 		assert.equal(target.innerHTML, read('fixtures/iterate2.html'));
 
@@ -43,12 +44,13 @@ describe('Iterate', () => {
 		cur.forEach((node, i) => assert.strictEqual(node, prev[i]));
 
 		// Render less elements
-		update({
+		target.setProps({
 			items: [
 				{ id: 1, marked: false },
 				{ id: 2, marked: false }
 			]
 		});
+		update();
 
 		cur = listNodes();
 		assert.equal(target.innerHTML, read('fixtures/iterate3.html'));
@@ -56,7 +58,7 @@ describe('Iterate', () => {
 		assert.strictEqual(cur[1], prev[1]);
 
 		// Render more elements
-		update({
+		target.setProps({
 			items: [
 				{ id: 3, marked: false },
 				{ id: 2, marked: false },
@@ -64,6 +66,7 @@ describe('Iterate', () => {
 				{ id: 4, marked: true }
 			]
 		});
+		update();
 
 		cur = listNodes();
 		assert.equal(target.innerHTML, read('fixtures/iterate2.html'));
@@ -82,36 +85,39 @@ describe('Iterate', () => {
 			};
 			return arr;
 		};
-		const expr = ctx => ctx;
-		const body = item => {
-			innerCalls[item.id]++;
+		const expr = scope => scope.component;
+		const body = scope => {
+			innerCalls[scope.vars.value.id]++;
 			return body;
 		};
-		const state = wrap([ { id: 0 }, { id: 1 }, { id: 2 } ]);
-		const update = renderIterator(state, createInjector(parent), expr, body);
+		const scope = createScope(wrap([ { id: 0 }, { id: 1 }, { id: 2 } ]));
+		const update = renderIterator(scope, createInjector(parent), expr, body);
 
 		assert.strictEqual(outerCalls, 1);
 		assert.deepStrictEqual(innerCalls, [1, 1, 1]);
 
 		// Render same object: no new renders
-		update(state);
+		update();
 		assert.strictEqual(outerCalls, 1);
 		assert.deepStrictEqual(innerCalls, [1, 1, 1]);
 
 		// Introduce updated object
-		const state2 = wrap([state[0], { id: 1 }, state[2]]);
-		update(state2);
+		const prev = scope.component;
+		const state2 = scope.component = wrap([prev[0], { id: 1 }, prev[2]]);
+		update();
 		assert.strictEqual(outerCalls, 2);
 		assert.deepStrictEqual(innerCalls, [1, 2, 1]);
 
 		// Render less objects: no items re-render
-		update(wrap(state2.slice(0, 2)));
+		scope.component = wrap(scope.component.slice(0, 2));
+		update();
 		assert.strictEqual(outerCalls, 3);
 		assert.deepStrictEqual(innerCalls, [1, 2, 1]);
 
 		// Render with previous state: should render last item even if it’s
 		// the same as previously rendered
-		update(state2);
+		scope.component = state2;
+		update();
 		assert.strictEqual(outerCalls, 4);
 		assert.deepStrictEqual(innerCalls, [1, 2, 2]);
 	});

@@ -1,36 +1,37 @@
-import { createInjector, renderBlock, text, get, insert } from '../../runtime';
+import { createInjector, renderBlock, text, insert, createScope, getProp } from '../../runtime';
 
-export default function template(ctx, target) {
-	const injector = createInjector(target);
-	return renderBlock(ctx, injector, ifBlock1);
+export default function template(component, target) {
+	const scope = createScope(component);
+	const injector = createInjector(target || component);
+	return renderBlock(scope, injector, ifBlock1);
 }
 
-function ifBlock1(ctx) {
-	if (get(ctx, 'expr1')) {
+function ifBlock1(scope) {
+	if (getProp(scope, 'expr1')) {
 		return ifContent1;
 	}
 }
 
-function ifBlock2(ctx) {
-	if (get(ctx, 'expr2')) {
+function ifBlock2(scope) {
+	if (getProp(scope, 'expr2')) {
 		return ifContent2;
 	}
 }
 
-function ifBlock3(ctx) {
-	if (get(ctx, 'expr3')) {
+function ifBlock3(scope) {
+	if (getProp(scope, 'expr3')) {
 		return ifContent3;
 	}
 }
 
-function ifContent1(ctx, injector) {
-	return renderBlock(ctx, injector, ifBlock2);
+function ifContent1(scope, injector) {
+	return renderBlock(scope, injector, ifBlock2);
 }
 
-function ifContent2(ctx, injector) {
-	return renderBlock(ctx, injector, ifBlock3);
+function ifContent2(scope, injector) {
+	return renderBlock(scope, injector, ifBlock3);
 }
 
-function ifContent3(ctx, injector) {
+function ifContent3(scope, injector) {
 	insert(injector, text('test'));
 }

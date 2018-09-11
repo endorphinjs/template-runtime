@@ -1,56 +1,57 @@
 import {
 	createInjector, renderBlock, renderKeyIterator, elem, elemWithText,
-	text, get, insert
+	text, get, insert, createScope, getProp, getVar
 } from '../../runtime';
 
-export default function template(ctx, target) {
-	const injector = createInjector(target);
+export default function template(component, target) {
+	const scope = createScope(component);
+	const injector = createInjector(target || component);
 	insert(injector, elemWithText('h1', 'Hello world'));
-	return renderBlock(ctx, injector, ifBlock1);
+	return renderBlock(scope, injector, ifBlock1);
 }
 
-function ifBlock1(ctx) {
-	if (get(ctx, 'items')) {
+function ifBlock1(scope) {
+	if (getProp(scope, 'items')) {
 		return ifContent1;
 	}
 }
 
-function ifContent1(ctx, injector) {
+function ifContent1(scope, injector) {
 	insert(injector, elemWithText('p', 'will iterate'));
 	const elem1 = insert(injector, elem('ul'));
 	const injector2 = createInjector(elem1);
 
-	return renderKeyIterator(ctx, injector2, forEachExpr1, forEachKey1, forEachBody1);
+	return renderKeyIterator(scope, injector2, forEachExpr1, forEachKey1, forEachBody1);
 }
 
-function forEachExpr1(ctx) {
-	return get(ctx, 'items');
+function forEachExpr1(scope) {
+	return getProp(scope, 'items');
 }
 
 function forEachKey1(ctx) {
 	return get(ctx, 'id');
 }
 
-function forEachBody1(ctx, injector) {
+function forEachBody1(scope, injector) {
 	const elem1 = insert(injector, elem('li'));
-	const attr1Expr = ctx => elem1.setAttribute('id', get(ctx, 'id'));
-	attr1Expr(ctx);
+	const attr1Expr = () => elem1.setAttribute('id', get(getVar(scope, 'value'), 'id'));
+	attr1Expr(scope);
 	const injector2 = createInjector(elem1);
 	insert(injector2, text('item'));
-	const block1 = renderBlock(ctx, injector2, ifBlock2);
+	const block1 = renderBlock(scope, injector2, ifBlock2);
 
-	return ctx => {
-		attr1Expr(ctx);
-		block1(ctx);
+	return () => {
+		attr1Expr(scope);
+		block1(scope);
 	};
 }
 
-function ifBlock2(ctx) {
-	if (get(ctx, 'marked')) {
+function ifBlock2(scope) {
+	if (get(getVar(scope, 'value'), 'marked')) {
 		return ifContent2;
 	}
 }
 
-function ifContent2(ctx, injector) {
+function ifContent2(scope, injector) {
 	insert(injector, elemWithText('strong', '*'));
 }

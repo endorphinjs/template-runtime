@@ -7,7 +7,7 @@
 		<t-for-each select="items">
 			<li>
 				item
-				<t-if test="marked">
+				<t-if test="$value.marked">
 					<strong>*</strong>
 				</t-if>
 			</li>
