@@ -3,6 +3,7 @@ export { default as renderIterator } from './lib/iterate';
 export { default as renderKeyIterator } from './lib/key-iterate';
 export * from './lib/injector';
 export * from './lib/scope';
+export * from './lib/attribute';
 
 /**
  * Creates element with given tag name
