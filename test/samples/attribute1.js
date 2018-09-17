@@ -1,4 +1,4 @@
-import { createInjector, renderBlock, elem, createScope, getProp, renderAttribute } from '../../runtime';
+import { createInjector, renderBlock, elem, createScope, getProp, renderAttribute, finalizeAttributes } from '../../runtime';
 
 export default function(component, target = component) {
 	const scope = createScope(component);
@@ -18,6 +18,7 @@ export default function(component, target = component) {
 	const block2 = renderBlock(scope, injector, ifBlock2);
 	const block3 = renderBlock(scope, injector, ifBlock3);
 	const attr4 = renderAttribute(scope, injector, 'a3', '4');
+	finalizeAttributes(injector);
 
 	return () => {
 		attr1();
@@ -25,6 +26,7 @@ export default function(component, target = component) {
 		block2();
 		block3();
 		attr4();
+		finalizeAttributes(injector);
 	};
 }
 
