@@ -1,4 +1,7 @@
-import { createInjector, renderBlock, elem, createScope, getProp, renderAttribute, finalizeAttributes } from '../../runtime';
+import {
+	createInjector, renderBlock, elem, createScope, getProp,
+	beginAttributes, finalizeAttributes, renderAttribute, renderAttributeDynValue
+} from '../../runtime';
 
 export default function(component, target = component) {
 	const scope = createScope(component);
@@ -10,22 +13,25 @@ export default function(component, target = component) {
 	// In compiler, we should detect if all `<attribute>` instructions use static
 	// name and render only these attributes as blocks
 	const injector = createInjector(elem1);
-	const attr1 = renderAttribute(scope, injector, 'a1', attrValue1);
-	renderAttribute(scope, injector, 'a2', '0');
+	beginAttributes(injector);
+	const attr1 = renderAttributeDynValue(scope, injector, 'a1', attrValue1);
+	const attr2 = renderAttribute(injector, 'a2', 0);
 
 	// <attribute if="..."> is the same as <if test="..."><attribute /></if>
 	const block1 = renderBlock(scope, injector, ifBlock1);
 	const block2 = renderBlock(scope, injector, ifBlock2);
 	const block3 = renderBlock(scope, injector, ifBlock3);
-	const attr4 = renderAttribute(scope, injector, 'a3', '4');
+	const attr3 = renderAttribute(injector, 'a3', '4');
 	finalizeAttributes(injector);
 
 	return () => {
+		beginAttributes(injector);
 		attr1();
+		attr2();
 		block1();
 		block2();
 		block3();
-		attr4();
+		attr3();
 		finalizeAttributes(injector);
 	};
 }
@@ -37,7 +43,7 @@ function ifBlock1(scope) {
 }
 
 function ifContent1(scope, injector) {
-	renderAttribute(scope, injector, 'a2', '1');
+	return renderAttribute(injector, 'a2', '1');
 }
 
 function ifBlock2(scope) {
@@ -47,7 +53,7 @@ function ifBlock2(scope) {
 }
 
 function ifContent2(scope, injector) {
-	renderAttribute(scope, injector, 'a2', '2');
+	return renderAttribute(injector, 'a2', '2');
 }
 
 function ifBlock3(scope) {
@@ -57,9 +63,14 @@ function ifBlock3(scope) {
 }
 
 function ifContent3(scope, injector) {
-	renderAttribute(scope, injector, 'a2', '3');
-	renderAttribute(scope, injector, 'a1', '3');
-	renderAttribute(scope, injector, 'a3', '3');
+	const attr1 = renderAttribute(injector, 'a2', '3');
+	const attr2 = renderAttribute(injector, 'a1', '3');
+	const attr3 = renderAttribute(injector, 'a3', '3');
+	return () => {
+		attr1();
+		attr2();
+		attr3();
+	};
 }
 
 function attrValue1(scope) {
