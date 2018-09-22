@@ -7,11 +7,6 @@ export default function(component, target = component) {
 	const scope = createScope(component);
 	const elem1 = target.appendChild(elem('main'));
 
-	// NB any `<attribute>` instruction should promote container to injector
-	// instance and render *all* element attributes as blocks to properly keep track
-	// of added and removed values.
-	// In compiler, we should detect if all `<attribute>` instructions use static
-	// name and render only these attributes as blocks
 	const injector = createInjector(elem1);
 	beginAttributes(injector);
 	const attr1 = renderAttributeDynValue(scope, injector, 'a1', attrValue1);
