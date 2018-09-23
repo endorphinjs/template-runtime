@@ -35,13 +35,6 @@ export function text(value) {
 }
 
 /**
- * Empty, no-op function
- */
-export function noop() {
-
-}
-
-/**
  * Safe property getter
  * @param {*} ctx
  * @param {*} ...args

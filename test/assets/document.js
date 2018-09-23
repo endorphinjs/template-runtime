@@ -76,6 +76,10 @@ class NodeShim {
 		}
 	}
 
+	removeAttribute(name) {
+		this.attributes = this.attributes.filter(attr => attr.name !== name);
+	}
+
 	/**
 	 * @param {NodeShim} node
 	 * @returns {NodeShim}

@@ -1,6 +1,6 @@
 import {
 	createInjector, elem, createScope, getProp,
-	beginAttributes, finalizeAttributes, setAttribute, addClass
+	finalizeAttributes, setAttribute, addClass
 } from '../../runtime';
 
 export default function(component, target = component) {
@@ -8,7 +8,6 @@ export default function(component, target = component) {
 	const elem1 = target.appendChild(elem('main'));
 
 	const injector = createInjector(elem1);
-	beginAttributes(injector);
 
 	setAttribute(injector, 'a1', attrValue1(scope));
 	setAttribute(injector, 'a2', '0');
@@ -19,10 +18,11 @@ export default function(component, target = component) {
 	ifAttr3(scope, injector);
 
 	addClass(injector, attrValue2(scope));
-	finalizeAttributes(injector);
+
+	// NB explicitly mark static attributes to exclude them from further change set
+	finalizeAttributes(injector, ['a2']);
 
 	return () => {
-		beginAttributes(injector);
 		setAttribute(injector, 'a1', attrValue1(scope));
 		setAttribute(injector, 'class', 'foo');
 

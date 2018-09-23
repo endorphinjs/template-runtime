@@ -1,6 +1,6 @@
 import {
 	createInjector, elem, createScope, getProp,
-	beginAttributes, finalizeAttributes, setAttribute
+	finalizeAttributes, setAttribute
 } from '../../runtime';
 
 export default function(component, target = component) {
@@ -8,7 +8,6 @@ export default function(component, target = component) {
 	const elem1 = target.appendChild(elem('main'));
 
 	const injector = createInjector(elem1);
-	beginAttributes(injector);
 	setAttribute(injector, 'a1', attrValue1(scope));
 	setAttribute(injector, 'a2', 0);
 	ifAttr1(scope, injector);
@@ -18,7 +17,6 @@ export default function(component, target = component) {
 	finalizeAttributes(injector);
 
 	return () => {
-		beginAttributes(injector);
 		setAttribute(injector, 'a1', attrValue1(scope));
 		setAttribute(injector, 'a2', 0);
 		ifAttr1(scope, injector);
