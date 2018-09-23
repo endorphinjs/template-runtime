@@ -1,6 +1,6 @@
 import {
-	createInjector, renderBlock, elem, createScope, getProp,
-	beginAttributes, finalizeAttributes, renderAttribute, renderAttributeDynValue
+	createInjector, elem, createScope, getProp,
+	beginAttributes, finalizeAttributes, setAttribute
 } from '../../runtime';
 
 export default function(component, target = component) {
@@ -9,63 +9,44 @@ export default function(component, target = component) {
 
 	const injector = createInjector(elem1);
 	beginAttributes(injector);
-	const attr1 = renderAttributeDynValue(scope, injector, 'a1', attrValue1);
-	const attr2 = renderAttribute(injector, 'a2', 0);
-
-	// <attribute if="..."> is the same as <if test="..."><attribute /></if>
-	const block1 = renderBlock(scope, injector, ifBlock1);
-	const block2 = renderBlock(scope, injector, ifBlock2);
-	const block3 = renderBlock(scope, injector, ifBlock3);
-	const attr3 = renderAttribute(injector, 'a3', '4');
+	setAttribute(injector, 'a1', attrValue1(scope));
+	setAttribute(injector, 'a2', 0);
+	ifAttr1(scope, injector);
+	ifAttr2(scope, injector);
+	ifAttr3(scope, injector);
+	setAttribute(injector, 'a3', '4');
 	finalizeAttributes(injector);
 
 	return () => {
 		beginAttributes(injector);
-		attr1();
-		attr2();
-		block1();
-		block2();
-		block3();
-		attr3();
+		setAttribute(injector, 'a1', attrValue1(scope));
+		setAttribute(injector, 'a2', 0);
+		ifAttr1(scope, injector);
+		ifAttr2(scope, injector);
+		ifAttr3(scope, injector);
+		setAttribute(injector, 'a3', '4');
 		finalizeAttributes(injector);
 	};
 }
 
-function ifBlock1(scope) {
+function ifAttr1(scope, injector) {
 	if (getProp(scope, 'c1')) {
-		return ifContent1;
+		setAttribute(injector, 'a2', '1');
 	}
 }
 
-function ifContent1(scope, injector) {
-	return renderAttribute(injector, 'a2', '1');
-}
-
-function ifBlock2(scope) {
+function ifAttr2(scope, injector) {
 	if (getProp(scope, 'c2')) {
-		return ifContent2;
+		setAttribute(injector, 'a2', '2');
 	}
 }
 
-function ifContent2(scope, injector) {
-	return renderAttribute(injector, 'a2', '2');
-}
-
-function ifBlock3(scope) {
+function ifAttr3(scope, injector) {
 	if (getProp(scope, 'c3')) {
-		return ifContent3;
+		setAttribute(injector, 'a2', '3');
+		setAttribute(injector, 'a1', '3');
+		setAttribute(injector, 'a3', '3');
 	}
-}
-
-function ifContent3(scope, injector) {
-	const attr1 = renderAttribute(injector, 'a2', '3');
-	const attr2 = renderAttribute(injector, 'a1', '3');
-	const attr3 = renderAttribute(injector, 'a3', '3');
-	return () => {
-		attr1();
-		attr2();
-		attr3();
-	};
 }
 
 function attrValue1(scope) {

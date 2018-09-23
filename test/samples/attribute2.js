@@ -1,9 +1,7 @@
 import {
-	createInjector, renderBlock, elem, createScope, getProp,
-	beginAttributes, finalizeAttributes, renderAttribute, renderAttributeDynValue,
-	renderAddClass
+	createInjector, elem, createScope, getProp,
+	beginAttributes, finalizeAttributes, setAttribute, addClass
 } from '../../runtime';
-import { renderAddClassDyn } from '../../lib/attribute';
 
 export default function(component, target = component) {
 	const scope = createScope(component);
@@ -11,56 +9,48 @@ export default function(component, target = component) {
 
 	const injector = createInjector(elem1);
 	beginAttributes(injector);
-	const attr1 = renderAttributeDynValue(scope, injector, 'a1', attrValue1);
-	renderAttribute(injector, 'a2', 0);
-	const attr2 = renderAttribute(injector, 'class', 'foo');
 
-	const block1 = renderBlock(scope, injector, ifBlock1);
-	const block2 = renderBlock(scope, injector, ifBlock2);
-	const block3 = renderBlock(scope, injector, ifBlock3);
-	const attr3 = renderAddClassDyn(scope, injector, attrValue2);
+	setAttribute(injector, 'a1', attrValue1(scope));
+	setAttribute(injector, 'a2', '0');
+	setAttribute(injector, 'class', 'foo');
+
+	ifAttr1(scope, injector);
+	ifAttr2(scope, injector);
+	ifAttr3(scope, injector);
+
+	addClass(injector, attrValue2(scope));
 	finalizeAttributes(injector);
 
 	return () => {
 		beginAttributes(injector);
-		attr1();
-		attr2();
-		block1();
-		block2();
-		block3();
-		attr3();
+		setAttribute(injector, 'a1', attrValue1(scope));
+		setAttribute(injector, 'class', 'foo');
+
+		ifAttr1(scope, injector);
+		ifAttr2(scope, injector);
+		ifAttr3(scope, injector);
+
+		addClass(injector, attrValue2(scope));
 		finalizeAttributes(injector);
 	};
 }
 
-function ifBlock1(scope) {
+function ifAttr1(scope, injector) {
 	if (getProp(scope, 'c1')) {
-		return ifContent1;
+		setAttribute(injector, 'a2', '1');
 	}
 }
 
-function ifContent1(scope, injector) {
-	return renderAttribute(injector, 'a2', '1');
-}
-
-function ifBlock2(scope) {
+function ifAttr2(scope, injector) {
 	if (getProp(scope, 'c2')) {
-		return ifContent2;
+		addClass(injector, 'foo bar');
 	}
 }
 
-function ifContent2(scope, injector) {
-	return renderAddClass(injector, 'foo bar');
-}
-
-function ifBlock3(scope) {
+function ifAttr3(scope, injector) {
 	if (getProp(scope, 'c3')) {
-		return ifContent3;
+		setAttribute(injector, 'class', attrValue3(scope));
 	}
-}
-
-function ifContent3(scope, injector) {
-	return renderAttributeDynValue(scope, injector, 'class', attrValue3);
 }
 
 function attrValue1(scope) {
