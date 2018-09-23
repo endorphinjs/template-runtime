@@ -49,6 +49,14 @@ class NodeShim {
 		}
 	}
 
+	get className() {
+		return this.getAttribute('class');
+	}
+
+	set className(value) {
+		this.setAttribute('class', value);
+	}
+
 	/** @returns {NodeShim} */
 	get firstChild() {
 		return this.childNodes[0];
