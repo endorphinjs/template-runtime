@@ -17,6 +17,8 @@ class NodeShim {
 		this.parentNode = null;
 		this.attached = 0;
 		this.detached = 0;
+
+		this.listeners = {};
 	}
 
 	get _index() {
@@ -141,6 +143,48 @@ class NodeShim {
 			siblings.splice(ix, 1);
 			this.parentNode = null;
 			this.detached++;
+		}
+	}
+
+	/**
+	 * @param {string} name
+	 * @param {function} listener
+	 */
+	addEventListener(name, listener) {
+		if (!this.listeners[name]) {
+			this.listeners[name] = [listener];
+		} else if (!this.listeners[name].includes(listener)) {
+			this.listeners[name].push(listener);
+		}
+	}
+
+	/**
+	 * @param {string} name
+	 * @param {function} listener
+	 */
+	removeEventListener(name, listener) {
+		if (name in this.listeners) {
+			this.listeners[name] = this.listeners[name].filter(item => item !== listener);
+			if (!this.listeners[name].length) {
+				delete this.listeners[name];
+			}
+		}
+	}
+
+	/**
+	 * Dispatches given event
+	 * @param {Event} event
+	 */
+	dispatchEvent(event) {
+		const listeners = this.listeners[event.type];
+		if (listeners) {
+			for (let i = listeners.length - 1; i >= 0; i--) {
+				listeners[i].call(this, event);
+			}
+		}
+
+		if (this.parentNode) {
+			this.parentNode.dispatchEvent(event);
 		}
 	}
 
