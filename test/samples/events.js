@@ -29,9 +29,7 @@ function ifEvent(scope, injector) {
 	}
 
 	const update = () => {
-		console.log(getProp(scope, 'c1'));
 		if (getProp(scope, 'c1')) {
-			console.log('add second');
 			addEvent(injector, 'click', onClick2);
 		}
 		return update;
