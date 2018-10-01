@@ -12,28 +12,23 @@ export default function (component, target = component) {
 		scope.component.method1(getProp(scope, 'foo'), getProp(scope, 'bar'), event);
 	}
 
-	addEvent(injector, 'click', onClick1);
-	const event1 = ifEvent(scope, injector);
-	finalizeEvents(injector);
-
-	return () => {
-		addEvent(injector, 'click', onClick1);
-		event1();
-		finalizeEvents(injector);
-	};
-}
-
-function ifEvent(scope, injector) {
 	function onClick2(event) {
 		scope.component.method2(getProp(scope, 'foo'), getProp(scope, 'bar'), event);
 	}
 
-	const update = () => {
-		if (getProp(scope, 'c1')) {
-			addEvent(injector, 'click', onClick2);
-		}
-		return update;
-	};
+	addEvent(injector, 'click', onClick1);
+	ifEvent(scope, injector, onClick2);
+	finalizeEvents(injector);
 
-	return update();
+	return () => {
+		addEvent(injector, 'click', onClick1);
+		ifEvent(scope, injector, onClick2);
+		finalizeEvents(injector);
+	};
+}
+
+function ifEvent(scope, injector, handler) {
+	if (getProp(scope, 'c1')) {
+		addEvent(injector, 'click', handler);
+	}
 }
