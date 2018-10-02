@@ -111,12 +111,13 @@ class NodeShim {
 				this.insertBefore(node.firstChild, ref);
 			}
 		} else {
-			const ix = this._getIndex(ref);
-			if (ix === -1) {
+			if (!this.childNodes.includes(ref)) {
 				throw new Error('Not a child node');
 			}
 
 			node.remove();
+
+			const ix = this._getIndex(ref);
 			this.childNodes.splice(ix, 0, node);
 			node.parentNode = this;
 			node.attached++;
