@@ -1,3 +1,5 @@
+const callbacks = [];
+
 /**
  * Minimal DOM shim, required for testing
  */
@@ -80,6 +82,10 @@ class NodeShim {
 
 	removeAttribute(name) {
 		this.attributes = this.attributes.filter(attr => attr.name !== name);
+	}
+
+	hasAttribute(name) {
+		return !!this.attributes.find(attr => attr.name === name);
 	}
 
 	/**
@@ -228,7 +234,9 @@ class DocumentShim extends NodeShim {
 	}
 
 	createElement(name) {
-		return new ElementShim(name);
+		const elem = new ElementShim(name);
+		callbacks.forEach(fn => fn(elem));
+		return elem;
 	}
 
 	createTextNode(value) {
@@ -255,6 +263,7 @@ class ElementShim extends NodeShim {
 	constructor(name) {
 		super(name, NodeShim.ELEMENT_NODE);
 		this.state = new StateModel();
+		this.props = {};
 	}
 
 	get textContent() {
@@ -275,10 +284,10 @@ class ElementShim extends NodeShim {
 
 	setProps(obj, overwrite) {
 		if (overwrite) {
-			this.attributes = [];
+			this.props = obj;
+		} else {
+			this.props = Object.assign(this.props, obj);
 		}
-
-		Object.keys(obj).forEach(key => this.setAttribute(key, obj[key]));
 	}
 
 	toString(indent='\t', level=0) {
@@ -348,3 +357,11 @@ function stringifyChildren(node, indent='\t', level=0) {
 }
 
 export default new DocumentShim();
+
+export function setCallback(fn) {
+	callbacks.push(fn);
+}
+
+export function clearCallbacks() {
+	callbacks.length = 0;
+}

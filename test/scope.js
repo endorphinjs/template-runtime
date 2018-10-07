@@ -7,14 +7,16 @@ describe('Scope', () => {
 		const component = document.createElement();
 		const scope = createScope(component);
 
-		component.setAttribute('class', 'foo');
-		component.setAttribute('id', 'bar');
-		component.setAttribute('prop1', 123);
+		component.setProps({
+			class: 'foo',
+			id: 'bar',
+			prop1: 123
+		});
 
 		assert.strictEqual(getProp(scope, 'class'), 'foo');
 		assert.strictEqual(getProp(scope, 'id'), 'bar');
 		assert.strictEqual(getProp(scope, 'prop1'), 123);
-		assert.strictEqual(getProp(scope, 'prop2'), null);
+		assert.strictEqual(getProp(scope, 'prop2'), undefined);
 	});
 
 	it('should get/set state values', () => {
