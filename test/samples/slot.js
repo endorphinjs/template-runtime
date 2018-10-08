@@ -1,9 +1,8 @@
 import {
-	createInjector, renderBlock, renderSlot, renderIterator, setAttribute,
+	createInjector, renderBlock, renderSlot, renderIterator, setAttribute, finalizeAttributes,
 	elemWithText, elem, insert,
 	createScope, getProp
 } from '../../runtime';
-import { finalizeAttributes } from '../../lib/attribute';
 
 export default function template(component) {
 	const scope = createScope(component);
