@@ -18,12 +18,12 @@ export default function (component) {
 
 	addEvent(injector, 'click', onClick1);
 	ifEvent(scope, injector, onClick2);
-	finalizeEvents(scope, injector);
+	finalizeEvents(injector);
 
 	return () => {
 		addEvent(injector, 'click', onClick1);
 		ifEvent(scope, injector, onClick2);
-		finalizeEvents(scope, injector);
+		finalizeEvents(injector);
 	};
 }
 

@@ -18,7 +18,7 @@ export default function(component) {
 
 	addClass(injector, attrValue2(scope));
 
-	finalizeAttributes(scope, injector);
+	finalizeAttributes(injector);
 
 	return () => {
 		setAttribute(injector, 'a1', attrValue1(scope));
@@ -29,7 +29,7 @@ export default function(component) {
 		ifAttr3(scope, injector);
 
 		addClass(injector, attrValue2(scope));
-		finalizeAttributes(scope, injector);
+		finalizeAttributes(injector);
 	};
 }
 

@@ -14,7 +14,7 @@ export default function(component) {
 	ifAttr2(scope, injector);
 	ifAttr3(scope, injector);
 	setAttribute(injector, 'a3', '4');
-	finalizeAttributes(scope, injector);
+	finalizeAttributes(injector);
 
 	return () => {
 		setAttribute(injector, 'a1', attrValue1(scope));
@@ -23,7 +23,7 @@ export default function(component) {
 		ifAttr2(scope, injector);
 		ifAttr3(scope, injector);
 		setAttribute(injector, 'a3', '4');
-		finalizeAttributes(scope, injector);
+		finalizeAttributes(injector);
 	};
 }
 

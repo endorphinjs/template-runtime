@@ -21,7 +21,7 @@ export default function template(component) {
 	const block3 = renderBlock(scope, subInjector, ifBlock3);
 
 	// TODO think about proper component rendering contract
-	finalizeAttributes(scope, subInjector);
+	finalizeAttributes(subInjector);
 	const update = subComponent.render(subInjector.slots);
 
 	return () => {
@@ -30,7 +30,7 @@ export default function template(component) {
 		block2();
 		iter1();
 		block3();
-		finalizeAttributes(scope, subInjector);
+		finalizeAttributes(subInjector);
 		update();
 	};
 }
