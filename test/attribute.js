@@ -40,22 +40,26 @@ describe('Attribute', () => {
 		const update = attribute2(component);
 
 		// Initial render
-		assert.equal(component.innerHTML, '<main a1="foo" a2="0" class="foo baz"></main>');
+		// XXX `a2` attribute is applied before `a1` since `a2` is static and applied immediately,
+		// while `a1` is dynamic and applied on element finalization.
+		// It shouldn’t be a problem for regular HTML, for component attributes (props)
+		// are applied differently
+		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		// Re-render: retain the same result
 		update();
-		assert.equal(component.innerHTML, '<main a1="foo" a2="0" class="foo baz"></main>');
+		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		component.setProps({ c1: true, c2: true });
 		update();
-		assert.equal(component.innerHTML, '<main a1="foo" a2="1" class="foo bar baz"></main>');
+		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		// Re-render: should retain previous result
 		update();
-		assert.equal(component.innerHTML, '<main a1="foo" a2="1" class="foo bar baz"></main>');
+		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		component.setProps({ c3: true });
 		update();
-		assert.equal(component.innerHTML, '<main a1="foo" a2="1" class="bam foo baz"></main>');
+		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="bam foo baz"></main>');
 	});
 });

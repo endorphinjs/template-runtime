@@ -9,7 +9,7 @@ export default function(component) {
 	const injector = createInjector(elem1);
 
 	setAttribute(injector, 'a1', attrValue1(scope));
-	setAttribute(injector, 'a2', '0');
+	elem1.setAttribute('a2', '0');
 	setAttribute(injector, 'class', 'foo');
 
 	ifAttr1(scope, injector);
@@ -18,8 +18,7 @@ export default function(component) {
 
 	addClass(injector, attrValue2(scope));
 
-	// NB explicitly mark static attributes to exclude them from further change set
-	finalizeAttributes(scope, injector, ['a2']);
+	finalizeAttributes(scope, injector);
 
 	return () => {
 		setAttribute(injector, 'a1', attrValue1(scope));
