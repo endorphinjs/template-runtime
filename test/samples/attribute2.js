@@ -3,10 +3,9 @@ import {
 	finalizeAttributes, setAttribute, addClass
 } from '../../runtime';
 
-export default function(component, target = component) {
+export default function(component) {
 	const scope = createScope(component);
-	const elem1 = target.appendChild(elem('main'));
-
+	const elem1 = component.appendChild(elem('main'));
 	const injector = createInjector(elem1);
 
 	setAttribute(injector, 'a1', attrValue1(scope));
@@ -20,7 +19,7 @@ export default function(component, target = component) {
 	addClass(injector, attrValue2(scope));
 
 	// NB explicitly mark static attributes to exclude them from further change set
-	finalizeAttributes(injector, ['a2']);
+	finalizeAttributes(scope, injector, ['a2']);
 
 	return () => {
 		setAttribute(injector, 'a1', attrValue1(scope));
@@ -31,7 +30,7 @@ export default function(component, target = component) {
 		ifAttr3(scope, injector);
 
 		addClass(injector, attrValue2(scope));
-		finalizeAttributes(injector);
+		finalizeAttributes(scope, injector);
 	};
 }
 

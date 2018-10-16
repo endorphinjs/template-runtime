@@ -6,6 +6,7 @@ export * from './lib/scope';
 export * from './lib/attribute';
 export * from './lib/event';
 export * from './lib/slot';
+export * from './lib/ref';
 
 /**
  * Creates element with given tag name

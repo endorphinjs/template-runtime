@@ -3,9 +3,9 @@ import {
 	finalizeAttributes, setAttribute
 } from '../../runtime';
 
-export default function(component, target = component) {
+export default function(component) {
 	const scope = createScope(component);
-	const elem1 = target.appendChild(elem('main'));
+	const elem1 = component.appendChild(elem('main'));
 
 	const injector = createInjector(elem1);
 	setAttribute(injector, 'a1', attrValue1(scope));
@@ -14,7 +14,7 @@ export default function(component, target = component) {
 	ifAttr2(scope, injector);
 	ifAttr3(scope, injector);
 	setAttribute(injector, 'a3', '4');
-	finalizeAttributes(injector);
+	finalizeAttributes(scope, injector);
 
 	return () => {
 		setAttribute(injector, 'a1', attrValue1(scope));
@@ -23,7 +23,7 @@ export default function(component, target = component) {
 		ifAttr2(scope, injector);
 		ifAttr3(scope, injector);
 		setAttribute(injector, 'a3', '4');
-		finalizeAttributes(injector);
+		finalizeAttributes(scope, injector);
 	};
 }
 

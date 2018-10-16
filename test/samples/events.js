@@ -3,9 +3,9 @@ import {
 	addEvent, finalizeEvents
 } from '../../runtime';
 
-export default function (component, target = component) {
+export default function (component) {
 	const scope = createScope(component);
-	const elem1 = target.appendChild(elem('main'));
+	const elem1 = component.appendChild(elem('main'));
 	const injector = createInjector(elem1);
 
 	function onClick1(event) {
@@ -18,12 +18,12 @@ export default function (component, target = component) {
 
 	addEvent(injector, 'click', onClick1);
 	ifEvent(scope, injector, onClick2);
-	finalizeEvents(injector);
+	finalizeEvents(scope, injector);
 
 	return () => {
 		addEvent(injector, 'click', onClick1);
 		ifEvent(scope, injector, onClick2);
-		finalizeEvents(injector);
+		finalizeEvents(scope, injector);
 	};
 }
 
