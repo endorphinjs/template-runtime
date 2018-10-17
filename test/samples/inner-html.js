@@ -1,19 +1,19 @@
 import {
-	createInjector, createScope, getProp, insert, renderBlock,
-	mountInnerHTML, updateInnerHTML, elemWithText
+	createInjector, createScope, elemWithText, getProp, insert,
+	mountInnerHTML, updateInnerHTML, mountBlock, updateBlock
 } from '../../runtime';
 
 export default function(component) {
 	const scope = createScope(component);
 	const injector = createInjector(component);
-	const block1 = renderBlock(scope, injector, ifBlock1);
+	const block1 = mountBlock(scope, injector, ifBlock1);
 	const html1 = mountInnerHTML(scope, injector, getHTML);
-	const block2 = renderBlock(scope, injector, ifBlock2);
+	const block2 = mountBlock(scope, injector, ifBlock2);
 
 	return () => {
-		block1();
-		updateInnerHTML(scope, injector, html1);
-		block2();
+		updateBlock(block1);
+		updateInnerHTML(html1);
+		updateBlock(block2);
 	};
 }
 

@@ -1,4 +1,4 @@
-export { default as renderBlock } from './lib/block';
+export * from './lib/block';
 export { default as renderIterator } from './lib/iterate';
 export { default as renderKeyIterator } from './lib/key-iterate';
 export * from './lib/injector';

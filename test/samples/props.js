@@ -1,5 +1,5 @@
 import {
-	createInjector, renderBlock, setAttribute, finalizeProps,
+	createInjector, setAttribute, finalizeProps, mountBlock, updateBlock,
 	elem, insert, createScope, getProp
 } from '../../runtime';
 
@@ -11,13 +11,13 @@ export default function template(component) {
 	const subInjector = createInjector(subComponent, true);
 
 	setAttribute(subInjector, 'id', attrValue1(scope));
-	const block1 = renderBlock(scope, subInjector, ifBlock1);
+	const block1 = mountBlock(scope, subInjector, ifBlock1);
 	setAttribute(subInjector, 'p3', 3);
 	finalizeProps(subInjector, { p1: 1 });
 
 	return () => {
 		setAttribute(subInjector, 'id', attrValue1(scope));
-		block1();
+		updateBlock(block1);
 		setAttribute(subInjector, 'p3', 3);
 		finalizeProps(subInjector);
 	};

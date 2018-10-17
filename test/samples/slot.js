@@ -1,5 +1,5 @@
 import {
-	createInjector, renderBlock, renderSlot, renderIterator, setAttribute, finalizeAttributes,
+	createInjector, mountBlock, updateBlock, renderSlot, renderIterator, setAttribute, finalizeAttributes,
 	elemWithText, elem, insert,
 	createScope, getProp
 } from '../../runtime';
@@ -15,10 +15,10 @@ export default function template(component) {
 	setAttribute(subInjector, 'id', attrValue1(scope));
 
 	insert(subInjector, elemWithText('div', 'foo'));
-	const block1 = renderBlock(scope, subInjector, ifBlock1);
-	const block2 = renderBlock(scope, subInjector, ifBlock2);
+	const block1 = mountBlock(scope, subInjector, ifBlock1);
+	const block2 = mountBlock(scope, subInjector, ifBlock2);
 	const iter1 = renderIterator(scope, subInjector, forEachExpr1, forEachBody1);
-	const block3 = renderBlock(scope, subInjector, ifBlock3);
+	const block3 = mountBlock(scope, subInjector, ifBlock3);
 
 	// TODO think about proper component rendering contract
 	finalizeAttributes(subInjector, true);
@@ -26,10 +26,10 @@ export default function template(component) {
 
 	return () => {
 		setAttribute(subInjector, 'id', attrValue1(scope));
-		block1(),
-		block2();
+		updateBlock(block1);
+		updateBlock(block2);
 		iter1();
-		block3();
+		updateBlock(block3);
 		finalizeAttributes(subInjector);
 		update();
 	};
@@ -46,20 +46,20 @@ export function subComponentTemplate(component, slots) {
 	const slot1 = insert(injector2, elem('slot'));
 	slot1.setAttribute('name', 'header');
 	const injector3 = createInjector(slot1);
-	const block1 = renderBlock(scope, injector3, slotBlock1);
+	const block1 = mountBlock(scope, injector3, slotBlock1);
 	insert(injector2, elemWithText('p', 'content'));
 
 	const slot2 = insert(injector2, elem('slot'));
 	renderSlot(slot2, scope.slots);
 
-	const block2 = renderBlock(scope, injector2, ifBlock4);
-	const block3 = renderBlock(scope, injector2, ifBlock5);
+	const block2 = mountBlock(scope, injector2, ifBlock4);
+	const block3 = mountBlock(scope, injector2, ifBlock5);
 
 	return () => {
-		block1();
+		updateBlock(block1);
 		renderSlot(slot2, scope.slots);
-		block2();
-		block3();
+		updateBlock(block2);
+		updateBlock(block3);
 	};
 }
 
@@ -122,7 +122,11 @@ function ifContent5(scope, injector) {
 	const slot = insert(injector, elem('slot'));
 	slot.setAttribute('name', 'footer');
 	const injector2 = createInjector(slot);
-	return renderBlock(scope, injector2, slotBlock2);
+	const block1 = mountBlock(scope, injector2, slotBlock2);
+
+	return () => {
+		updateBlock(block1);
+	};
 }
 
 function forEachExpr1(scope) {

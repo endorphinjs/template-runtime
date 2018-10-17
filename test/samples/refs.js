@@ -1,5 +1,5 @@
 import {
-	createInjector, elem, createScope, getProp, insert, renderBlock,
+	createInjector, elem, createScope, getProp, insert, mountBlock, updateBlock,
 	finalizeRefs, setRef, setStaticRef
 } from '../../runtime';
 
@@ -15,7 +15,7 @@ export default function(component) {
 	const elem2 = insert(injector2, elem('div', cssScope));
 	setRef(scope, 'header', elem2);
 
-	const block1 = renderBlock(scope, injector2, ifBlock1);
+	const block1 = mountBlock(scope, injector2, ifBlock1);
 
 	const elem3 = insert(injector2, elem('footer', cssScope));
 	setRef(scope, getProp(scope, 'dynRef'), elem3);
@@ -24,7 +24,7 @@ export default function(component) {
 
 	return () => {
 		setRef(scope, 'header', elem2);
-		block1();
+		updateBlock(block1);
 		setRef(scope, getProp(scope, 'dynRef'), elem3);
 		finalizeRefs(scope);
 	};

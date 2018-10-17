@@ -1,13 +1,17 @@
 import {
-	createInjector, renderBlock, renderKeyIterator, elem, elemWithText,
-	text, get, insert, createScope, getProp, getVar
+	createInjector, renderKeyIterator, elem, elemWithText,
+	text, get, insert, createScope, getProp, getVar,
+	mountBlock, updateBlock
 } from '../../runtime';
 
 export default function template(component, target) {
 	const scope = createScope(component);
 	const injector = createInjector(target || component);
 	insert(injector, elemWithText('h1', 'Hello world'));
-	return renderBlock(scope, injector, ifBlock1);
+	const block = mountBlock(scope, injector, ifBlock1);
+	return () => {
+		updateBlock(block);
+	};
 }
 
 function ifBlock1(scope) {
@@ -38,11 +42,11 @@ function forEachBody1(scope, injector) {
 	attr1Expr(scope);
 	const injector2 = createInjector(elem1);
 	insert(injector2, text('item'));
-	const block1 = renderBlock(scope, injector2, ifBlock2);
+	const block1 = mountBlock(scope, injector2, ifBlock2);
 
 	return () => {
 		attr1Expr(scope);
-		block1(scope);
+		updateBlock(block1);
 	};
 }
 

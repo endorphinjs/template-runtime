@@ -1,9 +1,16 @@
-import { createInjector, renderBlock, text, insert, createScope, getProp } from '../../runtime';
+import {
+	createInjector, renderBlock, text, insert, createScope, getProp,
+	mountBlock, updateBlock
+} from '../../runtime';
 
 export default function template(component, target) {
 	const scope = createScope(component);
 	const injector = createInjector(target || component);
-	return renderBlock(scope, injector, ifBlock1);
+	const block = mountBlock(scope, injector, ifBlock1);
+
+	return () => {
+		updateBlock(block);
+	};
 }
 
 function ifBlock1(scope) {
@@ -25,11 +32,19 @@ function ifBlock3(scope) {
 }
 
 function ifContent1(scope, injector) {
-	return renderBlock(scope, injector, ifBlock2);
+	const block = mountBlock(scope, injector, ifBlock2);
+
+	return () => {
+		updateBlock(block);
+	};
 }
 
 function ifContent2(scope, injector) {
-	return renderBlock(scope, injector, ifBlock3);
+	const block = mountBlock(scope, injector, ifBlock3);
+
+	return () => {
+		updateBlock(block);
+	};
 }
 
 function ifContent3(scope, injector) {
