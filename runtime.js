@@ -7,6 +7,9 @@ export * from './lib/attribute';
 export * from './lib/event';
 export * from './lib/slot';
 export * from './lib/ref';
+export * from './lib/inner-html';
+
+import { cssScope } from './lib/utils';
 
 /**
  * Creates element with given tag name
@@ -38,17 +41,6 @@ export function elemWithText(tagName, text, scope) {
  */
 export function text(value) {
 	return document.createTextNode(value);
-}
-
-/**
- * Adds given `scope` attribute to `el` to isolate its CSS
- * @param {HTMLElement} el
- * @param {String} scope
- * @returns {HTMLElement}
- */
-export function cssScope(el, scope) {
-	scope && el.setAttribute(scope, '');
-	return el;
 }
 
 /**

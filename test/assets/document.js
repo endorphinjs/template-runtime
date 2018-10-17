@@ -200,25 +200,17 @@ class NodeShim {
 		return this.nodeName;
 	}
 
-	static get ELEMENT_NODE() {
-		return 1;
-	}
+	static get ELEMENT_NODE() { return 1; }
+	static get TEXT_NODE() { return 3; }
+	static get COMMENT_NODE() { return 8; }
+	static get DOCUMENT_NODE() { return 9; }
+	static get DOCUMENT_FRAGMENT_NODE() { return 11; }
 
-	static get TEXT_NODE() {
-		return 3;
-	}
-
-	static get COMMENT_NODE() {
-		return 8;
-	}
-
-	static get DOCUMENT_NODE() {
-		return 9;
-	}
-
-	static get DOCUMENT_FRAGMENT_NODE() {
-		return 11;
-	}
+	get ELEMENT_NODE() { return 1; }
+	get TEXT_NODE() { return 3; }
+	get COMMENT_NODE() { return 8; }
+	get DOCUMENT_NODE() { return 9; }
+	get DOCUMENT_FRAGMENT_NODE() { return 11; }
 }
 
 class DocumentShim extends NodeShim {
@@ -281,6 +273,11 @@ class ElementShim extends NodeShim {
 
 	get innerHTML() {
 		return stringifyChildren(this);
+	}
+
+	set innerHTML(value) {
+		this.childNodes.length = 0;
+		parseHTML(this, value);
 	}
 
 	setProps(obj, overwrite) {
@@ -365,4 +362,35 @@ export function setCallback(fn) {
 
 export function clearCallbacks() {
 	callbacks.length = 0;
+}
+
+/**
+ * Parses given HTML code into dom
+ * @param {string} html
+ * @returns {ElementShim[]}
+ */
+function parseHTML(ctx, html) {
+	let pos = 0, m;
+	const re = /<\/?(\w+)>/g;
+
+	// For testing purposes, parse XML nodes without attributes
+	while (m = re.exec(html)) {
+		if (pos !== m.index) {
+			ctx.appendChild(new TextShim(html.slice(pos, m.index)));
+		}
+
+		if (m[0][1] === '/') {
+			ctx = ctx.parentNode;
+		} else {
+			ctx = ctx.appendChild(new ElementShim(m[1]));
+		}
+
+		pos = m.index + m[0].length;
+	}
+
+	if (pos < html.length) {
+		ctx.appendChild(new TextShim(html.slice(pos)));
+	}
+
+	return ctx;
 }
