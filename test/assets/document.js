@@ -8,6 +8,7 @@ class NodeShim {
 		this.nodeName = name;
 		this.nodeType = type || 0;
 		this.nodeValue = value || null;
+		this.style = { animation: '' };
 
 		/** @type {NodeShim[]} */
 		this.childNodes = [];

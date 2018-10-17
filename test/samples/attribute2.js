@@ -18,7 +18,7 @@ export default function(component) {
 
 	addClass(injector, attrValue2(scope));
 
-	finalizeAttributes(injector);
+	finalizeAttributes(injector, true);
 
 	return () => {
 		setAttribute(injector, 'a1', attrValue1(scope));

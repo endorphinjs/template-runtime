@@ -21,7 +21,7 @@ export default function template(component) {
 	const block3 = renderBlock(scope, subInjector, ifBlock3);
 
 	// TODO think about proper component rendering contract
-	finalizeAttributes(subInjector);
+	finalizeAttributes(subInjector, true);
 	const update = subComponent.render(subInjector.slots);
 
 	return () => {
