@@ -1,6 +1,8 @@
+import { cssScope } from './lib/utils';
+
 export * from './lib/block';
 export * from './lib/iterate';
-export { default as renderKeyIterator } from './lib/key-iterate';
+export * from './lib/key-iterate';
 export * from './lib/injector';
 export * from './lib/scope';
 export * from './lib/attribute';
@@ -8,8 +10,6 @@ export * from './lib/event';
 export * from './lib/slot';
 export * from './lib/ref';
 export * from './lib/inner-html';
-
-import { cssScope } from './lib/utils';
 
 /**
  * Creates element with given tag name

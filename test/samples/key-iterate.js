@@ -1,5 +1,5 @@
 import {
-	createInjector, renderKeyIterator, elem, elemWithText,
+	createInjector, mountKeyIterator, updateKeyIterator, elem, elemWithText,
 	text, get, insert, createScope, getProp, getVar,
 	mountBlock, updateBlock
 } from '../../runtime';
@@ -24,8 +24,11 @@ function ifContent1(scope, injector) {
 	insert(injector, elemWithText('p', 'will iterate'));
 	const elem1 = insert(injector, elem('ul'));
 	const injector2 = createInjector(elem1);
+	const iter1 = mountKeyIterator(scope, injector2, forEachExpr1, forEachKey1, forEachBody1);
 
-	return renderKeyIterator(scope, injector2, forEachExpr1, forEachKey1, forEachBody1);
+	return () => {
+		updateKeyIterator(iter1);
+	};
 }
 
 function forEachExpr1(scope) {
