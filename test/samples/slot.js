@@ -1,7 +1,7 @@
 import {
-	createInjector, mountBlock, updateBlock, renderSlot, renderIterator, setAttribute, finalizeAttributes,
+	createInjector, mountBlock, updateBlock, renderSlot, setAttribute, finalizeAttributes,
 	elemWithText, elem, insert,
-	createScope, getProp
+	createScope, getProp, mountIterator, updateIterator
 } from '../../runtime';
 
 export default function template(component) {
@@ -17,7 +17,7 @@ export default function template(component) {
 	insert(subInjector, elemWithText('div', 'foo'));
 	const block1 = mountBlock(scope, subInjector, ifBlock1);
 	const block2 = mountBlock(scope, subInjector, ifBlock2);
-	const iter1 = renderIterator(scope, subInjector, forEachExpr1, forEachBody1);
+	const iter1 = mountIterator(scope, subInjector, forEachExpr1, forEachBody1);
 	const block3 = mountBlock(scope, subInjector, ifBlock3);
 
 	// TODO think about proper component rendering contract
@@ -28,7 +28,7 @@ export default function template(component) {
 		setAttribute(subInjector, 'id', attrValue1(scope));
 		updateBlock(block1);
 		updateBlock(block2);
-		iter1();
+		updateIterator(iter1);
 		updateBlock(block3);
 		finalizeAttributes(subInjector);
 		update();

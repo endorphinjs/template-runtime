@@ -1,12 +1,13 @@
 import {
-	createInjector, renderIterator, elem, elemWithText,
+	createInjector, elem, elemWithText,
 	text, insert, createScope, getProp, getVar, get,
-	mountBlock, updateBlock
+	mountBlock, updateBlock, mountIterator, updateIterator
 } from '../../runtime';
 
-export default function template(component, target) {
+export default function template(component) {
 	const scope = createScope(component);
-	const injector = createInjector(target || component);
+	const injector = createInjector(component);
+
 	insert(injector, elemWithText('h1', 'Hello world'));
 	const block1 = mountBlock(scope, injector, ifBlock1);
 	return () => {
@@ -24,8 +25,11 @@ function ifContent1(scope, injector) {
 	insert(injector, elemWithText('p', 'will iterate'));
 	const elem1 = insert(injector, elem('ul'));
 	const injector2 = createInjector(elem1);
+	const iter1 = mountIterator(scope, injector2, forEachExpr1, forEachBody1);
 
-	return renderIterator(scope, injector2, forEachExpr1, forEachBody1);
+	return () => {
+		updateIterator(iter1);
+	};
 }
 
 function forEachExpr1(scope) {
