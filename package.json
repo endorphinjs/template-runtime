@@ -2,19 +2,38 @@
   "name": "@endorphinjs/template-runtime",
   "version": "0.1.0",
   "description": "EndorphinJS template runtime, embedded with template bundles",
-  "main": "index.js",
+  "main": "./dist/runtime.cjs.js",
+  "module": "./dist/runtime.es.js",
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -wc",
     "test": "mocha",
     "prepublish": "npm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "template",
+    "front-end",
+    "endorphin",
+    "endorphinjs"
+  ],
   "author": "Sergey Chikuyonok <serge.che@gmail.com>",
   "license": "APACHE-2.0",
   "devDependencies": {
     "mocha": "^5.2.0",
-    "reify": "^0.17.3",
-    "rollup": "^0.65.2"
-  }
+    "reify": "^0.18.1",
+    "rollup": "^0.66.6"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/endorphinjs/template-runtime.git"
+  },
+  "bugs": {
+    "url": "https://github.com/endorphinjs/template-runtime/issues"
+  },
+  "homepage": "https://github.com/endorphinjs/template-runtime#readme"
 }

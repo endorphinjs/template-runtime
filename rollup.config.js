@@ -2,9 +2,11 @@ export default {
 	input: './runtime.js',
 	output: [{
 		file: './dist/runtime.es.js',
-		format: 'es'
+		format: 'es',
+		sourcemap: true
 	}, {
 		file: './dist/runtime.cjs.js',
-		format: 'cjs'
+		format: 'cjs',
+		sourcemap: true
 	}]
 };
