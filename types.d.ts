@@ -40,6 +40,9 @@ declare interface ComponentModel extends HTMLElement {
 	setState(value: object): object;
 }
 
+/**
+ * A definition of component, written as ES module
+ */
 declare interface ComponentDefinition {
 	/**
 	 * Initial props factory
@@ -54,7 +57,23 @@ declare interface ComponentDefinition {
 	/**
 	 * Listeners for events bubbling from component contents
 	 */
-	events?(): object;
+	events?: object;
+
+	/**
+	 * List of nested components used by current one
+	 */
+	components?: object;
+
+	/**
+	 * Public methods to attach to component element
+	 */
+	methods?: { [name: string]: function };
+
+	/**
+	 * A function for rendering component contents. Will be added automatically
+	 * in compilation step
+	 */
+	render: function;
 
 	/**
 	 * Component created
@@ -85,27 +104,13 @@ declare interface ComponentDefinition {
 	 * @param initial Initial component render (e.g. mounting)
 	 */
 	didRender?(updatedProps?: ChangeSet, updatedState?: ChangeSet, initial: boolean): void;
+}
 
-	/**
-	 * Element is about to be animated
-	 * @param elem Element being animated
-	 * @param type Animation type: `in` or `out`
-	 * @param animation Animation CSS property
-	 */
-	willAnimate?(elem: HTMLElement, type: string, animation: string);
-
-	/**
-	 * Element animation is finished
-	 * @param elem Element being animated
-	 * @param type Animation type: `in` or `out`
-	 * @param animation Animation CSS property
-	 */
-	didAnimate?(elem: HTMLElement, type: string, animation: string): void;
-
-	/**
-	 * List of components used by current component
-	 */
-	components: object;
+declare interface ComponentContainer {
+	element: ComponentModel;
+	definition: ComponentDefinition;
+	injector: Injector;
+	update?: function;
 }
 
 interface RefMap {

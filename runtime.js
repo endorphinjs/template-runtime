@@ -7,6 +7,7 @@ export * from './lib/attribute';
 export * from './lib/event';
 export * from './lib/slot';
 export * from './lib/ref';
+export * from './lib/component';
 export * from './lib/inner-html';
 export * from './lib/dom';
 

@@ -6,7 +6,7 @@ import { emit, on } from 'endorphin';
  * @property {(data: string) => string} bar
  */
 
-/** @type {MyComponent} */
+/** @type {ComponentModel} */
 export const methods = {
 	foo() {
 
@@ -37,7 +37,7 @@ export function init(elem) {
 }
 
 /**
- * @param {MyComponent} elem
+ * @param {ComponentModel} elem
  */
 export function willRender(elem) {
 	const { props, state } = elem;
