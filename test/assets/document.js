@@ -255,8 +255,6 @@ class DocumentFragmentShim extends NodeShim {
 class ElementShim extends NodeShim {
 	constructor(name) {
 		super(name, NodeShim.ELEMENT_NODE);
-		this.state = new StateModel();
-		this.props = {};
 	}
 
 	get textContent() {
@@ -325,20 +323,6 @@ class CommentShim extends NodeShim {
 
 	toString(indent='\t', level=0) {
 		return `${indent.repeat(level)}<!--${this.nodeValue}-->`;
-	}
-}
-
-class StateModel {
-	constructor() {
-		this.values = {};
-	}
-
-	get() {
-		return this.values;
-	}
-
-	set(data) {
-		Object.assign(this.values, data);
 	}
 }
 

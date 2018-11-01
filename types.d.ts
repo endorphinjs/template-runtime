@@ -110,6 +110,7 @@ declare interface ComponentContainer {
 	element: ComponentModel;
 	definition: ComponentDefinition;
 	injector: Injector;
+	scope: Scope;
 	update?: function;
 }
 
