@@ -45,14 +45,17 @@ export function willRender(elem) {
 	emit(elem, 'foo', 'bar');
 }
 
-function calculateHeight(elem) {
-
-}
-
 export function handleClick(event, { state, props, setState }) {
 	if (event.which === 1 && props.enabled) {
 		setState({
 			a: state.a + 1
 		});
 	}
+}
+
+/**
+ * @param {ComponentModel} elem
+ */
+function calculateHeight(elem) {
+	console.log('height is', elem.offsetHeight);
 }

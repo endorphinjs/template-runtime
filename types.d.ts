@@ -57,7 +57,7 @@ declare interface ComponentDefinition {
 	/**
 	 * Listeners for events bubbling from component contents
 	 */
-	events?: object;
+	events?: { [type: string]: function };
 
 	/**
 	 * List of nested components used by current one
@@ -70,10 +70,15 @@ declare interface ComponentDefinition {
 	methods?: { [name: string]: function };
 
 	/**
-	 * A function for rendering component contents. Will be added automatically
-	 * in compilation step
+	 * List of plugins for current component
 	 */
-	render: function;
+	plugins?: ComponentDefinition[];
+
+	/**
+	 * A function for rendering component contents. Will be added automatically
+	 * in compilation step with compoled HTML template, if not provided
+	 */
+	default?: function;
 
 	/**
 	 * Component created
@@ -85,25 +90,50 @@ declare interface ComponentDefinition {
 	 */
 	destroy?(component: ComponentModel): void;
 
-	willMount?(): void;
-	didMount?(): void;
+	/**
+	 * Component is about to be mounted (will be initially rendered)
+	 * @param component
+	 */
+	willMount?(component: ComponentModel): void;
+
+	/**
+	 * Component just mounted (initially rendered)
+	 * @param component
+	 */
+	didMount?(component: ComponentModel): void;
+
+	/**
+	 * Component is about to be updated (next renders after mount)
+	 * @param component
+	 * @param changedProps List of changed properties which caused component update
+	 * @param changedState List of changed state which caused component update
+	 */
+	willUpdate?(component: ComponentModel, changedProps: ChangeSet, changedState: ChangeSet): void;
+
+	/**
+	 * Component just updated (next renders after mount)
+	 * @param component
+	 * @param changedProps List of changed properties which caused component update
+	 * @param changedState List of changed state which caused component update
+	 */
+	didUpdate?(component: ComponentModel, changedProps: ChangeSet, changedState: ChangeSet): void;
 
 	/**
 	 * Component is about to be rendered. If `false` value is returned, component
 	 * rendering will be cancelled
-	 * @param updatedProps Updated props that caused component to re-render
-	 * @param updatedState Updated state that caused component to re-render
-	 * @param initial Initial component render (e.g. mounting)
+	 * @param component
+	 * @param changedProps List of changed properties which caused component update
+	 * @param changedState List of changed state which caused component update
 	 */
-	willRender?(updatedProps?: ChangeSet, updatedState?: ChangeSet, initial: boolean): boolean;
+	willRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet): boolean;
 
 	/**
 	 * Component just rendered
-	 * @param updatedProps Updated props that caused component to re-render
-	 * @param updatedState Updated state that caused component to re-render
-	 * @param initial Initial component render (e.g. mounting)
+	 * @param component
+	 * @param changedProps List of changed properties which caused component update
+	 * @param changedState List of changed state which caused component update
 	 */
-	didRender?(updatedProps?: ChangeSet, updatedState?: ChangeSet, initial: boolean): void;
+	didRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet, initial: boolean): void;
 }
 
 declare interface ComponentContainer {
