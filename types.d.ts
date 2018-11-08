@@ -136,11 +136,42 @@ declare interface ComponentDefinition {
 	didRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet, initial: boolean): void;
 }
 
-declare interface ComponentContainer {
+declare interface Component {
+	/**
+	 * Component’s DOM element
+	 */
 	element: ComponentModel;
+
+	/**
+	 * Component’s definition
+	 */
 	definition: ComponentDefinition;
+
+	/**
+	 * Injector for incoming component data
+	 */
 	injector: Injector;
-	scope: Scope;
+
+	/**
+	 * Change set for component refs
+	 */
+	refs: ChangeSet;
+
+	/**
+	 * Runtime variables
+	 */
+	vars: object;
+
+	/**
+	 * Runtime variables stack
+	 * @private
+	 */
+	stack: object[];
+
+	/**
+	 * A function for updating rendered component content. Becomes available
+	 * after component was mounted
+	 */
 	update?: function;
 }
 
