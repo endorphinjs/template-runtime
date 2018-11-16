@@ -7,5 +7,4 @@ export default function subComponent2Template(component) {
 	const target = component.element.componentView;
 
 	target.appendChild(elemWithText('p', 'sub-component 1', component));
-	return function subComponent2Update() {};
 }

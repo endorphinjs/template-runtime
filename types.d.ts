@@ -173,6 +173,16 @@ declare interface Component {
 	 * after component was mounted
 	 */
 	update?: function;
+
+	/**
+	 * Indicates that component was mounted
+	 */
+	mounted: boolean;
+
+	/**
+	 * Indicates that component is currently rendering
+	 */
+	rendering: boolean;
 }
 
 interface RefMap {
