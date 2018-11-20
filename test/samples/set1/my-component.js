@@ -19,7 +19,7 @@ export default function myComponentTemplate(component) {
 	const subComponent1 = createComponent('sub-component1', SubComponent1, component);
 	const injector2 = subComponent1.injector;
 	setAttribute(injector2, 'foo', attrValue1(component));
-	insert(injector, subComponent1);
+	insert(injector, subComponent1.element);
 
 	const block1 = mountBlock(component, injector2, ifBlock1);
 
@@ -49,7 +49,7 @@ function ifContent1(host, injector) {
 	const subComponent2 = createComponent('sub-component2', SubComponent2, host);
 	const injector2 = subComponent2.injector;
 	setAttribute(injector2, 'bar', attrValue2(host));
-	insert(injector, subComponent2);
+	insert(injector, subComponent2.element);
 	insert(injector2, text('Hello world'));
 
 	mountComponent(subComponent2);

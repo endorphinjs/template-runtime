@@ -30,8 +30,7 @@ function ifBlock1(host) {
 }
 
 function ifContent1(host, injector) {
-	const cssScope = host.css;
-	insert(injector, elemWithText('p', 'foo enabled', cssScope));
+	insert(injector, elemWithText('p', 'foo enabled', host));
 }
 
 function slotBlock1(host, injector) {

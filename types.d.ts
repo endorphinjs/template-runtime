@@ -169,6 +169,12 @@ declare interface Component {
 	stack: object[];
 
 	/**
+	 * List of decendant components created inside current component
+	 * @private
+	 */
+	nested: Component[];
+
+	/**
 	 * A function for updating rendered component content. Becomes available
 	 * after component was mounted
 	 */
@@ -183,6 +189,64 @@ declare interface Component {
 	 * Indicates that component is currently rendering
 	 */
 	rendering: boolean;
+}
+
+declare interface Injector {
+	/**
+	 * Injector DOM target
+	 */
+	parentNode: Element;
+
+	/**
+	 * Current injector contents
+	 */
+	items: Node[] | Block[];
+
+	/**
+	 * Current insertion pointer
+	 */
+	ptr: number;
+
+	/**
+	 * Current block context
+	 */
+	ctx: Block;
+
+	/**
+	 * Slots container
+	 */
+	slots: object;
+
+	/**
+	 * Pending attributes updates
+	 */
+	attributes: ChangeSet;
+
+	/**
+	 * Current event handlers
+	 */
+	events: ChangeSet;
+}
+
+/**
+ * A structure that holds data about elements owned by given block context
+ * right below it in `Injector` list
+ */
+declare interface Block {
+	/**
+	 * Number of inserted items in block context
+	 */
+	inserted: number;
+
+	/**
+	 * Number of deleted items in block context
+	 */
+	deleted: number;
+
+	/**
+	 * Amount of items in current block
+	 */
+	size: number;
 }
 
 interface RefMap {
