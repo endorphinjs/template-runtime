@@ -1,9 +1,14 @@
-declare interface ComponentModel extends HTMLElement {
+declare interface Component extends HTMLElement {
 	/**
 	 * Pointer to component view container. By default, it’s the same as component
-	 * element, but for native Web Components it can point to shadow root
+	 * element, but for native Web Components it may point to shadow root
 	 */
-	readonly componentView: HTMLElement;
+	readonly componentView: HTMLElement | ShadowRoot;
+
+	/**
+	 * Internal component model
+	 */
+	readonly component: ComponentModel;
 
 	/**
 	 * Component properties (external contract)
@@ -16,7 +21,7 @@ declare interface ComponentModel extends HTMLElement {
 	readonly state: object;
 
 	/**
-	 * References to rendered elements
+	 * Named references to elements rendered inside current component
 	 */
 	readonly refs: RefMap;
 
@@ -41,6 +46,50 @@ declare interface ComponentModel extends HTMLElement {
 }
 
 /**
+ * Internal Endorphin component descriptor
+ */
+declare interface ComponentModel {
+	/**
+	 * Component’s definition
+	 */
+	definition: ComponentDefinition;
+
+	/**
+	 * Injector for incoming component data
+	 * @private
+	 */
+	input: Injector;
+
+	/**
+	 * Change set for component refs
+	 * @private
+	 */
+	refs: ChangeSet;
+
+	/**
+	 * Runtime variables
+	 */
+	vars: object;
+
+	/**
+	 * A function for updating rendered component content. Might be available
+	 * after component was mounted and only if component has update cycle
+	 */
+	update?(): void;
+
+	/**
+	 * Indicates that component was mounted
+	 */
+	mounted: boolean;
+
+	/**
+	 * Indicates that component is currently rendering
+	 * @private
+	 */
+	rendering: boolean;
+}
+
+/**
  * A definition of component, written as ES module
  */
 declare interface ComponentDefinition {
@@ -57,7 +106,9 @@ declare interface ComponentDefinition {
 	/**
 	 * Listeners for events bubbling from component contents
 	 */
-	events?: { [type: string]: function };
+	events?: {
+		[type: string]: (event: Event, component: Component) => void;
+	};
 
 	/**
 	 * List of nested components used by current one
@@ -67,7 +118,9 @@ declare interface ComponentDefinition {
 	/**
 	 * Public methods to attach to component element
 	 */
-	methods?: { [name: string]: function };
+	methods?: {
+		[name: string]: (this: Component) => void;
+	};
 
 	/**
 	 * List of plugins for current component
@@ -76,9 +129,9 @@ declare interface ComponentDefinition {
 
 	/**
 	 * A function for rendering component contents. Will be added automatically
-	 * in compilation step with compoled HTML template, if not provided
+	 * in compilation step with compiled HTML template, if not provided
 	 */
-	default?: function;
+	default?(component: Component): () => void | null;
 
 	/**
 	 * Component created
@@ -133,50 +186,7 @@ declare interface ComponentDefinition {
 	 * @param changedProps List of changed properties which caused component update
 	 * @param changedState List of changed state which caused component update
 	 */
-	didRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet, initial: boolean): void;
-}
-
-declare interface Component {
-	/**
-	 * Component’s DOM element
-	 */
-	element: ComponentModel;
-
-	/**
-	 * Component’s definition
-	 */
-	definition: ComponentDefinition;
-
-	/**
-	 * Injector for incoming component data
-	 */
-	input: Injector;
-
-	/**
-	 * Change set for component refs
-	 */
-	refs: ChangeSet;
-
-	/**
-	 * Runtime variables
-	 */
-	vars: object;
-
-	/**
-	 * A function for updating rendered component content. Becomes available
-	 * after component was mounted
-	 */
-	update?: function;
-
-	/**
-	 * Indicates that component was mounted
-	 */
-	mounted: boolean;
-
-	/**
-	 * Indicates that component is currently rendering
-	 */
-	rendering: boolean;
+	didRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet): void;
 }
 
 declare interface Injector {

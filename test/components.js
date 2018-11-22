@@ -10,12 +10,11 @@ describe('Full component render', () => {
 
 	it.only('set1', () => {
 		const component = createComponent('my-component', MyComponent);
-		const { element } = component;
 
 		mountComponent(component);
-		assert.equal(element.innerHTML, read('samples/set1/output1.html'));
+		assert.equal(component.innerHTML, read('samples/set1/output1.html'));
 
-		element.setProps({ value1: 0 });
-		assert.equal(element.innerHTML, read('samples/set1/output2.html'));
+		component.setProps({ value1: 0 });
+		assert.equal(component.innerHTML, read('samples/set1/output2.html'));
 	});
 });

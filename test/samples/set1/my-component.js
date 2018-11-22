@@ -11,15 +11,15 @@ import * as SubComponent2 from './sub-component2';
  * @param {Component} component
  */
 export default function myComponentTemplate(component) {
-	const target = component.element.componentView;
+	const target = component.componentView;
 	const injector = createInjector(target);
 
 	insert(injector, elemWithText('h1', 'Title', component));
 
 	const subComponent1 = createComponent('sub-component1', SubComponent1, component);
-	const injector2 = subComponent1.input;
+	const injector2 = subComponent1.component.input;
 	setAttribute(injector2, 'foo', attrValue1(component));
-	insert(injector, subComponent1.element);
+	insert(injector, subComponent1);
 
 	const block1 = mountBlock(component, injector2, ifBlock1);
 
@@ -47,9 +47,9 @@ function ifBlock1(scope) {
 
 function ifContent1(host, injector) {
 	const subComponent2 = createComponent('sub-component2', SubComponent2, host);
-	const injector2 = subComponent2.input;
+	const injector2 = subComponent2.component.input;
 	setAttribute(injector2, 'bar', attrValue2(host));
-	insert(injector, subComponent2.element);
+	insert(injector, subComponent2);
 	insert(injector2, text('Hello world'));
 
 	mountComponent(subComponent2);

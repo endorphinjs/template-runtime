@@ -7,7 +7,7 @@ import {
  * @param {Component} component
  */
 export default function subComponent1Template(component) {
-	const target = component.element.componentView;
+	const target = component.componentView;
 	const injector = createInjector(target);
 
 	insert(injector, elemWithText('h2', 'Sub component1', component));
@@ -34,7 +34,7 @@ function ifContent1(host, injector) {
 }
 
 function slotBlock1(host, injector) {
-	if (!renderSlot(injector.parentNode, host.element.slots)) {
+	if (!renderSlot(injector.parentNode, host.slots)) {
 		return slotContent1;
 	}
 }
