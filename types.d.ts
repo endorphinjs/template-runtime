@@ -150,7 +150,7 @@ declare interface Component {
 	/**
 	 * Injector for incoming component data
 	 */
-	injector: Injector;
+	input: Injector;
 
 	/**
 	 * Change set for component refs
@@ -161,18 +161,6 @@ declare interface Component {
 	 * Runtime variables
 	 */
 	vars: object;
-
-	/**
-	 * Runtime variables stack
-	 * @private
-	 */
-	stack: object[];
-
-	/**
-	 * List of decendant components created inside current component
-	 * @private
-	 */
-	nested: Component[];
 
 	/**
 	 * A function for updating rendered component content. Becomes available
