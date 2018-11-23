@@ -129,19 +129,16 @@ declare interface ComponentDefinition {
 
 	/**
 	 * A function for rendering component contents. Will be added automatically
-	 * in compilation step with compiled HTML template, if not provided
+	 * in compilation step with compiled HTML template, if not provided.
+	 * If rendered result must be updated, should return function that will be
+	 * invoked for update
 	 */
-	default?(component: Component): () => void | null;
+	default?(component: Component): void | function(): void;
 
 	/**
 	 * Component created
 	 */
 	init?(component: ComponentModel): void;
-
-	/**
-	 * Component is about to be destroyed
-	 */
-	destroy?(component: ComponentModel): void;
 
 	/**
 	 * Component is about to be mounted (will be initially rendered)
@@ -187,6 +184,16 @@ declare interface ComponentDefinition {
 	 * @param changedState List of changed state which caused component update
 	 */
 	didRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet): void;
+
+	/**
+	 * Component is about to be removed
+	 */
+	willUnmount?(component: ComponentModel): void;
+
+	/**
+	 * Component was removed
+	 */
+	didUnmount?(component: ComponentModel): void;
 }
 
 declare interface Injector {
