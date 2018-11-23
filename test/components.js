@@ -8,7 +8,7 @@ describe('Full component render', () => {
 	before(() => global.document = document);
 	after(() => delete global.document);
 
-	it.only('set1', () => {
+	it('set1', () => {
 		const component = createComponent('my-component', MyComponent);
 
 		mountComponent(component);

@@ -1,34 +1,36 @@
 import {
-	createInjector, elem, createScope, getProp,
-	finalizeAttributes, setAttribute, addClass
+	createInjector, elem, getProp, finalizeAttributes, setAttribute, addClass
 } from '../../runtime';
 
 export default function(component) {
-	const scope = createScope(component);
-	const elem1 = component.appendChild(elem('main'));
+	const target = component.componentView;
+	const elem1 = target.appendChild(elem('main'));
 	const injector = createInjector(elem1);
 
-	setAttribute(injector, 'a1', attrValue1(scope));
+	setAttribute(injector, 'a1', attrValue1(component));
 	elem1.setAttribute('a2', '0');
+
+	// TODO should set class attribute once, all `addClass()` calls should
+	// only add/remove class names, not replace entire class attribute
 	setAttribute(injector, 'class', 'foo');
 
-	ifAttr1(scope, injector);
-	ifAttr2(scope, injector);
-	ifAttr3(scope, injector);
+	ifAttr1(component, injector);
+	ifAttr2(component, injector);
+	ifAttr3(component, injector);
 
-	addClass(injector, attrValue2(scope));
+	addClass(injector, attrValue2(target));
 
-	finalizeAttributes(injector, true);
+	finalizeAttributes(injector);
 
 	return () => {
-		setAttribute(injector, 'a1', attrValue1(scope));
+		setAttribute(injector, 'a1', attrValue1(target));
 		setAttribute(injector, 'class', 'foo');
 
-		ifAttr1(scope, injector);
-		ifAttr2(scope, injector);
-		ifAttr3(scope, injector);
+		ifAttr1(target, injector);
+		ifAttr2(target, injector);
+		ifAttr3(target, injector);
 
-		addClass(injector, attrValue2(scope));
+		addClass(injector, attrValue2(target));
 		finalizeAttributes(injector);
 	};
 }
