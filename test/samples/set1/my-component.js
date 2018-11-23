@@ -39,8 +39,8 @@ export function props() {
 	};
 }
 
-function ifBlock1(scope) {
-	if (getProp(scope, 'value1') > 0) {
+function ifBlock1(host) {
+	if (getProp(host, 'value1') > 0) {
 		return ifContent1;
 	}
 }
