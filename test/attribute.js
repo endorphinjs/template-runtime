@@ -4,7 +4,7 @@ import attribute1 from './samples/attribute1';
 import attribute2 from './samples/attribute2';
 import { createComponent, mountComponent } from '../runtime';
 
-describe.only('Attribute', () => {
+describe('Attribute', () => {
 	before(() => global.document = document);
 	after(() => delete global.document);
 

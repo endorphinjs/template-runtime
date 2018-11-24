@@ -128,12 +128,18 @@ declare interface ComponentDefinition {
 	plugins?: ComponentDefinition[];
 
 	/**
+	 * A scope token to be added for every element, created inside current component
+	 * bound
+	 */
+	cssScope?: string;
+
+	/**
 	 * A function for rendering component contents. Will be added automatically
 	 * in compilation step with compiled HTML template, if not provided.
 	 * If rendered result must be updated, should return function that will be
 	 * invoked for update
 	 */
-	default?(component: Component): void | function(): void;
+	default(component: Component): void | function(): void;
 
 	/**
 	 * Component created

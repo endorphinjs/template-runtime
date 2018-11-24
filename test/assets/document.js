@@ -278,14 +278,6 @@ class ElementShim extends NodeShim {
 		parseHTML(this, value);
 	}
 
-	setProps(obj, overwrite) {
-		if (overwrite) {
-			this.props = obj;
-		} else {
-			this.props = Object.assign(this.props, obj);
-		}
-	}
-
 	toString(indent='\t', level=0) {
 		const attrs = this.attributes.map(attr => ` ${attr.name}="${attr.value}"`).join('');
 		const prefix = indent.repeat(level);

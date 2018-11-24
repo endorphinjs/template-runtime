@@ -1,19 +1,23 @@
 import assert from 'assert';
 import document from './assets/document';
 import template from './samples/refs';
+import { createComponent, mountComponent } from '../runtime';
 
 describe('Refs', () => {
 	before(() => global.document = document);
 	after(() => delete global.document);
 
 	it('should store and update refs', () => {
-		const component = document.createElement('div');
-		component.setProps({ c1: false, dynRef: 'foo' });
-
-		const update = template(component);
-		const refs = component.refs;
+		const component = createComponent('my-component', {
+			default: template,
+			props() {
+				return { c1: false, dynRef: 'foo' };
+			}
+		});
 
 		// Initial render
+		mountComponent(component);
+		const refs = component.refs;
 		assert.deepEqual(Object.keys(refs), ['main', 'header', 'foo']);
 
 		assert.strictEqual(refs.main.nodeName, 'main');
@@ -29,8 +33,6 @@ describe('Refs', () => {
 		const prevFoo = refs.foo;
 
 		component.setProps({ c1: true, dynRef: 'bar' });
-		update();
-
 		assert.deepEqual(Object.keys(refs), ['main', 'header', 'foo', 'bar']);
 
 		assert.strictEqual(refs.main.nodeName, 'main');
@@ -44,13 +46,11 @@ describe('Refs', () => {
 		assert.strictEqual(refs.bar.nodeName, 'footer');
 		assert(refs.bar.hasAttribute('ref-bar'));
 
-		// Make sure ref atrtibutes are removed
+		// Make sure ref attributes are removed
 		assert(!prevHeader.hasAttribute('ref-header'));
 		assert(!prevFoo.hasAttribute('ref-foo'));
 
 		component.setProps({ c1: false, dynRef: 'bar' });
-		update();
-
 		assert.deepEqual(Object.keys(refs), ['main', 'header', 'foo', 'bar']);
 		assert.strictEqual(refs.header.nodeName, 'div');
 		assert.strictEqual(refs.header, prevHeader);

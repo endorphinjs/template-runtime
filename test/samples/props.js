@@ -1,39 +1,43 @@
 import {
-	createInjector, setAttribute, finalizeProps, mountBlock, updateBlock,
-	elem, insert, createScope, getProp
+	createInjector, setAttribute, mountBlock, updateBlock,
+	insert, getProp, createComponent, mountComponent, updateComponent
 } from '../../runtime';
 
+import * as SubComponent1 from './set1/sub-component1';
+
 export default function template(component) {
-	const scope = createScope(component);
-	const injector = createInjector(component);
+	const injector = createInjector(component.componentView);
 
-	const subComponent = insert(injector, elem('sub-component'));
-	const subInjector = createInjector(subComponent, true);
+	const subComponent = createComponent('sub-component', SubComponent1, component);
+	insert(injector, subComponent);
+	const subInjector = subComponent.component.input;
 
-	setAttribute(subInjector, 'id', attrValue1(scope));
-	const block1 = mountBlock(scope, subInjector, ifBlock1);
+	setAttribute(subInjector, 'p1', 1);
+	setAttribute(subInjector, 'id', attrValue1(component));
+	const block1 = mountBlock(component, subInjector, ifBlock1);
 	setAttribute(subInjector, 'p3', 3);
-	finalizeProps(subInjector, { p1: 1 });
+	mountComponent(subComponent);
 
 	return () => {
-		setAttribute(subInjector, 'id', attrValue1(scope));
+		setAttribute(subInjector, 'p1', 1);
+		setAttribute(subInjector, 'id', attrValue1(component));
 		updateBlock(block1);
 		setAttribute(subInjector, 'p3', 3);
-		finalizeProps(subInjector);
+		updateComponent(subComponent);
 	};
 }
 
-function attrValue1(scope) {
-	return getProp(scope, 'id');
+function attrValue1(host) {
+	return getProp(host, 'id');
 }
 
-function ifBlock1(scope) {
-	if (getProp(scope, 'c1')) {
+function ifBlock1(host) {
+	if (getProp(host, 'c1')) {
 		return ifContent1;
 	}
 }
 
-function ifContent1(scope, injector) {
+function ifContent1(host, injector) {
 	setAttribute(injector, 'p2', 2);
 	return ifContent1;
 }

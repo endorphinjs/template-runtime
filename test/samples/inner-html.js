@@ -1,14 +1,13 @@
 import {
-	createInjector, createScope, elemWithText, getProp, insert,
+	createInjector, elemWithText, getProp, insert,
 	mountInnerHTML, updateInnerHTML, mountBlock, updateBlock
 } from '../../runtime';
 
 export default function(component) {
-	const scope = createScope(component);
-	const injector = createInjector(component);
-	const block1 = mountBlock(scope, injector, ifBlock1);
-	const html1 = mountInnerHTML(scope, injector, getHTML);
-	const block2 = mountBlock(scope, injector, ifBlock2);
+	const injector = createInjector(component.componentView);
+	const block1 = mountBlock(component, injector, ifBlock1);
+	const html1 = mountInnerHTML(component, injector, getHTML);
+	const block2 = mountBlock(component, injector, ifBlock2);
 
 	return () => {
 		updateBlock(block1);
@@ -17,26 +16,26 @@ export default function(component) {
 	};
 }
 
-function getHTML(scope) {
-	return getProp(scope, 'html');
+function getHTML(host) {
+	return getProp(host, 'html');
 }
 
-function ifBlock1(scope) {
-	if (getProp(scope, 'c1')) {
+function ifBlock1(host) {
+	if (getProp(host, 'c1')) {
 		return ifContent1;
 	}
 }
 
-function ifContent1(scope, injector) {
-	insert(injector, elemWithText('div', 'foo', scope.css));
+function ifContent1(host, injector) {
+	insert(injector, elemWithText('div', 'foo', host));
 }
 
-function ifBlock2(scope) {
-	if (getProp(scope, 'c2')) {
+function ifBlock2(host) {
+	if (getProp(host, 'c2')) {
 		return ifContent2;
 	}
 }
 
-function ifContent2(scope, injector) {
-	insert(injector, elemWithText('p', 'bar', scope.css));
+function ifContent2(host, injector) {
+	insert(injector, elemWithText('p', 'bar', host));
 }

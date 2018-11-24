@@ -1,6 +1,7 @@
 import assert from 'assert';
 import document from './assets/document';
 import { createInjector, run, insert, block, dispose, move } from '../lib/injector';
+import { obj } from '../lib/utils';
 
 describe('Slotted injector', () => {
 	before(() => global.document = document);
@@ -16,7 +17,9 @@ describe('Slotted injector', () => {
 
 	it('flat blocks', () => {
 		const parent = elem('div');
-		const injector = createInjector(parent, true);
+		const injector = createInjector(parent);
+		injector.slots = obj();
+
 		const content1 = () => {
 			insert(injector, elem('3'));
 			insert(injector, elem('4'), 'slot1');
@@ -91,7 +94,9 @@ describe('Slotted injector', () => {
 
 	it('nested blocks', () => {
 		const parent = elem('div');
-		const injector = createInjector(parent, true);
+		const injector = createInjector(parent);
+		injector.slots = obj();
+
 		const content1 = () => {
 			insert(injector, elem('1'));
 		};
@@ -155,7 +160,9 @@ describe('Slotted injector', () => {
 
 	it('dispose', () => {
 		const parent = elem('div');
-		const injector = createInjector(parent, true);
+		const injector = createInjector(parent);
+		injector.slots = obj();
+
 		const content1 = () => {
 			insert(injector, elem('1'));
 		};
@@ -204,7 +211,9 @@ describe('Slotted injector', () => {
 
 	it('move', () => {
 		const parent = elem('div');
-		const injector = createInjector(parent, true);
+		const injector = createInjector(parent);
+		injector.slots = obj();
+
 		const content1 = () => {
 			insert(injector, elem('1'));
 		};

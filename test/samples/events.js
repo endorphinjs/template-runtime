@@ -1,34 +1,33 @@
 import {
-	createInjector, elem, createScope, getProp,
-	addEvent, finalizeEvents
+	createInjector, elem, getProp, addEvent, finalizeEvents
 } from '../../runtime';
 
-export default function (component) {
-	const scope = createScope(component);
-	const elem1 = component.appendChild(elem('main'));
+export default function template(host) {
+	const target = host.componentView;
+	const elem1 = target.appendChild(elem('main'));
 	const injector = createInjector(elem1);
 
-	function onClick1(event) {
-		scope.component.method1(getProp(scope, 'foo'), getProp(scope, 'bar'), event);
-	}
+	const onClick1 = function(event) {
+		host.component.definition.method1.call(this, getProp(host, 'foo'), getProp(host, 'bar'), event, host);
+	};
 
-	function onClick2(event) {
-		scope.component.method2(getProp(scope, 'foo'), getProp(scope, 'bar'), event);
-	}
+	const onClick2 = function(event) {
+		host.component.definition.method2.call(this, getProp(host, 'foo'), getProp(host, 'bar'), event, host);
+	};
 
 	addEvent(injector, 'click', onClick1);
-	ifEvent(scope, injector, onClick2);
+	ifEvent(host, injector, onClick2);
 	finalizeEvents(injector);
 
-	return () => {
+	return function updateTemplate(){
 		addEvent(injector, 'click', onClick1);
-		ifEvent(scope, injector, onClick2);
+		ifEvent(host, injector, onClick2);
 		finalizeEvents(injector);
 	};
 }
 
-function ifEvent(scope, injector, handler) {
-	if (getProp(scope, 'c1')) {
+function ifEvent(host, injector, handler) {
+	if (getProp(host, 'c1')) {
 		addEvent(injector, 'click', handler);
 	}
 }
