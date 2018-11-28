@@ -1,5 +1,5 @@
 import {
-	createInjector, elem, getProp, addEvent, finalizeEvents
+	createInjector, elem, getProp, addEvent, getEventHandler, finalizeEvents
 } from '../../runtime';
 
 export default function template(host) {
@@ -8,11 +8,11 @@ export default function template(host) {
 	const injector = createInjector(elem1);
 
 	const onClick1 = function(event) {
-		host.component.definition.method1.call(this, getProp(host, 'foo'), getProp(host, 'bar'), event, host);
+		getEventHandler(host, 'method1', this)(getProp(host, 'foo'), getProp(host, 'bar'), event, host);
 	};
 
 	const onClick2 = function(event) {
-		host.component.definition.method2.call(this, getProp(host, 'foo'), getProp(host, 'bar'), event, host);
+		getEventHandler(host, 'method2', this)(getProp(host, 'foo'), getProp(host, 'bar'), event, host);
 	};
 
 	addEvent(injector, 'click', onClick1);
