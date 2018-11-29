@@ -6,8 +6,6 @@ import branching from './samples/branching';
 import { createComponent, mountComponent } from '../runtime';
 
 describe('Event handler', () => {
-	// TODO add tests for static events
-
 	before(() => global.document = document);
 	after(() => delete global.document);
 
