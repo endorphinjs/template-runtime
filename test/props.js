@@ -23,7 +23,7 @@ describe('Props', () => {
 		component.setProps({ id: 'bar', c1: true });
 		assert.deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
 
-		component.component.update();
+		component.componentModel.update();
 		assert.deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
 
 		component.setProps({ c1: false });

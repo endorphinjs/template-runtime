@@ -50,14 +50,14 @@ describe('Attribute', () => {
 		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		// Re-render: retain the same result
-		component.component.update();
+		component.componentModel.update();
 		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		component.setProps({ c1: true, c2: true });
 		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		// Re-render: should retain previous result
-		component.component.update();
+		component.componentModel.update();
 		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		component.setProps({ c3: true });

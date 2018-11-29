@@ -10,7 +10,7 @@ export default function template(component) {
 
 	const subComponent = createComponent('sub-component', SubComponent1, component);
 	insert(injector, subComponent);
-	const subInjector = subComponent.component.input;
+	const subInjector = subComponent.componentModel.input;
 
 	setAttribute(subInjector, 'p1', 1);
 	setAttribute(subInjector, 'id', attrValue1(component));

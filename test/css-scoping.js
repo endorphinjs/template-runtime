@@ -25,7 +25,7 @@ describe('CSS scoping', () => {
 
 		// Re-render with the same state: must be exactly the same result
 		const prevChildren = Array.from(component.childNodes);
-		component.component.update();
+		component.componentModel.update();
 		assert.equal(component.innerHTML, read('fixtures/branching1-scoped.html'));
 		prevChildren.forEach((child, i) => assert.strictEqual(child, component.childNodes[i]));
 

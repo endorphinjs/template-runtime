@@ -39,7 +39,7 @@ describe('Event handler', () => {
 		assert.deepEqual(calls.method2, []);
 
 		// Re-run template: nothing should change
-		component.component.update();
+		component.componentModel.update();
 		component.firstChild.dispatchEvent({ type: 'click' });
 		assert.equal(component.innerHTML, '<main></main>');
 		assert.deepEqual(calls.method1, [['foo1', 'bar2'], ['foo1', 'bar2']]);
@@ -77,7 +77,7 @@ describe('Event handler', () => {
 		assert.deepEqual(calls, [[0, 2, 1], [1, 2, 1]]);
 
 		// Re-run template: nothing should change
-		component.component.update();
+		component.componentModel.update();
 		component.firstChild.childNodes[0].dispatchEvent({ type: 'click' });
 		component.firstChild.childNodes[1].dispatchEvent({ type: 'click' });
 		assert.equal(component.innerHTML, '<ul>\n\t<li>item</li>\n\t<li>item</li>\n\t<li>item</li>\n</ul>');

@@ -8,7 +8,7 @@ declare interface Component extends HTMLElement {
 	/**
 	 * Internal component model
 	 */
-	readonly component: ComponentModel;
+	readonly componentModel: ComponentModel;
 
 	/**
 	 * Component properties (external contract)

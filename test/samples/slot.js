@@ -9,7 +9,7 @@ export default function template(component) {
 
 	insert(injector, elemWithText('h1', 'Hello world'));
 	const subComponent = insert(injector, createComponent('sub-component', { default: subComponentTemplate }, component));
-	const subInjector = subComponent.component.input;
+	const subInjector = subComponent.componentModel.input;
 
 	setAttribute(subInjector, 'id', attrValue1(component));
 	insert(subInjector, elemWithText('div', 'foo'));

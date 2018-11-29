@@ -17,7 +17,7 @@ export default function myComponentTemplate(component) {
 	insert(injector, elemWithText('h1', 'Title', component));
 
 	const subComponent1 = createComponent('sub-component1', SubComponent1, component);
-	const injector2 = subComponent1.component.input;
+	const injector2 = subComponent1.componentModel.input;
 	setAttribute(injector2, 'foo', attrValue1(component));
 	insert(injector, subComponent1);
 
@@ -47,7 +47,7 @@ function ifBlock1(host) {
 
 function ifContent1(host, injector) {
 	const subComponent2 = createComponent('sub-component2', SubComponent2, host);
-	const injector2 = subComponent2.component.input;
+	const injector2 = subComponent2.componentModel.input;
 	setAttribute(injector2, 'bar', attrValue2(host));
 	insert(injector, subComponent2);
 	insert(injector2, text('Hello world'));

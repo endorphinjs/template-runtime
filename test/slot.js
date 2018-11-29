@@ -59,7 +59,7 @@ describe('Slots', () => {
 		assert.equal(component.innerHTML, read('./fixtures/slot5.html'));
 
 		// Re-render the same template: keep data as-is
-		component.component.update();
+		component.componentModel.update();
 		assert.equal(component.innerHTML, read('./fixtures/slot5.html'));
 
 		// Dispose data rendered in iterator
