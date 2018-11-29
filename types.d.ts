@@ -78,6 +78,12 @@ declare interface ComponentModel {
 	update?(): void;
 
 	/**
+	 * Detaches all static events bound to current component
+	 * @private
+	 */
+	detachEvents(): void;
+
+	/**
 	 * Indicates that component was mounted
 	 */
 	mounted: boolean;

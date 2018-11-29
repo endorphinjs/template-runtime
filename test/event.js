@@ -2,6 +2,7 @@ import assert from 'assert';
 import document from './assets/document';
 import template from './samples/events';
 import loopTemplate from './samples/events-loop';
+import branching from './samples/branching';
 import { createComponent, mountComponent } from '../runtime';
 
 describe('Event handler', () => {
@@ -82,5 +83,30 @@ describe('Event handler', () => {
 		component.firstChild.childNodes[1].dispatchEvent({ type: 'click' });
 		assert.equal(component.innerHTML, '<ul>\n\t<li>item</li>\n\t<li>item</li>\n\t<li>item</li>\n</ul>');
 		assert.deepEqual(calls, [[0, 2, 1], [1, 2, 1], [0, 2, 1], [1, 2, 1]]);
+	});
+
+	it('should attach static events', () => {
+		let calls = 0;
+
+		const component = createComponent('my-component', {
+			default: branching,
+			events: {
+				click() {
+					calls++;
+				}
+			}
+		});
+
+		// Initial render
+		mountComponent(component);
+		component.firstChild.childNodes[0].dispatchEvent({ type: 'click' });
+
+		// Event should bubble up to container
+		assert.equal(calls, 1);
+
+		// Re-run template: nothing should change
+		component.componentModel.update();
+		component.firstChild.childNodes[0].dispatchEvent({ type: 'click' });
+		assert.equal(calls, 2);
 	});
 });
