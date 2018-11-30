@@ -10,6 +10,7 @@ export * from './lib/ref';
 export * from './lib/component';
 export * from './lib/inner-html';
 export * from './lib/dom';
+export { assign, obj } from './lib/utils';
 
 /**
  * Safe property getter

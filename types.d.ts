@@ -72,6 +72,13 @@ declare interface ComponentModel {
 	vars: object;
 
 	/**
+	 * List of redefined partials
+	 */
+	partials: {
+		[name: string]: (host: Comment, injector: Injector) => void;
+	}
+
+	/**
 	 * A function for updating rendered component content. Might be available
 	 * after component was mounted and only if component has update cycle
 	 */
