@@ -1,6 +1,6 @@
 import {
 	createInjector, elem, text, insert, getProp, mountIterator, updateIterator,
-	enterScope, exitScope, getVar, assign, obj, updateText, addClass, getPartial,
+	enterScope, exitScope, getVar, assign, obj, updateText, addClass,
 	finalizeAttributes
 } from '../../runtime';
 
@@ -56,7 +56,7 @@ function forEachExpr1(host) {
 }
 
 function forEachBody1(host, injector) {
-	const partial1 = getPartial(host, 'button', partialButton);
+	const partial1 = getProp(host, 'partial:button') || partialButton;
 	const updatePartial = partial1(host, injector, {
 		item: getVar(host, 'value'),
 		enabled: getVar(host, 'index') !== 1
