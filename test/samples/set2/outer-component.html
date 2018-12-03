@@ -1,0 +1,13 @@
+<template>
+	<h2>Default partials</h2>
+	<inner-component items={$items1} />
+
+	<h2>Override partials</h2>
+	<inner-component items={$items2} partial:item="partial:my-item" />
+</template>
+
+<template partial:my-item item pos={0}>
+	<div>
+		<span value={$pos}>{ $item }</span>
+	</div>
+</template>
