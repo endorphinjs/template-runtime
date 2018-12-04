@@ -1,9 +1,9 @@
-declare interface Component extends HTMLElement {
+export interface Component extends HTMLElement {
 	/**
 	 * Pointer to component view container. By default, it’s the same as component
-	 * element, but for native Web Components it may point to shadow root
+	 * element, but for native Web Components it points to shadow root
 	 */
-	readonly componentView: HTMLElement | ShadowRoot;
+	componentView: HTMLElement | ShadowRoot;
 
 	/**
 	 * Internal component model
@@ -48,7 +48,7 @@ declare interface Component extends HTMLElement {
 /**
  * Internal Endorphin component descriptor
  */
-declare interface ComponentModel {
+export interface ComponentModel {
 	/**
 	 * Component’s definition
 	 */
@@ -75,14 +75,14 @@ declare interface ComponentModel {
 	 * List of redefined partials
 	 */
 	partials: {
-		[name: string]: (host: Comment, injector: Injector) => void;
+		[name: string]: (host: Component, injector: Injector) => void;
 	}
 
 	/**
 	 * A function for updating rendered component content. Might be available
 	 * after component was mounted and only if component has update cycle
 	 */
-	update?(): void;
+	update?: UpdateView;
 
 	/**
 	 * Detaches all static events bound to current component
@@ -105,7 +105,7 @@ declare interface ComponentModel {
 /**
  * A definition of component, written as ES module
  */
-declare interface ComponentDefinition {
+export interface ComponentDefinition {
 	/**
 	 * Initial props factory
 	 */
@@ -152,7 +152,7 @@ declare interface ComponentDefinition {
 	 * If rendered result must be updated, should return function that will be
 	 * invoked for update
 	 */
-	default(component: Component): void | function(): void;
+	default(component: Component): UpdateView;
 
 	/**
 	 * Component created
@@ -215,7 +215,7 @@ declare interface ComponentDefinition {
 	didUnmount?(component: ComponentModel): void;
 }
 
-declare interface Injector {
+interface Injector {
 	/**
 	 * Injector DOM target
 	 */
@@ -256,7 +256,7 @@ declare interface Injector {
  * A structure that holds data about elements owned by given block context
  * right below it in `Injector` list
  */
-declare interface Block {
+interface Block {
 	/**
 	 * Number of inserted items in block context
 	 */
@@ -280,4 +280,8 @@ interface RefMap {
 interface ChangeSet {
 	prev: object;
 	next: object;
+}
+
+interface UpdateView {
+	(): void;
 }
