@@ -3,7 +3,7 @@ import read from './assets/read-file';
 import document from './assets/document';
 import branching from './samples/branching';
 import deepBranching from './samples/branching-deep-nesting';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../runtime';
 
 describe('Branching', () => {
 	before(() => global.document = document);
@@ -25,7 +25,7 @@ describe('Branching', () => {
 
 		// Re-render with the same state: must be exactly the same result
 		const prevChildren = Array.from(component.childNodes);
-		component.componentModel.update();
+		updateComponent(component);
 		assert.equal(component.innerHTML, read('fixtures/branching1.html'));
 		prevChildren.forEach((child, i) => assert.strictEqual(child, component.childNodes[i]));
 

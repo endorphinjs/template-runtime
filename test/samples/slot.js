@@ -4,36 +4,38 @@ import {
 	getProp, mountIterator, updateIterator
 } from '../../runtime';
 
-export default function template(component) {
-	const injector = createInjector(component.componentView);
+export default function template(host, scope) {
+	const injector = createInjector(host.componentView);
 
 	insert(injector, elemWithText('h1', 'Hello world'));
-	const subComponent = insert(injector, createComponent('sub-component', { default: subComponentTemplate }, component));
-	const subInjector = subComponent.componentModel.input;
+	scope.subComponent = insert(injector, createComponent('sub-component', { default: subComponentTemplate }, host));
+	scope.subInjector = scope.subComponent.componentModel.input;
 
-	setAttribute(subInjector, 'id', attrValue1(component));
-	insert(subInjector, elemWithText('div', 'foo'));
+	setAttribute(scope.subInjector, 'id', attrValue1(host));
+	insert(scope.subInjector, elemWithText('div', 'foo'));
 
-	const block1 = mountBlock(component, subInjector, ifBlock1);
-	const block2 = mountBlock(component, subInjector, ifBlock2);
-	const iter1 = mountIterator(component, subInjector, forEachExpr1, forEachBody1);
-	const block3 = mountBlock(component, subInjector, ifBlock3);
+	scope.block1 = mountBlock(host, scope.subInjector, ifBlock1);
+	scope.block2 = mountBlock(host, scope.subInjector, ifBlock2);
+	scope.iter1 = mountIterator(host, scope.subInjector, forEachExpr1, forEachBody1);
+	scope.block3 = mountBlock(host, scope.subInjector, ifBlock3);
 
 	// TODO think about proper component rendering contract
-	mountComponent(subComponent);
+	mountComponent(scope.subComponent);
 
-	return () => {
-		setAttribute(subInjector, 'id', attrValue1(component));
-		updateBlock(block1);
-		updateBlock(block2);
-		updateIterator(iter1);
-		updateBlock(block3);
-		updateComponent(subComponent);
-	};
+	return updateTemplate;
 }
 
-function subComponentTemplate(component) {
-	const injector = createInjector(component.componentView);
+function updateTemplate(host, scope) {
+	setAttribute(scope.subInjector, 'id', attrValue1(host));
+	updateBlock(scope.block1);
+	updateBlock(scope.block2);
+	updateIterator(scope.iter1);
+	updateBlock(scope.block3);
+	updateComponent(scope.subComponent);
+}
+
+function subComponentTemplate(host, scope) {
+	const injector = createInjector(host.componentView);
 
 	const elem1 = insert(injector, elem('div'));
 	elem1.setAttribute('class', 'container');
@@ -42,21 +44,23 @@ function subComponentTemplate(component) {
 	const slot1 = insert(injector2, elem('slot'));
 	slot1.setAttribute('name', 'header');
 	const injector3 = createInjector(slot1);
-	const block1 = mountBlock(component, injector3, slotBlock1);
+	scope.block1 = mountBlock(host, injector3, slotBlock1);
 	insert(injector2, elemWithText('p', 'content'));
 
-	const slot2 = insert(injector2, elem('slot'));
-	renderSlot(slot2, component.slots);
+	scope.slot2 = insert(injector2, elem('slot'));
+	renderSlot(scope.slot2, host.slots);
 
-	const block2 = mountBlock(component, injector2, ifBlock4);
-	const block3 = mountBlock(component, injector2, ifBlock5);
+	scope.block2 = mountBlock(host, injector2, ifBlock4);
+	scope.block3 = mountBlock(host, injector2, ifBlock5);
 
-	return () => {
-		updateBlock(block1);
-		renderSlot(slot2, component.slots);
-		updateBlock(block2);
-		updateBlock(block3);
-	};
+	return subComponentTemplateUpdate;
+}
+
+function subComponentTemplateUpdate(host, scope) {
+	updateBlock(scope.block1);
+	renderSlot(scope.slot2, host.slots);
+	updateBlock(scope.block2);
+	updateBlock(scope.block3);
 }
 
 function attrValue1(scope) {
@@ -114,15 +118,17 @@ function ifBlock5(host) {
 	}
 }
 
-function ifContent5(host, injector) {
+function ifContent5(host, injector, scope) {
 	const slot = insert(injector, elem('slot'));
 	slot.setAttribute('name', 'footer');
 	const injector2 = createInjector(slot);
-	const block1 = mountBlock(host, injector2, slotBlock2);
+	scope.block10 = mountBlock(host, injector2, slotBlock2);
 
-	return () => {
-		updateBlock(block1);
-	};
+	return ifContent5Update;
+}
+
+function ifContent5Update(host, injector, scope) {
+	updateBlock(scope.block10);
 }
 
 function forEachExpr1(host) {

@@ -4,23 +4,25 @@ import {
 } from '../../../runtime';
 
 /**
- * @param {Component} component
+ * @param {Component} host
  */
-export default function subComponent1Template(component) {
-	const target = component.componentView;
+export default function subComponent1Template(host, scope) {
+	const target = host.componentView;
 	const injector = createInjector(target);
 
-	insert(injector, elemWithText('h2', 'Sub component1', component));
+	insert(injector, elemWithText('h2', 'Sub component1', host));
 
-	const block1 = mountBlock(component, injector, ifBlock1);
+	scope.block1 = mountBlock(host, injector, ifBlock1);
 	const slot1 = insert(injector, elem('slot'));
 	const injector2 = createInjector(slot1);
-	const block2 = mountBlock(component, injector2, slotBlock1);
+	scope.block2 = mountBlock(host, injector2, slotBlock1);
 
-	return function subComponent1Update() {
-		updateBlock(block1);
-		updateBlock(block2);
-	};
+	return subComponent1Update;
+}
+
+function subComponent1Update(host, scope) {
+	updateBlock(scope.block1);
+	updateBlock(scope.block2);
 }
 
 function ifBlock1(host) {

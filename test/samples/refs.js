@@ -3,29 +3,31 @@ import {
 	finalizeRefs, setRef, setStaticRef
 } from '../../runtime';
 
-export default function(component) {
-	const injector = createInjector(component.componentView);
+export default function(host, scope) {
+	const injector = createInjector(host.componentView);
 
-	const elem1 = insert(injector, elem('main', component));
-	setStaticRef(component, 'main', elem1);
+	const elem1 = insert(injector, elem('main', host));
+	setStaticRef(host, 'main', elem1);
 
 	const injector2 = createInjector(elem1);
-	const elem2 = insert(injector2, elem('div', component));
-	setRef(component, 'header', elem2);
+	scope.elem2 = insert(injector2, elem('div', host));
+	setRef(host, 'header', scope.elem2);
 
-	const block1 = mountBlock(component, injector2, ifBlock1);
+	scope.block1 = mountBlock(host, injector2, ifBlock1);
 
-	const elem3 = insert(injector2, elem('footer', component));
-	setRef(component, getProp(component, 'dynRef'), elem3);
+	scope.elem3 = insert(injector2, elem('footer', host));
+	setRef(host, getProp(host, 'dynRef'), scope.elem3);
 
-	finalizeRefs(component);
+	finalizeRefs(host);
 
-	return () => {
-		setRef(component, 'header', elem2);
-		updateBlock(block1);
-		setRef(component, getProp(component, 'dynRef'), elem3);
-		finalizeRefs(component);
-	};
+	return updateTemplate;
+}
+
+function updateTemplate(host, scope) {
+	setRef(host, 'header', scope.elem2);
+	updateBlock(scope.block1);
+	setRef(host, getProp(host, 'dynRef'), scope.elem3);
+	finalizeRefs(host);
 }
 
 function ifBlock1(host) {
@@ -34,12 +36,13 @@ function ifBlock1(host) {
 	}
 }
 
-function ifContent1(host, injector) {
-	const cssScope = host.css;
-	const elem1 = insert(injector, elem('span', cssScope));
-	setRef(host, 'header', elem1);
+function ifContent1(host, injector, scope) {
+	scope.elem1 = insert(injector, elem('span', host));
+	setRef(host, 'header', scope.elem1);
 
-	return () => {
-		setRef(host, 'header', elem1);
-	};
+	return ifContent1Update;
+}
+
+function ifContent1Update(host, injector, scope) {
+	setRef(host, 'header', scope.elem1);
 }

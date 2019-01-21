@@ -3,7 +3,7 @@ import document from './assets/document';
 import template from './samples/events';
 import loopTemplate from './samples/events-loop';
 import branching from './samples/branching';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../runtime';
 
 describe('Event handler', () => {
 	before(() => global.document = document);
@@ -38,7 +38,7 @@ describe('Event handler', () => {
 		assert.deepEqual(calls.method2, []);
 
 		// Re-run template: nothing should change
-		component.componentModel.update();
+		updateComponent(component);
 		component.firstChild.dispatchEvent({ type: 'click' });
 		assert.equal(component.innerHTML, '<main></main>');
 		assert.deepEqual(calls.method1, [['foo1', 'bar2'], ['foo1', 'bar2']]);
@@ -76,7 +76,7 @@ describe('Event handler', () => {
 		assert.deepEqual(calls, [[0, 2, 1], [1, 2, 1]]);
 
 		// Re-run template: nothing should change
-		component.componentModel.update();
+		updateComponent(component);
 		component.firstChild.childNodes[0].dispatchEvent({ type: 'click' });
 		component.firstChild.childNodes[1].dispatchEvent({ type: 'click' });
 		assert.equal(component.innerHTML, '<ul>\n\t<li>item</li>\n\t<li>item</li>\n\t<li>item</li>\n</ul>');
@@ -103,7 +103,7 @@ describe('Event handler', () => {
 		assert.equal(calls, 1);
 
 		// Re-run template: nothing should change
-		component.componentModel.update();
+		updateComponent(component);
 		component.firstChild.childNodes[0].dispatchEvent({ type: 'click' });
 		assert.equal(calls, 2);
 	});

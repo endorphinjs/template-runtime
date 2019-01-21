@@ -5,26 +5,28 @@ import {
 
 import * as SubComponent1 from './set1/sub-component1';
 
-export default function template(component) {
-	const injector = createInjector(component.componentView);
+export default function template(host, scope) {
+	const injector = createInjector(host.componentView);
 
-	const subComponent = createComponent('sub-component', SubComponent1, component);
-	insert(injector, subComponent);
-	const subInjector = subComponent.componentModel.input;
+	scope.subComponent = createComponent('sub-component', SubComponent1, host);
+	insert(injector, scope.subComponent);
+	scope.subInjector = scope.subComponent.componentModel.input;
 
-	setAttribute(subInjector, 'p1', 1);
-	setAttribute(subInjector, 'id', attrValue1(component));
-	const block1 = mountBlock(component, subInjector, ifBlock1);
-	setAttribute(subInjector, 'p3', 3);
-	mountComponent(subComponent);
+	setAttribute(scope.subInjector, 'p1', 1);
+	setAttribute(scope.subInjector, 'id', attrValue1(host));
+	scope.block1 = mountBlock(host, scope.subInjector, ifBlock1);
+	setAttribute(scope.subInjector, 'p3', 3);
+	mountComponent(scope.subComponent);
 
-	return () => {
-		setAttribute(subInjector, 'p1', 1);
-		setAttribute(subInjector, 'id', attrValue1(component));
-		updateBlock(block1);
-		setAttribute(subInjector, 'p3', 3);
-		updateComponent(subComponent);
-	};
+	return updateTemplate;
+}
+
+function updateTemplate(host, scope) {
+	setAttribute(scope.subInjector, 'p1', 1);
+	setAttribute(scope.subInjector, 'id', attrValue1(host));
+	updateBlock(scope.block1);
+	setAttribute(scope.subInjector, 'p3', 3);
+	updateComponent(scope.subComponent);
 }
 
 function attrValue1(host) {

@@ -2,7 +2,7 @@ import assert from 'assert';
 import document from './assets/document';
 import attribute1 from './samples/attribute1';
 import attribute2 from './samples/attribute2';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../runtime';
 
 describe('Attribute', () => {
 	before(() => global.document = document);
@@ -50,14 +50,14 @@ describe('Attribute', () => {
 		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		// Re-render: retain the same result
-		component.componentModel.update();
+		updateComponent(component);
 		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		component.setProps({ c1: true, c2: true });
 		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		// Re-render: should retain previous result
-		component.componentModel.update();
+		updateComponent(component);
 		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		component.setProps({ c3: true });

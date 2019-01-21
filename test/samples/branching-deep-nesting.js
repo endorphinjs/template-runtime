@@ -2,14 +2,16 @@ import {
 	createInjector, text, insert, getProp, mountBlock, updateBlock
 } from '../../runtime';
 
-export default function template(component) {
+export default function template(component, scope) {
 	const target = component.componentView;
-	const injector = createInjector(target || component);
-	const block = mountBlock(component, injector, ifBlock1);
+	const injector = createInjector(target);
+	scope.block1 = mountBlock(component, injector, ifBlock1);
 
-	return () => {
-		updateBlock(block);
-	};
+	return updateTemplate;
+}
+
+function updateTemplate(host, scope) {
+	updateBlock(scope.block1);
 }
 
 function ifBlock1(host) {
@@ -30,20 +32,23 @@ function ifBlock3(host) {
 	}
 }
 
-function ifContent1(host, injector) {
-	const block = mountBlock(host, injector, ifBlock2);
-
-	return () => {
-		updateBlock(block);
-	};
+function ifContent1(host, injector, scope) {
+	scope.block2 = mountBlock(host, injector, ifBlock2);
+	return ifContent1Update;
 }
 
-function ifContent2(host, injector) {
-	const block = mountBlock(host, injector, ifBlock3);
+function ifContent1Update(host, injector, scope) {
+	updateBlock(scope.block2);
+}
 
-	return () => {
-		updateBlock(block);
-	};
+function ifContent2(host, injector, scope) {
+	scope.block3 = mountBlock(host, injector, ifBlock3);
+
+	return ifContent2Update;
+}
+
+function ifContent2Update(host, injector, scope) {
+	updateBlock(scope.block3);
 }
 
 function ifContent3(host, injector) {

@@ -3,17 +3,19 @@ import {
 	mountInnerHTML, updateInnerHTML, mountBlock, updateBlock
 } from '../../runtime';
 
-export default function(component) {
-	const injector = createInjector(component.componentView);
-	const block1 = mountBlock(component, injector, ifBlock1);
-	const html1 = mountInnerHTML(component, injector, getHTML);
-	const block2 = mountBlock(component, injector, ifBlock2);
+export default function(host, scope) {
+	const injector = createInjector(host.componentView);
+	scope.block1 = mountBlock(host, injector, ifBlock1);
+	scope.html1 = mountInnerHTML(host, injector, getHTML);
+	scope.block2 = mountBlock(host, injector, ifBlock2);
 
-	return () => {
-		updateBlock(block1);
-		updateInnerHTML(html1);
-		updateBlock(block2);
-	};
+	return updateTemplate;
+}
+
+function updateTemplate(host, scope) {
+	updateBlock(scope.block1);
+	updateInnerHTML(scope.html1);
+	updateBlock(scope.block2);
 }
 
 function getHTML(host) {

@@ -2,28 +2,31 @@ import {
 	createInjector, elem, getProp, finalizeAttributes, setAttribute
 } from '../../runtime';
 
-export default function(component) {
-	const target = component.componentView;
+export default function(host, scope) {
+	const target = host.componentView;
 	const elem1 = target.appendChild(elem('main'));
 
-	const injector = createInjector(elem1);
-	setAttribute(injector, 'a1', attrValue1(component));
+	const injector = scope.injector = createInjector(elem1);
+	setAttribute(injector, 'a1', attrValue1(host));
 	setAttribute(injector, 'a2', 0);
-	ifAttr1(component, injector);
-	ifAttr2(component, injector);
-	ifAttr3(component, injector);
+	ifAttr1(host, injector);
+	ifAttr2(host, injector);
+	ifAttr3(host, injector);
 	setAttribute(injector, 'a3', '4');
 	finalizeAttributes(injector);
 
-	return () => {
-		setAttribute(injector, 'a1', attrValue1(component));
-		setAttribute(injector, 'a2', 0);
-		ifAttr1(component, injector);
-		ifAttr2(component, injector);
-		ifAttr3(component, injector);
-		setAttribute(injector, 'a3', '4');
-		finalizeAttributes(injector);
-	};
+	return updateComponent;
+}
+
+function updateComponent(host, scope) {
+	const { injector } = scope;
+	setAttribute(injector, 'a1', attrValue1(host));
+	setAttribute(injector, 'a2', 0);
+	ifAttr1(host, injector);
+	ifAttr2(host, injector);
+	ifAttr3(host, injector);
+	setAttribute(injector, 'a3', '4');
+	finalizeAttributes(injector);
 }
 
 function ifAttr1(host, injector) {

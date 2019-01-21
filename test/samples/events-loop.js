@@ -1,24 +1,25 @@
 import {
 	createInjector, elem, elemWithText, getProp,
 	addStaticEvent, getEventHandler,
-	mountIterator, updateIterator, insert, getScope
+	mountIterator, updateIterator, insert
 } from '../../runtime';
 
-export default function template(host) {
+export default function template(host, scope) {
 	const target = host.componentView;
 	const elem1 = target.appendChild(elem('ul'));
 	const injector = createInjector(elem1);
-	let scope = getScope(host);
 
 	scope.foo = 1;
-	const iter1 = mountIterator(host, injector, forEachExpr1, forEachBody1);
+	scope.iter1 = mountIterator(host, injector, forEachExpr1, forEachBody1);
 	scope.foo = 2;
 
-	return function updateTemplate() {
-		scope.foo = 1;
-		updateIterator(iter1);
-		scope.foo = 2;
-	};
+	return updateTemplate;
+}
+
+function updateTemplate(host, scope) {
+	scope.foo = 1;
+	updateIterator(scope.iter1);
+	scope.foo = 2;
 }
 
 function forEachExpr1(host) {
@@ -34,8 +35,10 @@ function forEachBody1(host, injector, scope) {
 	scope.bar = scope.foo;
 	addStaticEvent(elem1, 'click', onClick1);
 
-	return (host, injector, scope) => {
-		// NB in iterators, we should update scope since it’s re-created on each iteration
-		scope.bar = scope.foo;
-	};
+	return forEachBody1Update;
+}
+
+function forEachBody1Update(host, injector, scope) {
+	// NB in iterators, we should update scope since it’s re-created on each iteration
+	scope.bar = scope.foo;
 }

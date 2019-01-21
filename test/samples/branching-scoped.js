@@ -2,23 +2,25 @@ import {
 	createInjector, elem, elemWithText, text, insert, getProp, mountBlock, updateBlock
 } from '../../runtime';
 
-export default function(component) {
+export default function(component, scope) {
 	const target = component.componentView;
-	const injector = createInjector(target || component);
+	const injector = createInjector(target);
 	insert(injector, elemWithText('h1', 'Hello world', component));
 
-	const block1 = mountBlock(component, injector, ifBlock1);
+	scope.block1 = mountBlock(component, injector, ifBlock1);
 	const elem1 = insert(injector, elem('blockquote', component));
 	const injector2 = createInjector(elem1);
 	insert(injector2, elemWithText('p', 'Lorem ipsum 1', component));
 
-	const block2 = mountBlock(component, injector2, chooseBlock1);
+	scope.block2 = mountBlock(component, injector2, chooseBlock1);
 	insert(injector2, elemWithText('p', 'Lorem ipsum 2', component));
 
-	return () => {
-		updateBlock(block1);
-		updateBlock(block2);
-	};
+	return updateTemplate;
+}
+
+function updateTemplate(host, scope) {
+	updateBlock(scope.block1);
+	updateBlock(scope.block2);
 }
 
 function ifBlock1(host) {
@@ -49,16 +51,17 @@ function chooseBlock1(host) {
 	}
 }
 
-function ifContent1(host, injector) {
+function ifContent1(host, injector, scope) {
 	const p = insert(injector, elem('p', host));
 	p.appendChild(elemWithText('strong', 'top 1', host));
-	const block1 = mountBlock(host, injector, ifBlock2);
-	const block2 = mountBlock(host, injector, ifBlock3);
+	scope.block3 = mountBlock(host, injector, ifBlock2);
+	scope.block4 = mountBlock(host, injector, ifBlock3);
+	return ifContent1Update;
+}
 
-	return () => {
-		updateBlock(block1);
-		updateBlock(block2);
-	};
+function ifContent1Update(host, injector, scope) {
+	updateBlock(scope.block3);
+	updateBlock(scope.block4);
 }
 
 function ifContent2(host, injector) {

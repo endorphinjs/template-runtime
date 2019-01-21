@@ -2,65 +2,68 @@ import {
 	createInjector, elem, getProp, finalizeAttributes, setAttribute, addClass
 } from '../../runtime';
 
-export default function(component) {
-	const target = component.componentView;
+export default function(host, scope) {
+	const target = host.componentView;
 	const elem1 = target.appendChild(elem('main'));
-	const injector = createInjector(elem1);
+	const injector = scope.injector = createInjector(elem1);
 
-	setAttribute(injector, 'a1', attrValue1(component));
+	setAttribute(injector, 'a1', attrValue1(host));
 	elem1.setAttribute('a2', '0');
 
 	// TODO should set class attribute once, all `addClass()` calls should
 	// only add/remove class names, not replace entire class attribute
 	setAttribute(injector, 'class', 'foo');
 
-	ifAttr1(component, injector);
-	ifAttr2(component, injector);
-	ifAttr3(component, injector);
+	ifAttr1(host, injector);
+	ifAttr2(host, injector);
+	ifAttr3(host, injector);
 
-	addClass(injector, attrValue2(component));
+	addClass(injector, attrValue2(host));
 
 	finalizeAttributes(injector);
 
-	return () => {
-		setAttribute(injector, 'a1', attrValue1(target));
-		setAttribute(injector, 'class', 'foo');
-
-		ifAttr1(target, injector);
-		ifAttr2(target, injector);
-		ifAttr3(target, injector);
-
-		addClass(injector, attrValue2(component));
-		finalizeAttributes(injector);
-	};
+	return updateTemplate;
 }
 
-function ifAttr1(scope, injector) {
-	if (getProp(scope, 'c1')) {
+function updateTemplate(host, scope) {
+	const { injector } = scope;
+	setAttribute(injector, 'a1', attrValue1(host));
+	setAttribute(injector, 'class', 'foo');
+
+	ifAttr1(host, injector);
+	ifAttr2(host, injector);
+	ifAttr3(host, injector);
+
+	addClass(injector, attrValue2(host));
+	finalizeAttributes(injector);
+}
+
+function ifAttr1(host, injector) {
+	if (getProp(host, 'c1')) {
 		setAttribute(injector, 'a2', '1');
 	}
 }
 
-function ifAttr2(scope, injector) {
-	if (getProp(scope, 'c2')) {
+function ifAttr2(host, injector) {
+	if (getProp(host, 'c2')) {
 		addClass(injector, 'foo bar');
 	}
 }
 
-function ifAttr3(scope, injector) {
-	if (getProp(scope, 'c3')) {
-		setAttribute(injector, 'class', attrValue3(scope));
+function ifAttr3(host, injector) {
+	if (getProp(host, 'c3')) {
+		setAttribute(injector, 'class', attrValue3(host));
 	}
 }
 
-function attrValue1(scope) {
-	return getProp(scope, 'id');
+function attrValue1(host) {
+	return getProp(host, 'id');
 }
 
-function attrValue2(scope) {
-	return getProp(scope, 'classAddon');
+function attrValue2(host) {
+	return getProp(host, 'classAddon');
 }
 
-function attrValue3(scope) {
-	return 'bam ' + getProp(scope, 'id');
+function attrValue3(host) {
+	return 'bam ' + getProp(host, 'id');
 }

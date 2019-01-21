@@ -2,7 +2,7 @@ import assert from 'assert';
 import read from './assets/read-file';
 import document, { setCallback, clearCallbacks } from './assets/document';
 import parentTemplate from './samples/slot';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../runtime';
 
 describe('Slots', () => {
 	before(() => global.document = document);
@@ -59,7 +59,7 @@ describe('Slots', () => {
 		assert.equal(component.innerHTML, read('./fixtures/slot5.html'));
 
 		// Re-render the same template: keep data as-is
-		component.componentModel.update();
+		updateComponent(component);
 		assert.equal(component.innerHTML, read('./fixtures/slot5.html'));
 
 		// Dispose data rendered in iterator

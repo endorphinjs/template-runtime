@@ -1,7 +1,7 @@
 import assert from 'assert';
 import document from './assets/document';
 import template from './samples/props';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../runtime';
 
 describe('Props', () => {
 	before(() => global.document = document);
@@ -23,7 +23,7 @@ describe('Props', () => {
 		component.setProps({ id: 'bar', c1: true });
 		assert.deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
 
-		component.componentModel.update();
+		updateComponent(component);
 		assert.deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
 
 		component.setProps({ c1: false });

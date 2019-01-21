@@ -8,28 +8,30 @@ import * as SubComponent1 from './sub-component1';
 import * as SubComponent2 from './sub-component2';
 
 /**
- * @param {Component} component
+ * @param {Component} host
  */
-export default function myComponentTemplate(component) {
-	const target = component.componentView;
+export default function myComponentTemplate(host, scope) {
+	const target = host.componentView;
 	const injector = createInjector(target);
 
-	insert(injector, elemWithText('h1', 'Title', component));
+	insert(injector, elemWithText('h1', 'Title', host));
 
-	const subComponent1 = createComponent('sub-component1', SubComponent1, component);
-	const injector2 = subComponent1.componentModel.input;
-	setAttribute(injector2, 'foo', attrValue1(component));
-	insert(injector, subComponent1);
+	scope.subComponent1 = createComponent('sub-component1', SubComponent1, host);
+	scope.injector2 = scope.subComponent1.componentModel.input;
+	setAttribute(scope.injector2, 'foo', attrValue1(host));
+	insert(injector, scope.subComponent1);
 
-	const block1 = mountBlock(component, injector2, ifBlock1);
+	scope.block1 = mountBlock(host, scope.injector2, ifBlock1);
 
-	mountComponent(subComponent1);
+	mountComponent(scope.subComponent1);
 
-	return function myComponentUpdate() {
-		setAttribute(injector2, 'foo', attrValue1(component));
-		updateBlock(block1);
-		updateComponent(subComponent1);
-	};
+	return myComponentUpdate;
+}
+
+function myComponentUpdate(host, scope) {
+	setAttribute(scope.injector2, 'foo', attrValue1(host));
+	updateBlock(scope.block1);
+	updateComponent(scope.subComponent1);
 }
 
 export function props() {
@@ -45,19 +47,21 @@ function ifBlock1(host) {
 	}
 }
 
-function ifContent1(host, injector) {
-	const subComponent2 = createComponent('sub-component2', SubComponent2, host);
-	const injector2 = subComponent2.componentModel.input;
-	setAttribute(injector2, 'bar', attrValue2(host));
-	insert(injector, subComponent2);
-	insert(injector2, text('Hello world'));
+function ifContent1(host, injector, scope) {
+	scope.subComponent2 = createComponent('sub-component2', SubComponent2, host);
+	scope.injector3 = scope.subComponent2.componentModel.input;
+	setAttribute(scope.injector3, 'bar', attrValue2(host));
+	insert(injector, scope.subComponent2);
+	insert(scope.injector3, text('Hello world'));
 
-	mountComponent(subComponent2);
+	mountComponent(scope.subComponent2);
 
-	return () => {
-		setAttribute(injector2, 'bar', attrValue2(host));
-		updateComponent(subComponent2);
-	};
+	return ifContent1Update;
+}
+
+function ifContent1Update(host, injector, scope) {
+	setAttribute(scope.injector3, 'bar', attrValue2(host));
+	updateComponent(scope.subComponent2);
 }
 
 function attrValue1(host) {
