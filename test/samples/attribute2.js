@@ -18,7 +18,7 @@ export default function(component) {
 	ifAttr2(component, injector);
 	ifAttr3(component, injector);
 
-	addClass(injector, attrValue2(target));
+	addClass(injector, attrValue2(component));
 
 	finalizeAttributes(injector);
 
@@ -30,7 +30,7 @@ export default function(component) {
 		ifAttr2(target, injector);
 		ifAttr3(target, injector);
 
-		addClass(injector, attrValue2(target));
+		addClass(injector, attrValue2(component));
 		finalizeAttributes(injector);
 	};
 }

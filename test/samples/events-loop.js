@@ -25,8 +25,7 @@ function forEachExpr1(host) {
 	return getProp(host, 'items');
 }
 
-function forEachBody1(host, injector) {
-	let scope = getScope(host);
+function forEachBody1(host, injector, scope) {
 	function onClick1(event) {
 		getEventHandler(host, 'handleClick', this)(scope.index, scope.foo, scope.bar, event, host);
 	}
@@ -35,9 +34,8 @@ function forEachBody1(host, injector) {
 	scope.bar = scope.foo;
 	addStaticEvent(elem1, 'click', onClick1);
 
-	return () => {
+	return (host, injector, scope) => {
 		// NB in iterators, we should update scope since it’s re-created on each iteration
-		scope = getScope(host);
 		scope.bar = scope.foo;
 	};
 }
