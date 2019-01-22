@@ -1,7 +1,6 @@
 import {
 	createInjector, elem, text, insert, getProp, mountIterator, updateIterator,
-	enterScope, exitScope, getVar, assign, obj, updateText, addClass,
-	finalizeAttributes
+	getVar, updateText, addClass, finalizeAttributes, mountPartial, updatePartial
 } from '../../runtime';
 
 export default function partialsTemplate(host) {
@@ -16,33 +15,37 @@ export default function partialsTemplate(host) {
 	};
 }
 
-const partialButtonVars = {
+export const $partials = {
+	button: {
+		defaults: {
+			enabled: true,
+			pos: 0,
+			item: null
+		},
+		body: partialButton
+	}
+};
+
+export const partialButtonArgs = {
 	enabled: true,
 	pos: 0,
 	item: null
 };
 
-export function partialButton(host, injector, vars) {
-	enterScope(host, assign(obj(), partialButtonVars, vars));
-
+function partialButton(host, injector, scope) {
 	const li = insert(injector, elem('li', host));
-	const injector2 = createInjector(li);
-	ifAttr1(host, injector2);
+	scope.injector2 = createInjector(li);
+	ifAttr1(host, scope.injector2);
+	scope.text1 = insert(scope.injector2, text(scope.text1Value = scope.item));
+	finalizeAttributes(scope.injector2);
 
-	let text1Value = getVar(host, 'item');
-	const text1 = insert(injector2, text(text1Value));
+	return partialButtonUpdate;
+}
 
-	finalizeAttributes(injector2);
-
-	exitScope(host);
-
-	return function partialButtonUpdate(vars) {
-		enterScope(host, assign(obj(), partialButtonVars, vars));
-		ifAttr1(host, injector2);
-		text1Value = updateText(text1, getVar(host, 'item'), text1Value);
-		finalizeAttributes(injector2);
-		exitScope(host);
-	};
+function partialButtonUpdate(host, injector, scope) {
+	ifAttr1(host, scope.injector2);
+	scope.text1Value = updateText(scope.text1, scope.item, scope.text1Value);
+	finalizeAttributes(scope.injector2);
 }
 
 function ifAttr1(host, injector) {
@@ -55,17 +58,18 @@ function forEachExpr1(host) {
 	return getProp(host, 'items');
 }
 
-function forEachBody1(host, injector) {
-	const partial1 = getProp(host, 'partial:button') || partialButton;
-	const updatePartial = partial1(host, injector, {
-		item: getVar(host, 'value'),
-		enabled: getVar(host, 'index') !== 1
+function forEachBody1(host, injector, scope) {
+	scope.partial1 = mountPartial(host, injector, host.props['partial:button'] || $partials['button'], {
+		item: scope.value,
+		enabled: scope.index !== 1
 	});
 
-	return () => {
-		updatePartial({
-			item: getVar(host, 'value'),
-			enabled: getVar(host, 'index') !== 1
-		});
-	};
+	return forEachBody1Update;
+}
+
+function forEachBody1Update(host, injector, scope) {
+	updatePartial(scope.partial1, host.props['partial:button'] || $partials['button'], {
+		item: scope.value,
+		enabled: scope.index !== 1
+	});
 }

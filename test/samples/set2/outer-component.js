@@ -1,7 +1,6 @@
 import {
-	elem, text, elemWithText, insert, getProp, getVar, updateText,
-	createComponent, mountComponent, updateAttribute, updateProps,
-	enterScope, exitScope, obj, assign
+	elem, text, elemWithText, insert, getProp, updateText,
+	createComponent, mountComponent, updateAttribute, updateProps
 } from '../../../runtime';
 
 import * as InnerComponent from './inner-component';
@@ -9,54 +8,52 @@ import * as InnerComponent from './inner-component';
 /**
  * Local partials, used for runtime resolving
  */
-const $partials = {
-	'partial:item': partialMyItem
+export const $partials = {
+	'my-item': {
+		defaults: {
+			enabled: true,
+			pos: 0
+		},
+		body: partialMyItem
+	}
 };
 
-const partialMyItemVars = {
-	enabled: true,
-	pos: 0
-};
-
-export default function outerComponentTemplate(host) {
+export default function outerComponentTemplate(host, scope) {
 	const target = host.componentView;
 
 	target.appendChild(elemWithText('h2', 'Default partials', host));
-	const comp1 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
-	mountComponent(comp1, {
-		items: getProp(host, 'items1')
+	scope.comp1 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
+	mountComponent(scope.comp1, {
+		items: host.props.items1
 	});
 
 	target.appendChild(elemWithText('h2', 'Override partials', host));
-	const comp2 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
-	mountComponent(comp2, {
+	scope.comp2 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
+	mountComponent(scope.comp2, {
 		items: getProp(host, 'items2'),
-		'partial:item': $partials['partial:item']
+		'partial:item': $partials['my-item']
 	});
 
-	return function outerComponentTemplateUpdate() {
-		updateProps(comp1, { items: getProp(host, 'items1') });
-		updateProps(comp2, { items: getProp(host, 'items2') });
-	};
+	return outerComponentTemplateUpdate;
 }
 
-export function partialMyItem(host, injector, vars) {
-	enterScope(host, assign(obj(), partialMyItemVars, vars));
+function outerComponentTemplateUpdate(host, scope) {
+	updateProps(scope.comp1, { items: host.props.items1 });
+	updateProps(scope.comp2, { items: host.props.items2 });
+}
 
+function partialMyItem(host, injector, scope) {
 	const div = insert(injector, elem('div', host));
-	const span = div.appendChild(elem('span', host));
-	let attr1Value = updateAttribute(span, 'value', getVar(host, 'pos'));
-	let text1Value = getVar(host, 'item');
-	const textNode = span.appendChild(text(text1Value));
+	scope.span = div.appendChild(elem('span', host));
+	scope.attr1Value = updateAttribute(scope.span, 'value', scope.pos);
+	scope.textNode = scope.span.appendChild(text(scope.text1Value = scope.item));
 
-	exitScope(host);
+	return partialMyItemUpdate;
+}
 
-	return function partialMyItemUpdate() {
-		enterScope(host, assign(obj(), partialMyItemVars, vars));
-		attr1Value = updateAttribute(span, 'value', getVar(host, 'pos'), attr1Value);
-		text1Value = updateText(textNode, getVar(host, 'item'), text1Value);
-		exitScope(host);
-	};
+function partialMyItemUpdate(host, injector, scope) {
+	scope.attr1Value = updateAttribute(scope.span, 'value', scope.pos, scope.attr1Value);
+	scope.text1Value = updateText(scope.textNode, scope.item, scope.text1Value);
 }
 
 export function props() {

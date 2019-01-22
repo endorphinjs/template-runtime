@@ -3,7 +3,7 @@ import read from './assets/read-file';
 import document from './assets/document';
 import partials from './samples/partials';
 import * as OuterComponent from './samples/set2/outer-component';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../runtime';
 
 describe('Partials', () => {
 	before(() => global.document = document);
@@ -30,7 +30,7 @@ describe('Partials', () => {
 		assert.equal(component.innerHTML, read('./samples/set2/output1.html'));
 
 		// Re-render: keep everything as is
-		component.componentModel.update();
+		updateComponent(component);
 		assert.equal(component.innerHTML, read('./samples/set2/output1.html'));
 
 		component.setProps({
