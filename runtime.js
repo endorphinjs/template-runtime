@@ -11,7 +11,6 @@ export * from './lib/component';
 export * from './lib/inner-html';
 export * from './lib/dom';
 export * from './lib/partial';
-export { assign, obj } from './lib/utils';
 
 /**
  * Safe property getter
@@ -20,9 +19,10 @@ export { assign, obj } from './lib/utils';
  * @returns {*}
  */
 export function get(ctx) {
+	const hasMap = typeof Map !== 'undefined';
 	for (let i = 1, il = arguments.length, arg; ctx != null && i < il; i++) {
 		arg = arguments[i];
-		if (ctx instanceof Map) {
+		if (hasMap && ctx instanceof Map) {
 			ctx = ctx.get(arg);
 		} else {
 			ctx = ctx[arg];
