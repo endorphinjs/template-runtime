@@ -1,9 +1,10 @@
 {
   "name": "@endorphinjs/template-runtime",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "EndorphinJS template runtime, embedded with template bundles",
   "main": "./dist/runtime.cjs.js",
   "module": "./dist/runtime.es.js",
+  "types": "./types.d.ts",
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -wc",
@@ -17,11 +18,11 @@
     "endorphinjs"
   ],
   "author": "Sergey Chikuyonok <serge.che@gmail.com>",
-  "license": "APACHE-2.0",
+  "license": "Apache-2.0",
   "devDependencies": {
     "mocha": "^5.2.0",
     "reify": "^0.18.1",
-    "rollup": "^0.66.6"
+    "rollup": "^1.1.2"
   },
   "directories": {
     "lib": "lib",
