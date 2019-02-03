@@ -26,12 +26,6 @@ export const $partials = {
 	}
 };
 
-export const partialButtonArgs = {
-	enabled: true,
-	pos: 0,
-	item: null
-};
-
 function partialButton(host, injector, scope) {
 	const li = insert(injector, elem('li', host));
 	scope.injector2 = createInjector(li);
