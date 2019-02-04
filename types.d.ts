@@ -130,11 +130,6 @@ export interface ComponentDefinition {
 	};
 
 	/**
-	 * List of nested components used by current one
-	 */
-	components?: object;
-
-	/**
 	 * Public methods to attach to component element
 	 */
 	methods?: {
@@ -163,19 +158,18 @@ export interface ComponentDefinition {
 	/**
 	 * Component created
 	 */
-	init?(component: ComponentModel): void;
+	init?(component: Component): void;
 
 	/**
 	 * Component is about to be mounted (will be initially rendered)
-	 * @param component
 	 */
-	willMount?(component: ComponentModel): void;
+	willMount?(component: Component): void;
 
 	/**
 	 * Component just mounted (initially rendered)
 	 * @param component
 	 */
-	didMount?(component: ComponentModel): void;
+	didMount?(component: Component): void;
 
 	/**
 	 * Component is about to be updated (next renders after mount)
@@ -183,7 +177,7 @@ export interface ComponentDefinition {
 	 * @param changedProps List of changed properties which caused component update
 	 * @param changedState List of changed state which caused component update
 	 */
-	willUpdate?(component: ComponentModel, changedProps: ChangeSet, changedState: ChangeSet): void;
+	willUpdate?(component: Component, changedProps: ChangeSet, changedState: ChangeSet): void;
 
 	/**
 	 * Component just updated (next renders after mount)
@@ -191,7 +185,7 @@ export interface ComponentDefinition {
 	 * @param changedProps List of changed properties which caused component update
 	 * @param changedState List of changed state which caused component update
 	 */
-	didUpdate?(component: ComponentModel, changedProps: ChangeSet, changedState: ChangeSet): void;
+	didUpdate?(component: Component, changedProps: ChangeSet, changedState: ChangeSet): void;
 
 	/**
 	 * Component is about to be rendered. If `false` value is returned, component
@@ -200,7 +194,7 @@ export interface ComponentDefinition {
 	 * @param changedProps List of changed properties which caused component update
 	 * @param changedState List of changed state which caused component update
 	 */
-	willRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet): boolean;
+	willRender?(component: Component, changedProps?: ChangeSet, changedState?: ChangeSet): boolean;
 
 	/**
 	 * Component just rendered
@@ -208,17 +202,17 @@ export interface ComponentDefinition {
 	 * @param changedProps List of changed properties which caused component update
 	 * @param changedState List of changed state which caused component update
 	 */
-	didRender?(component: ComponentModel, changedProps?: ChangeSet, changedState?: ChangeSet): void;
+	didRender?(component: Component, changedProps?: ChangeSet, changedState?: ChangeSet): void;
 
 	/**
 	 * Component is about to be removed
 	 */
-	willUnmount?(component: ComponentModel): void;
+	willUnmount?(component: Component): void;
 
 	/**
 	 * Component was removed
 	 */
-	didUnmount?(component: ComponentModel): void;
+	didUnmount?(component: Component): void;
 }
 
 interface Injector {
