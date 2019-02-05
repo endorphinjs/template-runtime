@@ -31,3 +31,24 @@ export function get(ctx) {
 
 	return ctx;
 }
+
+/**
+ * Filter items from given collection that matches `fn` criteria and returns
+ * matched items
+ * @param {Component} host
+ * @param {Iterable} collection
+ * @param {Function} fn
+ * @returns {Array}
+ */
+export function filter(host, collection, fn) {
+	const result = [];
+	if (collection && collection.forEach) {
+		collection.forEach((value, key) => {
+			if (fn(host, value, key)) {
+				result.push(value);
+			}
+		});
+	}
+
+	return result;
+}
