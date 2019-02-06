@@ -20,6 +20,7 @@ describe('CSS scoping', () => {
 		// Initial render
 		mountComponent(component);
 		assert.equal(component.innerHTML, read('fixtures/branching1-scoped.html'));
+		assert(component.hasAttribute('end1-host'));
 
 		const [h1, p, div] = component.childNodes;
 
