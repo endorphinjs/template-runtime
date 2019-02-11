@@ -11,6 +11,7 @@ export * from './lib/component';
 export * from './lib/inner-html';
 export * from './lib/dom';
 export * from './lib/partial';
+export * from './lib/store';
 
 /**
  * Safe property getter

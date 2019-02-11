@@ -1,3 +1,5 @@
+import { Store } from './lib/store';
+
 export interface Component extends HTMLElement {
 	/**
 	 * Pointer to component view container. By default, it’s the same as component
@@ -26,9 +28,19 @@ export interface Component extends HTMLElement {
 	readonly refs: RefMap;
 
 	/**
+	 * A store, bound to current component
+	 */
+	readonly store?: Store;
+
+	/**
 	 * References to component slot containers. Default slot is available as `slot['']`
 	 */
 	readonly slots: RefMap;
+
+	/**
+	 * Reference to the root component of the current app
+	 */
+	readonly root?: Component;
 
 	/**
 	 * Updates props with data from `value`
@@ -115,6 +127,11 @@ export interface ComponentDefinition {
 	 * Initial state factory
 	 */
 	state?(): object;
+
+	/**
+	 * Returns instance of store used for components
+	 */
+	store?(): Store;
 
 	/**
 	 * Returns pointer to element where contents of component should be rendered
