@@ -1,11 +1,15 @@
 import {
 	elemWithText, text, insert, setAttribute, getProp,
 	createComponent, mountComponent, updateComponent, createInjector,
-	mountBlock, updateBlock
+	mountBlock, updateBlock, Store
 } from '../../../runtime';
 
 import * as SubComponent1 from './sub-component1';
 import * as SubComponent2 from './sub-component2';
+
+export function store() {
+	return new Store({ foo: 'bar' });
+}
 
 /**
  * @param {Component} host

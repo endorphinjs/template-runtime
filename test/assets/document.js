@@ -41,6 +41,8 @@ class NodeShim {
 				return siblings[ix + 1];
 			}
 		}
+
+		return null;
 	}
 
 	/** @returns {NodeShim} */
@@ -52,6 +54,7 @@ class NodeShim {
 				return siblings[ix - 1];
 			}
 		}
+		return null;
 	}
 
 	get className() {
@@ -276,6 +279,29 @@ class ElementShim extends NodeShim {
 	set innerHTML(value) {
 		this.childNodes.length = 0;
 		parseHTML(this, value);
+	}
+
+	/**
+	 * Finds node by given name
+	 * @param {string} name
+	 * @returns {ElementShim}
+	 */
+	findByName(name) {
+		let ctx = this.firstChild, child;
+		while (ctx) {
+			if (ctx.nodeName === name) {
+				return ctx;
+			}
+
+			if (ctx.nodeType === ctx.ELEMENT_NODE) {
+				child = ctx.findByName(name);
+				if (child) {
+					return child;
+				}
+			}
+
+			ctx = ctx.nextSibling;
+		}
 	}
 
 	toString(indent='\t', level=0) {
