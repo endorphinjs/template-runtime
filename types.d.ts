@@ -98,9 +98,13 @@ export interface ComponentModel {
 
 	/**
 	 * List of attached event handlers
-	 * @private
 	 */
 	events: AttachedEventsMap;
+
+	/** Slot output for component */
+	slots: {
+		[name: string]: BlockContext
+	}
 
 	/**
 	 * Indicates that component was mounted
@@ -308,4 +312,13 @@ interface ChangeSet {
 
 interface UpdateView {
 	(): void;
+}
+
+interface BlockContext {
+	component: Component;
+	injector: Injector;
+	block: Block,
+	get: Function;
+	fn?: Function,
+	update?: Function,
 }

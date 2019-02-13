@@ -1,6 +1,6 @@
 import {
 	elem, elemWithText, text, insert,
-	mountBlock, updateBlock, createInjector, renderSlot, getProp
+	mountBlock, updateBlock, createInjector, mountSlot, getProp
 } from '../../../runtime';
 
 /**
@@ -14,15 +14,13 @@ export default function subComponent1Template(host, scope) {
 
 	scope.block1 = mountBlock(host, injector, ifBlock1);
 	const slot1 = insert(injector, elem('slot'));
-	const injector2 = createInjector(slot1);
-	scope.block2 = mountBlock(host, injector2, slotBlock1);
+	mountSlot(host, '', slot1, slotContent1);
 
 	return subComponent1Update;
 }
 
 function subComponent1Update(host, scope) {
 	updateBlock(scope.block1);
-	updateBlock(scope.block2);
 }
 
 function ifBlock1(host) {
@@ -33,12 +31,6 @@ function ifBlock1(host) {
 
 function ifContent1(host, injector) {
 	insert(injector, elemWithText('p', 'foo enabled', host));
-}
-
-function slotBlock1(host, injector) {
-	if (!renderSlot(injector.parentNode, host.slots)) {
-		return slotContent1;
-	}
 }
 
 function slotContent1(host, injector) {

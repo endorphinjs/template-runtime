@@ -1,7 +1,7 @@
 import {
-	createInjector, mountBlock, updateBlock, renderSlot, setAttribute,
+	createInjector, mountBlock, updateBlock, setAttribute,
 	elemWithText, elem, insert, createComponent, mountComponent, updateComponent,
-	getProp, mountIterator, updateIterator
+	getProp, mountIterator, updateIterator, mountSlot
 } from '../../runtime';
 
 export default function template(host, scope) {
@@ -19,7 +19,6 @@ export default function template(host, scope) {
 	scope.iter1 = mountIterator(host, scope.subInjector, forEachExpr1, forEachBody1);
 	scope.block3 = mountBlock(host, scope.subInjector, ifBlock3);
 
-	// TODO think about proper component rendering contract
 	mountComponent(scope.subComponent);
 
 	return updateTemplate;
@@ -43,12 +42,12 @@ function subComponentTemplate(host, scope) {
 	const injector2 = createInjector(elem1);
 	const slot1 = insert(injector2, elem('slot'));
 	slot1.setAttribute('name', 'header');
-	const injector3 = createInjector(slot1);
-	scope.block1 = mountBlock(host, injector3, slotBlock1);
+	mountSlot(host, 'header', slot1, slotContent1);
+
 	insert(injector2, elemWithText('p', 'content'));
 
-	scope.slot2 = insert(injector2, elem('slot'));
-	renderSlot(scope.slot2, host.slots);
+	const slot2 = insert(injector2, elem('slot'));
+	mountSlot(host, '', slot2);
 
 	scope.block2 = mountBlock(host, injector2, ifBlock4);
 	scope.block3 = mountBlock(host, injector2, ifBlock5);
@@ -57,8 +56,6 @@ function subComponentTemplate(host, scope) {
 }
 
 function subComponentTemplateUpdate(host, scope) {
-	updateBlock(scope.block1);
-	renderSlot(scope.slot2, host.slots);
 	updateBlock(scope.block2);
 	updateBlock(scope.block3);
 }
@@ -108,7 +105,7 @@ function ifBlock4(scope) {
 function ifContent4(host, injector) {
 	const elem = insert(injector, elem('slot'));
 	elem.setAttribute('slot', 'error');
-	renderSlot(elem, host.slots);
+	mountSlot(host, 'error', elem);
 	// NB: no default value in slot, no need to update anything
 }
 
@@ -118,11 +115,10 @@ function ifBlock5(host) {
 	}
 }
 
-function ifContent5(host, injector, scope) {
+function ifContent5(host, injector) {
 	const slot = insert(injector, elem('slot'));
 	slot.setAttribute('name', 'footer');
-	const injector2 = createInjector(slot);
-	scope.block10 = mountBlock(host, injector2, slotBlock2);
+	mountSlot(host, 'footer', slot, slotContent2);
 
 	return ifContent5Update;
 }
@@ -141,20 +137,8 @@ function forEachBody1(host, injector) {
 	slot.setAttribute('slot', 'footer');
 }
 
-function slotBlock1(host, injector) {
-	if (!renderSlot(injector.parentNode, host.slots)) {
-		return slotContent1;
-	}
-}
-
 function slotContent1(host, injector) {
 	insert(injector, elemWithText('h2', 'Default header'));
-}
-
-function slotBlock2(host, injector) {
-	if (!renderSlot(injector.parentNode, host.slots)) {
-		return slotContent2;
-	}
 }
 
 function slotContent2(host, injector) {
