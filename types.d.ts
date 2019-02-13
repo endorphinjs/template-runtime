@@ -97,10 +97,10 @@ export interface ComponentModel {
 	update?: UpdateView;
 
 	/**
-	 * Detaches all static events bound to current component
+	 * List of attached event handlers
 	 * @private
 	 */
-	detachEvents(): void;
+	events: AttachedEventsMap;
 
 	/**
 	 * Indicates that component was mounted
@@ -288,6 +288,13 @@ interface Block {
 	 * Amount of items in current block
 	 */
 	size: number;
+}
+
+interface AttachedEventsMap {
+	[event: string]: {
+		listeners: Function[];
+		handler: Function;
+	}
 }
 
 interface RefMap {
