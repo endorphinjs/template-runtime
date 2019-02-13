@@ -151,8 +151,6 @@ describe('Slotted injector', () => {
 		assert.deepEqual(children(injector.slots['']), []);
 		assert.deepEqual(children(injector.slots['slot1']), []);
 		assert.equal(block1.size, 0);
-		assert.equal(block2.size, 0);
-		assert.equal(block3.size, 0);
 		assert(injector.items.includes(block1));
 		assert(!injector.items.includes(block2));
 		assert(!injector.items.includes(block3));
@@ -203,7 +201,6 @@ describe('Slotted injector', () => {
 		assert.deepEqual(children(injector.slots['slot1']), []);
 		assert.equal(block1.size, 1);
 		assert.equal(block2.size, 0);
-		assert.equal(block3.size, 0);
 		assert(injector.items.includes(block1));
 		assert(!injector.items.includes(block2));
 		assert(!injector.items.includes(block3));

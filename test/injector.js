@@ -125,8 +125,6 @@ describe('Injector', () => {
 
 		assert.deepEqual(children(parent), []);
 		assert.equal(block1.size, 0);
-		assert.equal(block2.size, 0);
-		assert.equal(block3.size, 0);
 		assert(injector.items.includes(block1));
 		assert(!injector.items.includes(block2));
 		assert(!injector.items.includes(block3));
