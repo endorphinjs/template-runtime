@@ -139,9 +139,8 @@ export interface ComponentDefinition {
 
 	/**
 	 * Returns pointer to element where contents of component should be rendered
-	 * @param parent
 	 */
-	componentView?(parent?: Component | Element): Element;
+	componentView?(component: Component, parentComponent?: Component | Element): Element;
 
 	/**
 	 * Listeners for events bubbling from component contents

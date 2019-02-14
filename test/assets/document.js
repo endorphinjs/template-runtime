@@ -7,7 +7,7 @@ class NodeShim {
 	constructor(name, type, value) {
 		this.nodeName = name;
 		this.nodeType = type || 0;
-		this.nodeValue = value || null;
+		this.nodeValue = value;
 		this.style = { animation: '' };
 
 		/** @type {NodeShim[]} */
