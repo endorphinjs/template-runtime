@@ -1,6 +1,6 @@
 import assert from 'assert';
 import document from './assets/document';
-import template from './samples/inner-html';
+import template, { cssScope } from './samples/inner-html';
 import { createComponent, mountComponent } from '../runtime';
 
 describe('Inner HTML', () => {
@@ -10,7 +10,7 @@ describe('Inner HTML', () => {
 	it('render and update inner HTML', () => {
 		const component = createComponent('my-component', {
 			default: template,
-			cssScope: 'ih',
+			cssScope,
 			props() {
 				return { c1: false, c2: false, html: '<main>hello <b>world</b></main>' };
 			}

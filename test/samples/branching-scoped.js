@@ -2,18 +2,20 @@ import {
 	createInjector, elem, elemWithText, text, insert, getProp, mountBlock, updateBlock
 } from '../../runtime';
 
+const cssScope = 'end1';
+
 export default function(component, scope) {
 	const target = component.componentView;
 	const injector = createInjector(target);
-	insert(injector, elemWithText('h1', 'Hello world', component));
+	insert(injector, elemWithText('h1', 'Hello world', cssScope));
 
 	scope.block1 = mountBlock(component, injector, ifBlock1);
-	const elem1 = insert(injector, elem('blockquote', component));
+	const elem1 = insert(injector, elem('blockquote', cssScope));
 	const injector2 = createInjector(elem1);
-	insert(injector2, elemWithText('p', 'Lorem ipsum 1', component));
+	insert(injector2, elemWithText('p', 'Lorem ipsum 1', cssScope));
 
 	scope.block2 = mountBlock(component, injector2, chooseBlock1);
-	insert(injector2, elemWithText('p', 'Lorem ipsum 2', component));
+	insert(injector2, elemWithText('p', 'Lorem ipsum 2', cssScope));
 
 	return updateTemplate;
 }
@@ -52,8 +54,8 @@ function chooseBlock1(host) {
 }
 
 function ifContent1(host, injector, scope) {
-	const p = insert(injector, elem('p', host));
-	p.appendChild(elemWithText('strong', 'top 1', host));
+	const p = insert(injector, elem('p', cssScope));
+	p.appendChild(elemWithText('strong', 'top 1', cssScope));
 	scope.block3 = mountBlock(host, injector, ifBlock2);
 	scope.block4 = mountBlock(host, injector, ifBlock3);
 	return ifContent1Update;
@@ -65,22 +67,22 @@ function ifContent1Update(host, injector, scope) {
 }
 
 function ifContent2(host, injector) {
-	insert(injector, elemWithText('div', 'top 2', host));
+	insert(injector, elemWithText('div', 'top 2', cssScope));
 }
 
 function ifContent3(host, injector) {
-	insert(injector, elemWithText('div', 'top 3', host));
-	insert(injector, text('top 3.1', host));
+	insert(injector, elemWithText('div', 'top 3', cssScope));
+	insert(injector, text('top 3.1'));
 }
 
 function chooseContent1(host, injector) {
-	insert(injector, elemWithText('div', 'sub 1', host));
+	insert(injector, elemWithText('div', 'sub 1', cssScope));
 }
 
 function chooseContent2(host, injector) {
-	insert(injector, elemWithText('div', 'sub 2', host));
+	insert(injector, elemWithText('div', 'sub 2', cssScope));
 }
 
 function chooseContent3(host, injector) {
-	insert(injector, elemWithText('div', 'sub 3', host));
+	insert(injector, elemWithText('div', 'sub 3', cssScope));
 }

@@ -27,7 +27,7 @@ export const $partials = {
 };
 
 function partialButton(host, injector, scope) {
-	const li = insert(injector, elem('li', host));
+	const li = insert(injector, elem('li'));
 	scope.injector2 = createInjector(li);
 	ifAttr1(host, scope.injector2);
 	scope.text1 = insert(scope.injector2, text(scope.text1Value = scope.item));

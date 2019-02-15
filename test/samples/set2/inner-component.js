@@ -6,7 +6,7 @@ import {
 
 export default function innerComponentTemplate(host, scope) {
 	const target = host.componentView;
-	target.appendChild(elemWithText('h3', 'Inner component', host));
+	target.appendChild(elemWithText('h3', 'Inner component'));
 	const ul = target.appendChild(elem('ul'));
 	const injector2 = createInjector(ul);
 	scope.iter1 = mountIterator(host, injector2, forEachExpr1, forEachBody1);
@@ -29,7 +29,7 @@ export const $partials = {
 };
 
 function partialItem(host, injector, scope) {
-	scope.li = insert(injector, elem('li', host));
+	scope.li = insert(injector, elem('li'));
 	const injector2 = createInjector(scope.li);
 	scope.attr1Value = updateAttribute(scope.li, 'pos', scope.pos);
 	scope.text1 = insert(injector2, text(scope.text1Value = scope.item));

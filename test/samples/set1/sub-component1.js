@@ -10,7 +10,7 @@ export default function subComponent1Template(host, scope) {
 	const target = host.componentView;
 	const injector = createInjector(target);
 
-	insert(injector, elemWithText('h2', 'Sub component1', host));
+	insert(injector, elemWithText('h2', 'Sub component1'));
 
 	scope.block1 = mountBlock(host, injector, ifBlock1);
 	const slot1 = insert(injector, elem('slot'));
@@ -30,7 +30,7 @@ function ifBlock1(host) {
 }
 
 function ifContent1(host, injector) {
-	insert(injector, elemWithText('p', 'foo enabled', host));
+	insert(injector, elemWithText('p', 'foo enabled'));
 }
 
 function slotContent1(host, injector) {

@@ -6,5 +6,5 @@ import { elemWithText } from '../../../runtime';
 export default function subComponent2Template(component) {
 	const target = component.componentView;
 
-	target.appendChild(elemWithText('p', 'sub-component 1', component));
+	target.appendChild(elemWithText('p', 'sub-component 1'));
 }

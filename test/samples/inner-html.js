@@ -3,6 +3,8 @@ import {
 	mountInnerHTML, updateInnerHTML, mountBlock, updateBlock
 } from '../../runtime';
 
+export const cssScope = 'ih';
+
 export default function(host, scope) {
 	const injector = createInjector(host.componentView);
 	scope.block1 = mountBlock(host, injector, ifBlock1);
@@ -29,7 +31,7 @@ function ifBlock1(host) {
 }
 
 function ifContent1(host, injector) {
-	insert(injector, elemWithText('div', 'foo', host));
+	insert(injector, elemWithText('div', 'foo', cssScope));
 }
 
 function ifBlock2(host) {
@@ -39,5 +41,5 @@ function ifBlock2(host) {
 }
 
 function ifContent2(host, injector) {
-	insert(injector, elemWithText('p', 'bar', host));
+	insert(injector, elemWithText('p', 'bar', cssScope));
 }

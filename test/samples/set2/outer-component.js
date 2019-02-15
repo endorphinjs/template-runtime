@@ -21,13 +21,13 @@ export const $partials = {
 export default function outerComponentTemplate(host, scope) {
 	const target = host.componentView;
 
-	target.appendChild(elemWithText('h2', 'Default partials', host));
+	target.appendChild(elemWithText('h2', 'Default partials'));
 	scope.comp1 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
 	mountComponent(scope.comp1, {
 		items: host.props.items1
 	});
 
-	target.appendChild(elemWithText('h2', 'Override partials', host));
+	target.appendChild(elemWithText('h2', 'Override partials'));
 	scope.comp2 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
 	mountComponent(scope.comp2, {
 		items: getProp(host, 'items2'),
@@ -43,8 +43,8 @@ function outerComponentTemplateUpdate(host, scope) {
 }
 
 function partialMyItem(host, injector, scope) {
-	const div = insert(injector, elem('div', host));
-	scope.span = div.appendChild(elem('span', host));
+	const div = insert(injector, elem('div'));
+	scope.span = div.appendChild(elem('span'));
 	scope.attr1Value = updateAttribute(scope.span, 'value', scope.pos);
 	scope.textNode = scope.span.appendChild(text(scope.text1Value = scope.item));
 

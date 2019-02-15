@@ -18,7 +18,7 @@ export default function myComponentTemplate(host, scope) {
 	const target = host.componentView;
 	const injector = createInjector(target);
 
-	insert(injector, elemWithText('h1', 'Title', host));
+	insert(injector, elemWithText('h1', 'Title'));
 
 	scope.subComponent1 = createComponent('sub-component1', SubComponent1, host);
 	scope.injector2 = scope.subComponent1.componentModel.input;
