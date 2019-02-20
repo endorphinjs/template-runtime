@@ -48,9 +48,9 @@ describe('Component lifecycle', () => {
 
 		component.setProps({ p2: 'p2Value0' });
 		assert.deepEqual(dfn1.calls.willRender, [{
-			p1: { next: 'p1Value0', prev: undefined }
+			p1: { current: 'p1Value0', prev: undefined }
 		}, {
-			p2: { next: 'p2Value0', prev: undefined}
+			p2: { current: 'p2Value0', prev: undefined}
 		}]);
 		assertCalls(dfn1, {
 			init: 1,

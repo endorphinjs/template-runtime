@@ -323,7 +323,7 @@ declare global {
 
 	interface Changes {
 		[key: string]: {
-			next: any,
+			current: any,
 			prev: any
 		}
 	};
