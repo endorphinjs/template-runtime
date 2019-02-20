@@ -9,7 +9,7 @@ declare global {
 		 * Pointer to component view container. By default, it’s the same as component
 		 * element, but for native Web Components it points to shadow root
 		 */
-		componentView: Element | ShadowRoot;
+		componentView: Element;
 
 		/**
 		 * Internal component model
@@ -150,7 +150,7 @@ declare global {
 		 * Listeners for events bubbling from component contents
 		 */
 		events?: {
-			[type: string]: (event: Event, component: Component) => void;
+			[type: string]: (component: Component, event: Event, target: HTMLElement) => void;
 		};
 
 		/**
@@ -196,12 +196,17 @@ declare global {
 		didMount?(component: Component): void;
 
 		/**
+		 * Component props changed
+		 */
+		didChange?(component: Component, changes: Changes): void;
+
+		/**
 		 * Component is about to be updated (next renders after mount)
 		 * @param component
 		 * @param changedProps List of changed properties which caused component update
 		 * @param changedState List of changed state which caused component update
 		 */
-		willUpdate?(component: Component, changedProps: ChangeSet, changedState: ChangeSet): void;
+		willUpdate?(component: Component, changes: Changes): void;
 
 		/**
 		 * Component just updated (next renders after mount)
@@ -209,7 +214,7 @@ declare global {
 		 * @param changedProps List of changed properties which caused component update
 		 * @param changedState List of changed state which caused component update
 		 */
-		didUpdate?(component: Component, changedProps: ChangeSet, changedState: ChangeSet): void;
+		didUpdate?(component: Component, changes: Changes): void;
 
 		/**
 		 * Component is about to be rendered. If `false` value is returned, component
@@ -218,7 +223,7 @@ declare global {
 		 * @param changedProps List of changed properties which caused component update
 		 * @param changedState List of changed state which caused component update
 		 */
-		willRender?(component: Component, changedProps?: ChangeSet, changedState?: ChangeSet): boolean;
+		willRender?(component: Component, changes: Changes): boolean;
 
 		/**
 		 * Component just rendered
@@ -226,7 +231,7 @@ declare global {
 		 * @param changedProps List of changed properties which caused component update
 		 * @param changedState List of changed state which caused component update
 		 */
-		didRender?(component: Component, changedProps?: ChangeSet, changedState?: ChangeSet): void;
+		didRender?(component: Component, changes: Changes): void;
 
 		/**
 		 * Component is about to be removed
@@ -315,6 +320,13 @@ declare global {
 		prev: object;
 		cur: object;
 	}
+
+	interface Changes {
+		[key: string]: {
+			next: any,
+			prev: any
+		}
+	};
 
 	interface UpdateView {
 		(host: Component, scope: object): void;

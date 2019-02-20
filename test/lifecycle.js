@@ -22,6 +22,7 @@ describe('Component lifecycle', () => {
 
 		assertCalls(dfn1, {
 			init: 1,
+			didChange: 1,
 			willMount: 1,
 			didMount: 1,
 			willUpdate: 0,
@@ -34,6 +35,7 @@ describe('Component lifecycle', () => {
 
 		assertCalls(dfn2, {
 			init: 1,
+			didChange: 1,
 			willMount: 1,
 			didMount: 1,
 			willUpdate: 0,
@@ -45,9 +47,14 @@ describe('Component lifecycle', () => {
 		});
 
 		component.setProps({ p2: 'p2Value0' });
-		assert.deepEqual(dfn1.calls.willRender, [{ p1: 'p1Value0' }, { p2: 'p2Value0' }]);
+		assert.deepEqual(dfn1.calls.willRender, [{
+			p1: { next: 'p1Value0', prev: undefined }
+		}, {
+			p2: { next: 'p2Value0', prev: undefined}
+		}]);
 		assertCalls(dfn1, {
 			init: 1,
+			didChange: 2,
 			willMount: 1,
 			didMount: 1,
 			willUpdate: 1,
@@ -63,6 +70,7 @@ describe('Component lifecycle', () => {
 		// component only
 		assertCalls(dfn2, {
 			init: 1,
+			didChange: 1,
 			willMount: 1,
 			didMount: 1,
 			willUpdate: 0,
@@ -76,6 +84,7 @@ describe('Component lifecycle', () => {
 		component.setProps({ p2: null });
 		assertCalls(dfn1, {
 			init: 1,
+			didChange: 3,
 			willMount: 1,
 			didMount: 1,
 			willUpdate: 2,
@@ -174,7 +183,7 @@ function createDefinition(template) {
 		calls: {},
 		default: template
 	};
-	['init', 'willMount', 'didMount', 'willUpdate', 'didUpdate', 'willRender', 'didRender', 'willUnmount', 'didUnmount'].forEach(name => {
+	['init', 'willMount', 'didMount', 'didChange', 'willUpdate', 'didUpdate', 'willRender', 'didRender', 'willUnmount', 'didUnmount'].forEach(name => {
 		definition.calls[name] = [];
 		definition[name] = (host, changes) => {
 			definition.calls[name].push(changes);
