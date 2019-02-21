@@ -50,7 +50,7 @@ function forEachBody1Update(host, injector, scope) {
 	updateBlock(scope.block2);
 }
 
-function ifBlock2(host, injector, scope) {
+function ifBlock2(host, scope) {
 	if (get(scope.value, 'marked')) {
 		return ifContent2;
 	}
