@@ -30,7 +30,7 @@ function partialButton(host, injector, scope) {
 	const li = insert(injector, elem('li'));
 	scope.injector2 = createInjector(li);
 	ifAttr1(host, scope.injector2);
-	scope.text1 = insert(scope.injector2, text(scope.text1Value = scope.item));
+	scope.text1 = insert(scope.injector2, text(scope.item));
 	finalizeAttributes(scope.injector2);
 
 	return partialButtonUpdate;
@@ -38,7 +38,7 @@ function partialButton(host, injector, scope) {
 
 function partialButtonUpdate(host, injector, scope) {
 	ifAttr1(host, scope.injector2);
-	scope.text1Value = updateText(scope.text1, scope.item, scope.text1Value);
+	updateText(scope.text1, scope.item);
 	finalizeAttributes(scope.injector2);
 }
 

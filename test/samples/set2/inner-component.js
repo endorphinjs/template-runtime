@@ -32,14 +32,14 @@ function partialItem(host, injector, scope) {
 	scope.li = insert(injector, elem('li'));
 	const injector2 = createInjector(scope.li);
 	scope.attr1Value = updateAttribute(scope.li, 'pos', scope.pos);
-	scope.text1 = insert(injector2, text(scope.text1Value = scope.item));
+	scope.text1 = insert(injector2, text(scope.item));
 
 	return partialButtonUpdate;
 }
 
 function partialButtonUpdate(host, injector, scope) {
 	scope.attr1Value = updateAttribute(scope.li, 'pos', scope.pos, scope.attr1Value);
-	scope.text1Value = updateText(scope.text1, scope.item, scope.text1Value);
+	updateText(scope.text1, scope.item);
 }
 
 function forEachExpr1(host) {

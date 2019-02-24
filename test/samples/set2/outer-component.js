@@ -46,14 +46,14 @@ function partialMyItem(host, injector, scope) {
 	const div = insert(injector, elem('div'));
 	scope.span = div.appendChild(elem('span'));
 	scope.attr1Value = updateAttribute(scope.span, 'value', scope.pos);
-	scope.textNode = scope.span.appendChild(text(scope.text1Value = scope.item));
+	scope.textNode = scope.span.appendChild(text(scope.item));
 
 	return partialMyItemUpdate;
 }
 
 function partialMyItemUpdate(host, injector, scope) {
 	scope.attr1Value = updateAttribute(scope.span, 'value', scope.pos, scope.attr1Value);
-	scope.text1Value = updateText(scope.textNode, scope.item, scope.text1Value);
+	updateText(scope.textNode, scope.item);
 }
 
 export function props() {
