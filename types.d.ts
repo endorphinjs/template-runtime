@@ -346,6 +346,45 @@ declare global {
 		update?: Function,
 	}
 
+	interface IteratorContext {
+		host: Component;
+		injector: Injector;
+		get: Function;
+		body: Function;
+		block: Block;
+		index: number;
+		updated: number;
+		rendered: Array<[Block, Function, Object]>;
+	}
+
+	interface KeyIteratorContext extends IteratorContext {
+		keyExpr: Function;
+		used: {
+			[key: string]: Array<[Block, Function, Object]>
+		}
+		rendered: {
+			[key: string]: Array<[Block, Function, Object]>
+		}
+	}
+
+	interface InnerHtmlContext {
+		host: Component;
+		injector: Injector;
+		block: Block;
+		get: Function;
+		code?: string;
+		slotName: string;
+	}
+
+	interface PartialContext {
+		host: Component;
+		injector: Injector;
+		block: Block,
+		update?: Function,
+		scope?: object,
+		partial?: object
+	}
+
 	interface StoreUpdateHandler {
 		(state: object, changes: object): void
 	}
