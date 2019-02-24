@@ -104,6 +104,13 @@ declare global {
 		}
 
 		/**
+		 * Slots update status
+		 */
+		slotStatus?: {
+			[name: string]: number
+		};
+
+		/**
 		 * Indicates that component was mounted
 		 * @private
 		 */
@@ -273,7 +280,9 @@ declare global {
 		/**
 		 * Slots container
 		 */
-		slots: object;
+		slots?: {
+			[name: string]: DocumentFragment | Element
+		};
 
 		/**
 		 * Pending attributes updates

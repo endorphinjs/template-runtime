@@ -20,6 +20,7 @@
   "author": "Sergey Chikuyonok <serge.che@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@endorphinjs/template-compiler": "^0.1.10",
     "mocha": "^5.2.0",
     "reify": "^0.18.1",
     "rollup": "^1.1.2"
