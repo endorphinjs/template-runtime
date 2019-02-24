@@ -2,7 +2,7 @@ import assert from 'assert';
 import document from './assets/document';
 import attribute1 from './samples/attribute1';
 import attribute2 from './samples/attribute2';
-import { createComponent, mountComponent, updateComponent } from '../runtime';
+import { createComponent, mountComponent, renderComponent } from '../runtime';
 
 describe('Attribute', () => {
 	before(() => global.document = document);
@@ -27,6 +27,7 @@ describe('Attribute', () => {
 		assert.equal(component.innerHTML, '<main a1="foo2" a2="2" a3="4"></main>');
 
 		// Re-render: should keep previous result
+		renderComponent(component);
 		assert.equal(component.innerHTML, '<main a1="foo2" a2="2" a3="4"></main>');
 
 		component.setProps({ c1: false, c2: false });
@@ -50,14 +51,14 @@ describe('Attribute', () => {
 		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		// Re-render: retain the same result
-		updateComponent(component);
+		renderComponent(component);
 		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		component.setProps({ c1: true, c2: true });
 		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		// Re-render: should retain previous result
-		updateComponent(component);
+		renderComponent(component);
 		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		component.setProps({ c3: true });

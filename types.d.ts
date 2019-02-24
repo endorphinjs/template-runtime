@@ -51,14 +51,14 @@ declare global {
 		 * @param value Updated props
 		 * @returns Final props
 		 */
-		setProps(value: object, silent?: boolean): void;
+		setProps(value: object): void;
 
 		/**
 		 * Updates state with data from `value`
 		 * @param value Updated values
 		 * @returns Final state
 		 */
-		setState(value: object, silent: boolean): void;
+		setState(value: object): void;
 	}
 
 	/**
@@ -120,6 +120,11 @@ declare global {
 		 * @private
 		 */
 		rendering: boolean;
+
+		/**
+		 * Default props values
+		 */
+		defaultProps: object;
 	}
 
 	/**
