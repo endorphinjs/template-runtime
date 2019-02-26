@@ -16,10 +16,10 @@ export default function $$template0(host, scope) {
 
 function $$template0Update(host, scope) {
 	updateText(scope.$_text0, host.props.header);
-	let updated = 0;
-	updated |= updateText(scope.$_text1, host.props.content);
-	markSlotUpdate(scope.$_innerComponent0, "", updated);
+	let s__innerComponent0 = 0;
+	s__innerComponent0 |= updateText(scope.$_text1, host.props.content);
+	markSlotUpdate(scope.$_innerComponent0, "", s__innerComponent0);
 	updateComponent(scope.$_innerComponent0);
 	updateText(scope.$_text2, host.props.footer);
-	return updated;
+	return s__innerComponent0;
 }
