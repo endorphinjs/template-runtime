@@ -105,7 +105,7 @@ describe('Slot Update Hook', () => {
 
 		component.setProps({ enabled: true, footer: 'Footer 3' });
 		assert.equal(slotCallbacks.length, 6);
-		assert.deepEqual(slotCallbacks[4], ['', 'Content 1\n\t\t\tSubContent 1']);
-		assert.deepEqual(slotCallbacks[5], ['footer', 'Footer 3']);
+		assert.deepEqual(slotCallbacks[4], ['footer', 'Footer 3']);
+		assert.deepEqual(slotCallbacks[5], ['', 'Content 1\n\t\t\tSubContent 1']);
 	});
 });
