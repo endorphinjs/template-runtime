@@ -249,6 +249,10 @@ class DocumentFragmentShim extends NodeShim {
 		super('#document-fragment', NodeShim.DOCUMENT_FRAGMENT_NODE);
 	}
 
+	get textContent() {
+		return this.childNodes.map(node => node.textContent).join('');
+	}
+
 	toString(indent='\t', level=0) {
 		const prefix = indent.repeat(level);
 		return `${prefix}${this.nodeName}\n${stringifyChildren(this, indent, level + 1)}`;
