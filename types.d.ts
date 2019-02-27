@@ -3,6 +3,7 @@ import { Store } from './lib/store';
 declare global {
 	type InjectorNode = Node;
 	type InjectorItem = any;
+	type Disposable = Component | Block;
 
 	interface Component extends Element {
 		/**
@@ -132,6 +133,11 @@ declare global {
 		 * Default props values
 		 */
 		defaultProps: object;
+
+		/**
+		 * Items to explicitly dispose
+		 */
+		dispose: Disposable[]
 	}
 
 	/**
@@ -317,6 +323,9 @@ declare global {
 		 * Amount of items in current block
 		 */
 		size: number;
+
+		/** Items to explicitly dispose in current block */
+		dispose: Disposable[];
 	}
 
 	interface AttachedEventsMap {
@@ -346,21 +355,21 @@ declare global {
 		(host: Component, scope: object): void;
 	}
 
-	interface BlockContext {
-		component: Component;
+	interface BaseContext {
+		host: Component;
 		injector: Injector;
-		block: Block,
+		block: Block;
+	}
+
+	interface BlockContext extends BaseContext {
 		get: Function;
 		fn?: Function,
 		update?: Function,
 	}
 
-	interface IteratorContext {
-		host: Component;
-		injector: Injector;
+	interface IteratorContext extends BaseContext {
 		get: Function;
 		body: Function;
-		block: Block;
 		index: number;
 		updated: number;
 		rendered: Array<[Block, Function, Object]>;
@@ -376,19 +385,13 @@ declare global {
 		}
 	}
 
-	interface InnerHtmlContext {
-		host: Component;
-		injector: Injector;
-		block: Block;
+	interface InnerHtmlContext extends BaseContext {
 		get: Function;
 		code?: string;
 		slotName: string;
 	}
 
-	interface PartialContext {
-		host: Component;
-		injector: Injector;
-		block: Block,
+	interface PartialContext extends BaseContext {
 		update?: Function,
 		scope?: object,
 		partial?: object

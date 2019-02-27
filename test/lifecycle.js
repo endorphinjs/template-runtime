@@ -2,7 +2,7 @@ import assert from 'assert';
 import document from './assets/document';
 import {
 	createComponent, mountComponent, mountBlock, updateBlock, updateComponent,
-	insert, setAttribute, elem, text, updateText, mountSlot, elemWithText
+	insert, setAttribute, elem, text, updateText, mountSlot, elemWithText, addDisposable
 } from '../runtime';
 
 
@@ -110,8 +110,10 @@ describe('Component lifecycle', () => {
 		const target0 = host.componentView;
 		const testInner10 = scope.$_testInner10 = target0.appendChild(createComponent('component2', dfn2, host));
 		const injector0 = scope.$_injector0 = testInner10.componentModel.input;
+		addDisposable(host, testInner10);
 		setAttribute(injector0, 'p1', host.props.p1);
 		scope.$_block0 = mountBlock(host, injector0, component1Entry0);
+		addDisposable(host, scope.$_block0);
 		mountComponent(testInner10);
 		return update1;
 	}
@@ -126,6 +128,7 @@ describe('Component lifecycle', () => {
 	function component1Content0(host, injector, scope) {
 		const testInner20 = scope.$_testInner20 = insert(injector, createComponent('component3', dfn3, host));
 		const injector0 = scope.$_injector1 = testInner20.componentModel.input;
+		addDisposable(injector, testInner20);
 		setAttribute(injector0, 'p3', host.props.p3);
 		mountComponent(testInner20);
 		return component1Content0Update;
@@ -163,6 +166,7 @@ describe('Component lifecycle', () => {
 		p0.appendChild(text('Inner 3: '));
 		scope.$_text0 = p0.appendChild(text(scope.$_textValue0 = host.props.p3));
 		const testInner30 = scope.$_testInner30 = target0.appendChild(createComponent('component4', dfn4, host));
+		addDisposable(host, testInner30);
 		mountComponent(testInner30);
 		return update3;
 	}
