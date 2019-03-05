@@ -3,7 +3,10 @@ import { Store } from './lib/store';
 declare global {
 	type InjectorNode = Node;
 	type InjectorItem = any;
-	type Disposable = Component | Block;
+
+	interface DisposeCallback {
+		(scope: object): void
+	}
 
 	interface Component extends Element {
 		/**
@@ -135,9 +138,9 @@ declare global {
 		defaultProps: object;
 
 		/**
-		 * Items to explicitly dispose
+		 * A function for disposing component contents
 		 */
-		dispose: Disposable[]
+		dispose?: DisposeCallback
 	}
 
 	/**
@@ -324,8 +327,8 @@ declare global {
 		 */
 		size: number;
 
-		/** Items to explicitly dispose in current block */
-		dispose: Disposable[];
+		/** A function to dispose block contents */
+		dispose?: DisposeCallback;
 	}
 
 	interface AttachedEventsMap {
