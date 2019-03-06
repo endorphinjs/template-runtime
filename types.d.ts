@@ -362,6 +362,7 @@ declare global {
 		host: Component;
 		injector: Injector;
 		block: Block;
+		scope: Object;
 	}
 
 	interface BlockContext extends BaseContext {
@@ -395,9 +396,9 @@ declare global {
 	}
 
 	interface PartialContext extends BaseContext {
-		update?: Function,
-		scope?: object,
-		partial?: object
+		baseScope?: Object;
+		update?: Function;
+		partial?: Object;
 	}
 
 	interface StoreUpdateHandler {

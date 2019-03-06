@@ -1,4 +1,4 @@
-import { createComponent, insert, addDisposeCallback, mountComponent, updateComponent, mountBlock, updateBlock, createInjector, unmountComponent, disposeBlock } from '../../runtime';
+import { createComponent, insert, addDisposeCallback, mountComponent, updateComponent, mountBlock, updateBlock, createInjector, unmountComponent, unmountBlock } from '../../runtime';
 import * as SubComponent1 from 'sub-component1.html';
 import * as SubComponent2 from 'sub-component2.html';
 
@@ -20,7 +20,7 @@ function $$template0Update(host, scope) {
 
 function $$template0Dispose(scope) {
 	scope.$_subComponent10 = unmountComponent(scope.$_subComponent10);
-	scope.$_block1 = disposeBlock(scope.$_block1.block, true);
+	scope.$_block1 = unmountBlock(scope.$_block1);
 }
 
 function $$conditionContent1(host, injector, scope) {
@@ -60,7 +60,7 @@ function $$conditionContent0Update(host, injector, scope) {
 
 function $$conditionContent0Dispose(scope) {
 	scope.$_subComponent20 = unmountComponent(scope.$_subComponent20);
-	scope.$_block0 = disposeBlock(scope.$_block0.block, true);
+	scope.$_block0 = unmountBlock(scope.$_block0);
 }
 
 function $$conditionEntry0(host) {
