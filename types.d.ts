@@ -389,6 +389,13 @@ declare global {
 		}
 	}
 
+	interface SlotContext {
+		host: Component;
+		name: string;
+		isDefault: boolean;
+		defaultContent: Function;
+	}
+
 	interface InnerHtmlContext extends BaseContext {
 		get: Function;
 		code?: string;
