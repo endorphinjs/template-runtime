@@ -193,7 +193,7 @@ describe('Slotted injector', () => {
 
 		// Completely remove second block
 		run(injector, block1, () => {
-			dispose(injector, block2, true);
+			dispose(injector, block2, null, true);
 		});
 
 		assert.deepEqual(children(parent), []);

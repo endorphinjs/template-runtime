@@ -4,6 +4,10 @@ declare global {
 	type InjectorNode = Node;
 	type InjectorItem = any;
 
+	interface DisposeCallback {
+		(scope: object): void
+	}
+
 	interface Component extends Element {
 		/**
 		 * Pointer to component view container. By default, it’s the same as component
@@ -132,6 +136,11 @@ declare global {
 		 * Default props values
 		 */
 		defaultProps: object;
+
+		/**
+		 * A function for disposing component contents
+		 */
+		dispose?: DisposeCallback
 	}
 
 	/**
@@ -317,6 +326,9 @@ declare global {
 		 * Amount of items in current block
 		 */
 		size: number;
+
+		/** A function to dispose block contents */
+		dispose?: DisposeCallback;
 	}
 
 	interface AttachedEventsMap {
@@ -346,21 +358,22 @@ declare global {
 		(host: Component, scope: object): void;
 	}
 
-	interface BlockContext {
-		component: Component;
+	interface BaseContext {
+		host: Component;
 		injector: Injector;
-		block: Block,
+		block: Block;
+		scope: Object;
+	}
+
+	interface BlockContext extends BaseContext {
 		get: Function;
 		fn?: Function,
 		update?: Function,
 	}
 
-	interface IteratorContext {
-		host: Component;
-		injector: Injector;
+	interface IteratorContext extends BaseContext {
 		get: Function;
 		body: Function;
-		block: Block;
 		index: number;
 		updated: number;
 		rendered: Array<[Block, Function, Object]>;
@@ -376,22 +389,23 @@ declare global {
 		}
 	}
 
-	interface InnerHtmlContext {
+	interface SlotContext {
 		host: Component;
-		injector: Injector;
-		block: Block;
+		name: string;
+		isDefault: boolean;
+		defaultContent: Function;
+	}
+
+	interface InnerHtmlContext extends BaseContext {
 		get: Function;
 		code?: string;
 		slotName: string;
 	}
 
-	interface PartialContext {
-		host: Component;
-		injector: Injector;
-		block: Block,
-		update?: Function,
-		scope?: object,
-		partial?: object
+	interface PartialContext extends BaseContext {
+		baseScope?: Object;
+		update?: Function;
+		partial?: Object;
 	}
 
 	interface StoreUpdateHandler {

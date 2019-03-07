@@ -2,9 +2,9 @@ import assert from 'assert';
 import document from './assets/document';
 import {
 	createComponent, mountComponent, mountBlock, updateBlock, updateComponent,
-	insert, setAttribute, elem, text, updateText, mountSlot, elemWithText
+	insert, setAttribute, elem, text, updateText, mountSlot, elemWithText,
+	unmountComponent, addDisposeCallback, disposeBlock
 } from '../runtime';
-
 
 describe('Component lifecycle', () => {
 	before(() => global.document = document);
@@ -113,6 +113,7 @@ describe('Component lifecycle', () => {
 		setAttribute(injector0, 'p1', host.props.p1);
 		scope.$_block0 = mountBlock(host, injector0, component1Entry0);
 		mountComponent(testInner10);
+		addDisposeCallback(host, dispose1);
 		return update1;
 	}
 
@@ -123,11 +124,17 @@ describe('Component lifecycle', () => {
 		updateComponent(scope.$_testInner10);
 	}
 
+	function dispose1(scope) {
+		scope.$_testInner10 = unmountComponent(scope.$_testInner10);
+		scope.$_block0 = disposeBlock(scope.$_block0.block);
+	}
+
 	function component1Content0(host, injector, scope) {
 		const testInner20 = scope.$_testInner20 = insert(injector, createComponent('component3', dfn3, host));
 		const injector0 = scope.$_injector1 = testInner20.componentModel.input;
 		setAttribute(injector0, 'p3', host.props.p3);
 		mountComponent(testInner20);
+		addDisposeCallback(injector, component1Content0Dispose);
 		return component1Content0Update;
 	}
 
@@ -135,6 +142,11 @@ describe('Component lifecycle', () => {
 		const injector0 = scope.$_injector1;
 		setAttribute(injector0, 'p3', host.props.p3);
 		updateComponent(scope.$_testInner20);
+	}
+
+	function component1Content0Dispose(scope) {
+		scope.$_testInner20 = unmountComponent(scope.$_testInner20);
+		scope.$_injector1 = null;
 	}
 
 	function component1Entry0(host) {
@@ -164,12 +176,19 @@ describe('Component lifecycle', () => {
 		scope.$_text0 = p0.appendChild(text(scope.$_textValue0 = host.props.p3));
 		const testInner30 = scope.$_testInner30 = target0.appendChild(createComponent('component4', dfn4, host));
 		mountComponent(testInner30);
+		addDisposeCallback(host, dispose3);
 		return update3;
 	}
 
 	function update3(host, scope) {
 		scope.$_textValue0 = updateText(scope.$_text0, host.props.p3, scope.$_textValue0);
 		updateComponent(scope.$_testInner30);
+	}
+
+	function dispose3(scope) {
+		scope.$_testInner30 = unmountComponent(scope.$_testInner30);
+		scope.$_text0 = null;
+		scope.$_textValue0 = null;
 	}
 
 	function mount4(host) {
