@@ -274,12 +274,12 @@ declare global {
 		/**
 		 * Current injector contents
 		 */
-		items: InjectorItem[];
+		items: LinkedList;
 
 		/**
 		 * Current insertion pointer
 		 */
-		ptr: number;
+		ptr: LinkedListItem;
 
 		/**
 		 * Current block context
@@ -416,5 +416,15 @@ declare global {
 		keys?: string[];
 		component?: Component;
 		handler?: StoreUpdateHandler;
+	}
+
+	interface LinkedList {
+		head: LinkedListItem;
+	}
+
+	interface LinkedListItem<T> {
+		value: T;
+		next: LinkedListItem | null;
+		prev: LinkedListItem | null;
 	}
 }
