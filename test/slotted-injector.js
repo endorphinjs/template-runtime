@@ -11,7 +11,7 @@ describe('Slotted injector', () => {
 	const children = node => node.childNodes.map(elem => elem.nodeName);
 	const render = (injector, fn) => {
 		const b = block(injector);
-		run(injector, b, fn);
+		fn && run(injector, b, fn);
 		return b;
 	};
 
