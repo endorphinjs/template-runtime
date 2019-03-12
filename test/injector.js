@@ -1,6 +1,6 @@
 import assert from 'assert';
 import document from './assets/document';
-import { createInjector, run, insert, block, dispose, move } from '../lib/injector';
+import { createInjector, run, insert, move, emptyBlockContent, injectBlock, disposeBlock } from '../lib/injector';
 
 describe('Injector', () => {
 	before(() => global.document = document);
@@ -8,11 +8,24 @@ describe('Injector', () => {
 
 	const elem = name => document.createElement(name);
 	const children = node => node.childNodes.map(elem => elem.nodeName);
-	const render = (injector, fn) => {
-		const b = block(injector);
-		fn && run(injector, b, fn);
+
+	function render(injector, fn) {
+		const b = injectBlock(injector, { $$block: true, injector, fn });
+		fn && run(b, fn, b);
+		injector.ptr = b.end;
 		return b;
-	};
+	}
+
+	function listHas(list, value) {
+		let item = list.head;
+		while (item) {
+			if (item.value === value) {
+				return true;
+			}
+
+			item = item.next;
+		}
+	}
 
 	it('flat blocks', () => {
 		const parent = elem('div');
@@ -42,36 +55,20 @@ describe('Injector', () => {
 		insert(injector, elem('9'));
 
 		assert.deepEqual(children(parent), ['1', '2', '3', '4', '5', '8', '9']);
-		assert.equal(block1.size, 3);
-		assert.equal(block2.size, 0);
-		assert.equal(block3.size, 1);
 
-		// Dispose rendered block
-		dispose(injector, block1);
-
+		// Empty rendered block
+		emptyBlockContent(block1);
 		assert.deepEqual(children(parent), ['1', '2', '8', '9']);
-		assert.equal(block1.size, 0);
-		assert.equal(block2.size, 0);
-		assert.equal(block3.size, 1);
 
-		dispose(injector, block3);
+		emptyBlockContent(block3);
 		assert.deepEqual(children(parent), ['1', '2', '9']);
-		assert.equal(block1.size, 0);
-		assert.equal(block2.size, 0);
-		assert.equal(block3.size, 0);
 
 		// Render previously empty blocks
-		run(injector, block2, content2);
+		run(block2, content2);
 		assert.deepEqual(children(parent), ['1', '2', '6', '7', '9']);
-		assert.equal(block1.size, 0);
-		assert.equal(block2.size, 2);
-		assert.equal(block3.size, 0);
 
-		run(injector, block3, content3);
+		run(block3, content3);
 		assert.deepEqual(children(parent), ['1', '2', '6', '7', '8', '9']);
-		assert.equal(block1.size, 0);
-		assert.equal(block2.size, 2);
-		assert.equal(block3.size, 1);
 	});
 
 	it('nested blocks', () => {
@@ -101,33 +98,22 @@ describe('Injector', () => {
 		});
 
 		assert.deepEqual(children(parent), ['1', '2', '3', '4']);
-		assert.equal(block1.size, 6);
-		assert.equal(block2.size, 4);
-		assert.equal(block3.size, 1);
 
-		// Dispose deepest block
-		run(injector, block1, () => {
-			run(injector, block2, () => {
-				dispose(injector, block3);
-			});
-		});
+		// Empty deepest block
+		emptyBlockContent(block3);
 
 		assert.deepEqual(children(parent), ['1', '2', '3']);
-		assert.equal(block1.size, 5);
-		assert.equal(block2.size, 3);
-		assert.equal(block3.size, 0);
-		assert(injector.items.includes(block1));
-		assert(injector.items.includes(block2));
-		assert(injector.items.includes(block3));
+		assert(listHas(injector.items, block1));
+		assert(listHas(injector.items, block2));
+		assert(listHas(injector.items, block3));
 
-		// Dispose outer block
-		dispose(injector, block1);
+		// Empty outer block
+		emptyBlockContent(block1);
 
 		assert.deepEqual(children(parent), []);
-		assert.equal(block1.size, 0);
-		assert(injector.items.includes(block1));
-		assert(!injector.items.includes(block2));
-		assert(!injector.items.includes(block3));
+		assert(listHas(injector.items, block1));
+		assert(!listHas(injector.items, block2));
+		assert(!listHas(injector.items, block3));
 	});
 
 	it('dispose', () => {
@@ -157,37 +143,22 @@ describe('Injector', () => {
 		});
 
 		assert.deepEqual(children(parent), ['1', '2', '3', '4']);
-		assert.equal(block1.size, 6);
-		assert.equal(block2.size, 4);
-		assert.equal(block3.size, 1);
 
-		// Dispose deepest block
-		run(injector, block1, () => {
-			run(injector, block2, () => {
-				dispose(injector, block3);
-			});
-		});
+		// Empty deepest block
+		emptyBlockContent(block3);
 
 		assert.deepEqual(children(parent), ['1', '2', '3']);
-		assert.equal(block1.size, 5);
-		assert.equal(block2.size, 3);
-		assert.equal(block3.size, 0);
-		assert(injector.items.includes(block1));
-		assert(injector.items.includes(block2));
-		assert(injector.items.includes(block3));
+		assert(listHas(injector.items, block1));
+		assert(listHas(injector.items, block2));
+		assert(listHas(injector.items, block3));
 
 		// Completely remove second block
-		run(injector, block1, () => {
-			dispose(injector, block2, null, true);
-		});
+		disposeBlock(block2);
 
 		assert.deepEqual(children(parent), ['1']);
-		assert.equal(block1.size, 1);
-		assert.equal(block2.size, 0);
-		assert.equal(block3.size, 0);
-		assert(injector.items.includes(block1));
-		assert(!injector.items.includes(block2));
-		assert(!injector.items.includes(block3));
+		assert(listHas(injector.items, block1));
+		assert(!listHas(injector.items, block2));
+		assert(!listHas(injector.items, block3));
 	});
 
 	it('move', () => {
@@ -213,17 +184,18 @@ describe('Injector', () => {
 			insert(injector, elem('8'));
 		};
 
-		const block1 = render(injector, content1);
+		render(injector, content1);
 		const block2 = render(injector, content2);
-		render(injector, content3);
+		const block3 = render(injector, content3);
 		const block4 = render(injector, content4);
 
 		assert.deepEqual(children(parent), ['1', '2', '3', '4', '5', '6', '7', '8']);
 
-		move(injector, block4, injector.items.indexOf(block1));
+		// move as first item
+		move(injector, block4);
 		assert.deepEqual(children(parent), ['6', '7', '8', '1', '2', '3', '4', '5']);
 
-		move(injector, block2, injector.items.length);
+		move(injector, block2, block3);
 		assert.deepEqual(children(parent), ['6', '7', '8', '1', '4', '5', '2', '3']);
 	});
 });

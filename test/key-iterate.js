@@ -84,5 +84,24 @@ describe('Key iterate', () => {
 		assert(cur[2] === prev[0]);
 		assert(cur[0] !== prev[2]);
 		assert(cur[3] !== prev[3]);
+
+		prev = cur;
+
+		// Reorder elements again
+		component.setProps({
+			items: [
+				{ id: 1, marked: true },
+				{ id: 2, marked: false },
+				{ id: 3, marked: false },
+				{ id: 4, marked: true }
+			]
+		});
+
+		cur = listNodes();
+		assert.equal(component.innerHTML, read('fixtures/key-iterate1.html'));
+		assert.strictEqual(cur[0], prev[2]);
+		assert.strictEqual(cur[1], prev[1]);
+		assert.strictEqual(cur[2], prev[0]);
+		assert.strictEqual(cur[4], prev[4]);
 	});
 });
