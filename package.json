@@ -9,7 +9,7 @@
     "build": "rollup -c",
     "watch": "rollup -wc",
     "test": "mocha",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "keywords": [
     "template",

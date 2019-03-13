@@ -16,7 +16,7 @@ const destPath = absPath.replace(/\.\w+$/, '.js');
 const content = fs.readFileSync(absPath, 'utf8');
 const baseModulePath = path.relative(path.dirname(absPath), runtimeBasePath);
 const result = compile(content, absPath, {
-	module: path.join(baseModulePath, 'runtime'),
+	module: path.join(baseModulePath, 'dist/runtime.es.js'),
 	warn: msg => console.warn(msg)
 });
 fs.writeFileSync(destPath,  result.code);

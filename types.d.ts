@@ -12,7 +12,7 @@ declare global {
 		(block: BaseBlock): void;
 	}
 
-	interface Component extends Element {
+	interface Component extends HTMLElement {
 		/**
 		 * Pointer to component view container. By default, it’s the same as component
 		 * element, but for native Web Components it points to shadow root
