@@ -8,6 +8,10 @@ declare global {
 		(scope: object): void
 	}
 
+	interface BlockDisposeCallback {
+		(block: BaseBlock): void;
+	}
+
 	interface Component extends Element {
 		/**
 		 * Pointer to component view container. By default, it’s the same as component
@@ -104,7 +108,7 @@ declare global {
 
 		/** Slot output for component */
 		slots: {
-			[name: string]: BlockContext
+			[name: string]: BaseBlock
 		}
 
 		/**
@@ -274,17 +278,17 @@ declare global {
 		/**
 		 * Current injector contents
 		 */
-		items: InjectorItem[];
+		items: LinkedList;
 
 		/**
 		 * Current insertion pointer
 		 */
-		ptr: number;
+		ptr: LinkedListItem<any>;
 
 		/**
 		 * Current block context
 		 */
-		ctx: Block;
+		ctx: BaseBlock;
 
 		/**
 		 * Slots container
@@ -302,33 +306,6 @@ declare global {
 		 * Current event handlers
 		 */
 		events: ChangeSet;
-	}
-
-	/**
-	 * A structure that holds data about elements owned by given block context
-	 * right below it in `Injector` list
-	 */
-	type Block = {
-		/** @private */
-		'&block': true;
-
-		/**
-		 * Number of inserted items in block context
-		 */
-		inserted: number;
-
-		/**
-		 * Number of deleted items in block context
-		 */
-		deleted: number;
-
-		/**
-		 * Amount of items in current block
-		 */
-		size: number;
-
-		/** A function to dispose block contents */
-		dispose?: DisposeCallback;
 	}
 
 	interface AttachedEventsMap {
@@ -358,54 +335,11 @@ declare global {
 		(host: Component, scope: object): void;
 	}
 
-	interface BaseContext {
-		host: Component;
-		injector: Injector;
-		block: Block;
-		scope: Object;
-	}
-
-	interface BlockContext extends BaseContext {
-		get: Function;
-		fn?: Function,
-		update?: Function,
-	}
-
-	interface IteratorContext extends BaseContext {
-		get: Function;
-		body: Function;
-		index: number;
-		updated: number;
-		rendered: Array<[Block, Function, Object]>;
-	}
-
-	interface KeyIteratorContext extends IteratorContext {
-		keyExpr: Function;
-		used: {
-			[key: string]: Array<[Block, Function, Object]>
-		}
-		rendered: {
-			[key: string]: Array<[Block, Function, Object]>
-		}
-	}
-
 	interface SlotContext {
 		host: Component;
 		name: string;
 		isDefault: boolean;
 		defaultContent: Function;
-	}
-
-	interface InnerHtmlContext extends BaseContext {
-		get: Function;
-		code?: string;
-		slotName: string;
-	}
-
-	interface PartialContext extends BaseContext {
-		baseScope?: Object;
-		update?: Function;
-		partial?: Object;
 	}
 
 	interface StoreUpdateHandler {
@@ -416,5 +350,68 @@ declare global {
 		keys?: string[];
 		component?: Component;
 		handler?: StoreUpdateHandler;
+	}
+
+	interface LinkedList {
+		head: LinkedListItem;
+	}
+
+	interface LinkedListItem<T> {
+		value: T;
+		next: LinkedListItem<any> | null;
+		prev: LinkedListItem<any> | null;
+	}
+
+	interface BaseBlock<T> {
+		$$block: true;
+		host: Component;
+		injector: Injector;
+		scope: Object;
+
+		/** A function to dispose block contents */
+		dispose: BlockDisposeCallback | null;
+
+		start: LinkedListItem<T>;
+		end: LinkedListItem<T>;
+	}
+
+	interface FunctionBlock extends BaseBlock<FunctionBlock> {
+		get: Function;
+		fn: Function | undefined;
+		update: Function | undefined;
+	}
+
+	interface IteratorBlock extends BaseBlock<IteratorBlock> {
+		get: Function;
+		body: Function;
+		index: number;
+		updated: number;
+	}
+
+	interface KeyIteratorBlock extends IteratorBlock {
+		keyExpr: Function;
+		used: {
+			[key: string]: IteratorItemBlock[]
+		} | null;
+		rendered: {
+			[key: string]: IteratorItemBlock[]
+		} | null;
+	}
+
+	interface IteratorItemBlock extends BaseBlock<IteratorItemBlock> {
+		update: Function | undefined;
+		owner: IteratorBlock | KeyIteratorBlock;
+	}
+
+	interface InnerHtmlBlock extends BaseBlock<InnerHtmlBlock> {
+		get: Function;
+		code: string | null;
+		slotName: string;
+	}
+
+	interface PartialBlock extends BaseBlock<PartialBlock> {
+		childScope: Object;
+		update: Function | null;
+		partial: Object | null;
 	}
 }

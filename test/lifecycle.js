@@ -126,7 +126,7 @@ describe('Component lifecycle', () => {
 
 	function dispose1(scope) {
 		scope.$_testInner10 = unmountComponent(scope.$_testInner10);
-		scope.$_block0 = disposeBlock(scope.$_block0.block);
+		scope.$_block0 = disposeBlock(scope.$_block0);
 	}
 
 	function component1Content0(host, injector, scope) {
