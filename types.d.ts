@@ -366,7 +366,7 @@ declare global {
 		$$block: true;
 		host: Component;
 		injector: Injector;
-		scope: Object;
+		scope: any;
 
 		/** A function to dispose block contents */
 		dispose: BlockDisposeCallback | null;
