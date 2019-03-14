@@ -302,6 +302,10 @@ declare global {
 		 */
 		attributes: ChangeSet;
 
+		attributesNS?: {
+			[uri: string]: ChangeSet
+		}
+
 		/**
 		 * Current event handlers
 		 */
