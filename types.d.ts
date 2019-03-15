@@ -400,6 +400,13 @@ declare global {
 		rendered: {
 			[key: string]: IteratorItemBlock[]
 		} | null;
+		order: IteratorItemBlock[];
+		needReorder: boolean;
+		localScope: {
+			index: number,
+			key: any,
+			value: any
+		}
 	}
 
 	interface IteratorItemBlock extends BaseBlock<IteratorItemBlock> {

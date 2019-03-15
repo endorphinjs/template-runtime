@@ -50,10 +50,10 @@ describe('Key iterate', () => {
 		assert.strictEqual(cur[4], prev[4]);
 
 		// Both 2 and 3 should be reordered (detached and attached)
-		// assert(cur[0].attached > cur[2].attached);
-		// assert(cur[0].detached > cur[2].detached);
-		// assert(cur[0].attached === cur[1].attached);
-		// assert(cur[0].detached === cur[1].detached);
+		assert(cur[0].attached > cur[2].attached);
+		assert(cur[0].detached > cur[2].detached);
+		assert(cur[0].attached === cur[1].attached);
+		assert(cur[0].detached === cur[1].detached);
 
 		// Render less elements
 		component.setProps({
