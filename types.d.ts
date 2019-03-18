@@ -416,7 +416,7 @@ declare global {
 
 	interface InnerHtmlBlock extends BaseBlock<InnerHtmlBlock> {
 		get: Function;
-		code: string | null;
+		code: any;
 		slotName: string;
 	}
 
