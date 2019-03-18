@@ -137,6 +137,13 @@ declare global {
 		rendering: boolean;
 
 		/**
+		 * Indicates that component is currently in finalization state (calling
+		 * `did*` hooks)
+		 * @private
+		 */
+		finalizing: boolean;
+
+		/**
 		 * Default props values
 		 */
 		defaultProps: object;
