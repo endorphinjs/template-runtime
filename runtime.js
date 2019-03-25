@@ -55,3 +55,16 @@ export function filter(host, collection, fn) {
 
 	return result;
 }
+
+/**
+ * Invokes `methodName` of `ctx` object with given args
+ * @param {Object} ctx
+ * @param {string} methodName
+ * @param {Array} [args]
+ */
+export function call(ctx, methodName, args) {
+	const method = ctx != null && ctx[methodName];
+	if (typeof method === 'function') {
+		return args ? method.apply(ctx, args) : method.call(ctx);
+	}
+}
