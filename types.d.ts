@@ -409,11 +409,7 @@ declare global {
 		} | null;
 		order: IteratorItemBlock[];
 		needReorder: boolean;
-		localScope: {
-			index: number,
-			key: any,
-			value: any
-		}
+		parentScope: object;
 	}
 
 	interface IteratorItemBlock extends BaseBlock<IteratorItemBlock> {
