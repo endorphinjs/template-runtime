@@ -3,6 +3,8 @@ import { Store } from './lib/store';
 declare global {
 	type InjectorNode = Node;
 	type InjectorItem = any;
+	type ComponentEventHandler = (component: Component, event: Event, target: HTMLElement) => void;
+	type StaticEventHandler = (evt: Event) => void;
 
 	interface DisposeCallback {
 		(scope: object): void
@@ -104,7 +106,7 @@ declare global {
 		/**
 		 * List of attached event handlers
 		 */
-		events: AttachedEventsMap;
+		events: AttachedStaticEvents;
 
 		/** Slot output for component */
 		slots: {
@@ -161,12 +163,12 @@ declare global {
 		/**
 		 * Initial props factory
 		 */
-		props?(): object;
+		props?(component: Component): object;
 
 		/**
 		 * Initial state factory
 		 */
-		state?(): object;
+		state?(component: Component): object;
 
 		/**
 		 * Returns instance of store used for components
@@ -182,15 +184,21 @@ declare global {
 		 * Listeners for events bubbling from component contents
 		 */
 		events?: {
-			[type: string]: (component: Component, event: Event, target: HTMLElement) => void;
+			[type: string]: ComponentEventHandler;
 		};
 
 		/**
 		 * Public methods to attach to component element
+		 * @deprecated Use `extend` instead
 		 */
 		methods?: {
 			[name: string]: (this: Component) => void;
 		};
+
+		/**
+		 * Methods and properties to extend component with
+		 */
+		extend?: object;
 
 		/**
 		 * List of plugins for current component
@@ -319,10 +327,10 @@ declare global {
 		events: ChangeSet;
 	}
 
-	interface AttachedEventsMap {
-		[event: string]: {
-			listeners: Function[];
-			handler: EventListener;
+	interface AttachedStaticEvents {
+		handler: StaticEventHandler;
+		listeners: {
+			[event: string]: ComponentEventHandler[];
 		}
 	}
 
