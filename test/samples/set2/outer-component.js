@@ -1,64 +1,74 @@
-import {
-	elem, text, elemWithText, insert, getProp, updateText,
-	createComponent, mountComponent, updateAttribute, updateProps
-} from '../../../runtime';
+import { elemWithText, createComponent, setAttribute, mountComponent, updateComponent, unmountComponent, assign, addDisposeCallback, markSlotUpdate, elem, insert, text, updateText, finalizeAttributes, createInjector } from '../../../dist/runtime.es.js';
+import * as InnerComponent from './inner-component.js';
 
-import * as InnerComponent from './inner-component';
-
-/**
- * Local partials, used for runtime resolving
- */
-export const $partials = {
+export const partials = {
 	'my-item': {
+		body: $$partialMyItem0,
 		defaults: {
-			enabled: true,
+			item: true,
 			pos: 0
-		},
-		body: partialMyItem
+		}
 	}
 };
 
-export default function outerComponentTemplate(host, scope) {
-	const target = host.componentView;
+function $$partialMyItem0(host, injector, scope) {
+	const div0 = insert(injector, elem('div'));
+	const span0 = div0.appendChild(elem('span'));
+	const injector0 = scope.$_injector2 = createInjector(span0);
+	setAttribute(injector0, 'value', scope.pos);
+	scope.$_text0 = span0.appendChild(text(scope.item));
+	finalizeAttributes(injector0);
+	addDisposeCallback(injector, $$partialMyItem0Unmount);
+	return $$partialMyItem0Update;
+}
 
-	target.appendChild(elemWithText('h2', 'Default partials'));
-	scope.comp1 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
-	mountComponent(scope.comp1, {
-		items: host.props.items1
+function $$partialMyItem0Update(host, injector, scope) {
+	const injector0 = scope.$_injector2;
+	setAttribute(injector0, 'value', scope.pos);
+	updateText(scope.$_text0, scope.item);
+	finalizeAttributes(injector0);
+}
+
+function $$partialMyItem0Unmount(scope) {
+	scope.$_text0 = null;
+	scope.$_injector2 = null;
+}
+
+export default function $$template0(host, scope) {
+	const target0 = host.componentView;
+	target0.appendChild(elemWithText('h2', 'Default partials'));
+	const innerComponent0 = scope.$_innerComponent0 = target0.appendChild(createComponent('inner-component', InnerComponent, host));
+	const injector0 = scope.$_injector0 = innerComponent0.componentModel.input;
+	setAttribute(injector0, 'items', host.props.items1);
+	mountComponent(innerComponent0);
+	target0.appendChild(elemWithText('h2', 'Override partials'));
+	const innerComponent1 = scope.$_innerComponent1 = target0.appendChild(createComponent('inner-component', InnerComponent, host));
+	const injector1 = scope.$_injector1 = innerComponent1.componentModel.input;
+	setAttribute(injector1, 'items', host.props.items2);
+	mountComponent(innerComponent1, {
+		'partial:item': assign({ host }, partials['my-item'])
 	});
-
-	target.appendChild(elemWithText('h2', 'Override partials'));
-	scope.comp2 = target.appendChild( createComponent('inner-component', InnerComponent, host) );
-	mountComponent(scope.comp2, {
-		items: getProp(host, 'items2'),
-		'partial:item': $partials['my-item']
-	});
-
-	return outerComponentTemplateUpdate;
+	addDisposeCallback(host, $$template0Unmount);
+	return $$template0Update;
 }
 
-function outerComponentTemplateUpdate(host, scope) {
-	updateProps(scope.comp1, { items: host.props.items1 });
-	updateProps(scope.comp2, { items: host.props.items2 });
+function $$template0Update(host, scope) {
+	const injector1 = scope.$_injector1;
+	const injector0 = scope.$_injector0;
+	let s__innerComponent0 = 0;
+	s__innerComponent0 |= setAttribute(injector0, 'items', host.props.items1);
+	markSlotUpdate(scope.$_innerComponent0, '', s__innerComponent0);
+	updateComponent(scope.$_innerComponent0);
+	let s__innerComponent1 = 0;
+	s__innerComponent1 |= setAttribute(injector1, 'items', host.props.items2);
+	markSlotUpdate(scope.$_innerComponent1, '', s__innerComponent1);
+	updateComponent(scope.$_innerComponent1);
+	return s__innerComponent0;
 }
 
-function partialMyItem(host, injector, scope) {
-	const div = insert(injector, elem('div'));
-	scope.span = div.appendChild(elem('span'));
-	scope.attr1Value = updateAttribute(scope.span, 'value', scope.pos);
-	scope.textNode = scope.span.appendChild(text(scope.item));
-
-	return partialMyItemUpdate;
-}
-
-function partialMyItemUpdate(host, injector, scope) {
-	scope.attr1Value = updateAttribute(scope.span, 'value', scope.pos, scope.attr1Value);
-	updateText(scope.textNode, scope.item);
-}
-
-export function props() {
-	return {
-		items1: ['one', 'two', 'three'],
-		items2: ['foo', 'bar', 'baz']
-	};
+function $$template0Unmount(scope) {
+	scope.$_innerComponent0 = unmountComponent(scope.$_innerComponent0);
+	scope.$_injector0 = null;
+	scope.$_innerComponent1 = unmountComponent(scope.$_innerComponent1);
+	scope.$_injector1 = null;
 }

@@ -26,7 +26,10 @@ describe('Partials', () => {
 	it('pass partial as prop', () => {
 		const component = createComponent('outer-component', OuterComponent);
 
-		mountComponent(component);
+		mountComponent(component, {
+			items1: ['one', 'two', 'three'],
+			items2: ['foo', 'bar', 'baz']
+		});
 		assert.equal(component.innerHTML, read('./samples/set2/output1.html'));
 
 		// Re-render: keep everything as is

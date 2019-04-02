@@ -432,8 +432,13 @@ declare global {
 	}
 
 	interface PartialBlock extends BaseBlock<PartialBlock> {
-		childScope: Object;
 		update: Function | null;
-		partial: Object | null;
+		partial: PartialDefinition | null;
+	}
+
+	interface PartialDefinition {
+		host: Component;
+		body: Function;
+		defaults: object;
 	}
 }

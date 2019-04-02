@@ -13,7 +13,7 @@ export * from './lib/dom';
 export * from './lib/partial';
 export * from './lib/store';
 export * from './lib/animation';
-export { addDisposeCallback } from './lib/utils';
+export { addDisposeCallback, assign } from './lib/utils';
 
 /**
  * Safe property getter

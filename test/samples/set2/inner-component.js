@@ -1,63 +1,77 @@
-import {
-	elem, text, elemWithText, insert, getProp, updateText,
-	updateAttribute, createInjector, mountIterator, updateIterator,
-	mountPartial, updatePartial
-} from '../../../runtime';
+import { elemWithText, elem, mountPartial, updatePartial, unmountPartial, addDisposeCallback, mountIterator, updateIterator, unmountIterator, createInjector, finalizeRefs, insert, setAttribute, text, updateText, finalizeAttributes } from '../../../dist/runtime.es.js';
 
-export default function innerComponentTemplate(host, scope) {
-	const target = host.componentView;
-	target.appendChild(elemWithText('h3', 'Inner component'));
-	const ul = target.appendChild(elem('ul'));
-	const injector2 = createInjector(ul);
-	scope.iter1 = mountIterator(host, injector2, forEachExpr1, forEachBody1);
-
-	return partialsTemplateUpdate;
-}
-
-function partialsTemplateUpdate(host, scope) {
-	updateIterator(scope.iter1);
-}
-
-export const $partials = {
+export const partials = {
 	item: {
+		body: $$partialItem0,
 		defaults: {
-			pos: 0,
-			item: null
-		},
-		body: partialItem
+			item: true,
+			pos: 0
+		}
 	}
 };
 
-function partialItem(host, injector, scope) {
-	scope.li = insert(injector, elem('li'));
-	const injector2 = createInjector(scope.li);
-	scope.attr1Value = updateAttribute(scope.li, 'pos', scope.pos);
-	scope.text1 = insert(injector2, text(scope.item));
-
-	return partialButtonUpdate;
+function $$partialItem0(host, injector, scope) {
+	const li0 = insert(injector, elem('li'));
+	const injector0 = scope.$_injector0 = createInjector(li0);
+	setAttribute(injector0, 'pos', scope.pos);
+	scope.$_text0 = li0.appendChild(text(scope.item));
+	finalizeAttributes(injector0);
+	addDisposeCallback(injector, $$partialItem0Unmount);
+	return $$partialItem0Update;
 }
 
-function partialButtonUpdate(host, injector, scope) {
-	scope.attr1Value = updateAttribute(scope.li, 'pos', scope.pos, scope.attr1Value);
-	updateText(scope.text1, scope.item);
+function $$partialItem0Update(host, injector, scope) {
+	const injector0 = scope.$_injector0;
+	setAttribute(injector0, 'pos', scope.pos);
+	updateText(scope.$_text0, scope.item);
+	finalizeAttributes(injector0);
 }
 
-function forEachExpr1(host) {
-	return getProp(host, 'items');
+function $$partialItem0Unmount(scope) {
+	scope.$_text0 = null;
+	scope.$_injector0 = null;
 }
 
-function forEachBody1(host, injector, scope) {
-	scope.partial1 = mountPartial(host, injector, host.props['partial:item'] || $partials['item'], {
+export default function $$template0(host, scope) {
+	const target0 = host.componentView;
+	target0.appendChild(elemWithText('h3', 'Inner component'));
+	const ul0 = target0.appendChild(elem('ul'));
+	const injector0 = createInjector(ul0);
+	scope.$_iter0 = mountIterator(host, injector0, $$iteratorExpr0, $$iteratorBlock0);
+	finalizeRefs(host);
+	addDisposeCallback(host, $$template0Unmount);
+	return $$template0Update;
+}
+
+function $$template0Update(host, scope) {
+	updateIterator(scope.$_iter0);
+	finalizeRefs(host);
+}
+
+function $$template0Unmount(scope) {
+	scope.$_iter0 = unmountIterator(scope.$_iter0);
+}
+
+function $$iteratorExpr0(host) {
+	return host.props.items;
+}
+
+function $$iteratorBlock0(host, injector, scope) {
+	scope.$_partial0 = mountPartial(host, injector, host.props['partial:item'] || partials.item, {
 		item: scope.value,
 		pos: scope.index
 	});
-
-	return forEachBody1Update;
+	addDisposeCallback(injector, $$iteratorBlock0Unmount);
+	return $$iteratorBlock0Update;
 }
 
-function forEachBody1Update(host, injector, scope) {
-	updatePartial(scope.partial1, host.props['partial:item'] || $partials['item'], {
+function $$iteratorBlock0Update(host, injector, scope) {
+	updatePartial(scope.$_partial0, host.props['partial:item'] || partials.item, {
 		item: scope.value,
 		pos: scope.index
 	});
+}
+
+function $$iteratorBlock0Unmount(scope) {
+	scope.$_partial0 = unmountPartial(scope.$_partial0);
 }
