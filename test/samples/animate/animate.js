@@ -1,4 +1,4 @@
-import { elemWithText, insert, addStaticEvent, animateIn, animateOut, addDisposeCallback, mountBlock, updateBlock, unmountBlock, createComponent, mountComponent, updateComponent, createInjector } from "../../../dist/runtime.es.js";
+import { elemWithText, insert, addStaticEvent, animateIn, animateOut, addDisposeCallback, mountBlock, updateBlock, unmountBlock, createComponent, mountComponent, updateComponent, createInjector } from "../../../runtime";
 import * as SubComponent from "./sub-component.js";
 
 export default function $$template0(host, scope) {

@@ -1,4 +1,4 @@
-import { elemWithText, createComponent, setAttribute, mountComponent, updateComponent, unmountComponent, assign, addDisposeCallback, markSlotUpdate, elem, insert, text, updateText, finalizeAttributes, createInjector } from '../../../dist/runtime.es.js';
+import { elemWithText, createComponent, setAttribute, mountComponent, updateComponent, unmountComponent, assign, addDisposeCallback, markSlotUpdate, elem, insert, text, updateText, finalizeAttributes, createInjector } from '../../../runtime';
 import * as InnerComponent from './inner-component.js';
 
 export const partials = {
