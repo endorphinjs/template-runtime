@@ -130,7 +130,7 @@ declare global {
 		 * Component render is queued
 		 * @private
 		 */
-		queued: Promise;
+		queued: boolean;
 
 		/**
 		 * Indicates that component is currently rendering
