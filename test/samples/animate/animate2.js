@@ -53,10 +53,10 @@ function $$conditionEntry0(host) {
 function $$conditionContent1(host, injector, scope) {
 	const subComponent0 = scope.$_subComponent0 = insert(injector, createComponent('sub-component', SubComponent, host));
 	const injector0 = subComponent0.componentModel.input;
-	animateIn(subComponent0, 'show 1s ease-out');
 	const subComponent1 = scope.$_subComponent1 = insert(injector0, createComponent('sub-component', SubComponent, host));
 	mountComponent(subComponent1);
 	mountComponent(subComponent0);
+	animateIn(subComponent0, 'show 1s ease-out');
 	addDisposeCallback(injector, $$conditionContent1Unmount);
 	return $$conditionContent1Update;
 }
@@ -70,7 +70,7 @@ function $$conditionContent1Update(host, injector, scope) {
 }
 
 function $$conditionContent1Unmount(scope) {
-	scope.$_subComponent0 = animateOut(scope.$_subComponent0, 'hide 0.5s ease-in', function() {
+	scope.$_subComponent0 = animateOut(scope.$_subComponent0, 'hide 0.5s ease-in', scope, function(scope) {
 		scope.$_subComponent1 = unmountComponent(scope.$_subComponent1);
 	});
 }
