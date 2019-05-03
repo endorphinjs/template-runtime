@@ -1,0 +1,116 @@
+import { run, injectBlock, disposeBlock } from './injector';
+import { setScope, getScope } from './scope';
+import { obj } from './utils';
+import { Component, Injector, RenderMount, IteratorBlock, IteratorItemBlock, LinkedListItem, RenderItems } from '../types';
+
+/**
+ * Mounts iterator block
+ * @param get A function that returns collection to iterate
+ * @param body A function that renders item of iterated collection
+ */
+export function mountIterator(host: Component, injector: Injector, get: RenderItems, body: RenderMount): IteratorBlock {
+	const block: IteratorBlock = injectBlock(injector, {
+		$$block: true,
+		host,
+		injector,
+		scope: getScope(host),
+		dispose: null,
+		get,
+		body,
+		index: 0,
+		updated: 0,
+		start: null,
+		end: null
+	});
+	updateIterator(block);
+	return block;
+}
+
+/**
+ * Updates iterator block defined in `ctx`
+ * @returns Returns `1` if iterator was updated, `0` otherwise
+ */
+export function updateIterator(block: IteratorBlock): number {
+	run(block, iteratorHost, block);
+	return block.updated;
+}
+
+export function unmountIterator(block: IteratorBlock) {
+	disposeBlock(block);
+}
+
+function iteratorHost(host: Component, injector: Injector, block: IteratorBlock) {
+	block.index = 0;
+	block.updated = 0;
+	const collection = block.get(host, block.scope);
+	if (collection && typeof collection.forEach === 'function') {
+		collection.forEach(iterator, block);
+	}
+
+	trimIteratorItems(block);
+}
+
+export function prepareScope(scope: any, index: number, key: any, value: any) {
+	scope.index = index;
+	scope.key = key;
+	scope.value = value;
+	return scope;
+}
+
+/**
+ * Removes remaining iterator items from current context
+ */
+function trimIteratorItems(block: IteratorBlock) {
+	let item: LinkedListItem<IteratorItemBlock> = block.injector.ptr.next;
+	let listItem: IteratorItemBlock;
+	while (item.value.owner === block) {
+		block.updated = 1;
+		listItem = item.value;
+		item = listItem.end.next;
+		disposeBlock(listItem);
+	}
+}
+
+function iterator(this: IteratorBlock, value: any, key: any) {
+	const { host, injector, index } = this;
+	const { ptr } = injector;
+	const prevScope = getScope(host);
+
+	let rendered: IteratorItemBlock = ptr.next.value;
+
+	if (rendered.owner === this) {
+		// We have rendered item, update it
+		if (rendered.update) {
+			const scope = prepareScope(rendered.scope, index, key, value);
+			setScope(host, scope);
+			if (run(rendered, rendered.update, scope)) {
+				this.updated = 1;
+			}
+			setScope(host, prevScope);
+		}
+	} else {
+		// Create & render new block
+		const scope = prepareScope(obj(prevScope), index, key, value);
+
+		/** @type {IteratorItemBlock} */
+		rendered = injectBlock(injector, {
+			$$block: true,
+			host,
+			injector,
+			scope,
+			dispose: null,
+			update: undefined,
+			owner: this,
+			start: null,
+			end: null
+		});
+
+		setScope(host, scope);
+		rendered.update = run(rendered, this.body, scope);
+		setScope(host, prevScope);
+		this.updated = 1;
+	}
+
+	injector.ptr = rendered.end;
+	this.index++;
+}
