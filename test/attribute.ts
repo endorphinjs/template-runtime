@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import { strictEqual } from 'assert';
 import document from './assets/document';
 import attribute1 from './samples/attribute1';
 import attribute2 from './samples/attribute2';
@@ -18,20 +18,20 @@ describe('Attribute', () => {
 
 		// Initial render
 		mountComponent(component);
-		assert.equal(component.innerHTML, '<main a1="foo" a2="0" a3="4"></main>');
+		strictEqual(component.innerHTML, '<main a1="foo" a2="0" a3="4"></main>');
 
 		component.setProps({ id: 'foo2', c1: true, c2: false, c3: true });
-		assert.equal(component.innerHTML, '<main a1="3" a2="3" a3="4"></main>');
+		strictEqual(component.innerHTML, '<main a1="3" a2="3" a3="4"></main>');
 
 		component.setProps({ c2: true, c3: false });
-		assert.equal(component.innerHTML, '<main a1="foo2" a2="2" a3="4"></main>');
+		strictEqual(component.innerHTML, '<main a1="foo2" a2="2" a3="4"></main>');
 
 		// Re-render: should keep previous result
 		renderComponent(component);
-		assert.equal(component.innerHTML, '<main a1="foo2" a2="2" a3="4"></main>');
+		strictEqual(component.innerHTML, '<main a1="foo2" a2="2" a3="4"></main>');
 
 		component.setProps({ c1: false, c2: false });
-		assert.equal(component.innerHTML, '<main a1="foo2" a2="0" a3="4"></main>');
+		strictEqual(component.innerHTML, '<main a1="foo2" a2="0" a3="4"></main>');
 	});
 
 	it('should add class names', () => {
@@ -48,20 +48,20 @@ describe('Attribute', () => {
 		// It shouldn’t be a problem for regular HTML, for component attributes (props)
 		// are applied differently
 		mountComponent(component);
-		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
+		strictEqual(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		// Re-render: retain the same result
 		renderComponent(component);
-		assert.equal(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
+		strictEqual(component.innerHTML, '<main a2="0" a1="foo" class="foo baz"></main>');
 
 		component.setProps({ c1: true, c2: true });
-		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
+		strictEqual(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		// Re-render: should retain previous result
 		renderComponent(component);
-		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
+		strictEqual(component.innerHTML, '<main a2="1" a1="foo" class="foo bar baz"></main>');
 
 		component.setProps({ c3: true });
-		assert.equal(component.innerHTML, '<main a2="1" a1="foo" class="bam foo baz"></main>');
+		strictEqual(component.innerHTML, '<main a2="1" a1="foo" class="bam foo baz"></main>');
 	});
 });

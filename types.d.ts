@@ -16,7 +16,7 @@ interface Data {
 	[key: string]: any;
 }
 
-export interface Component<P = {}, S = {}, T = Store> extends HTMLElement {
+export interface Component<P = Data, S = Data, T = Store> extends HTMLElement {
 	/**
 	 * Pointer to component view container. By default, it’s the same as component
 	 * element, but for native Web Components it points to shadow root
@@ -233,7 +233,6 @@ export interface ComponentDefinition {
 
 	/**
 	 * Component just mounted (initially rendered)
-	 * @param component
 	 */
 	didMount?(component: Component): void;
 
@@ -245,16 +244,14 @@ export interface ComponentDefinition {
 	/**
 	 * Component is about to be updated (next renders after mount)
 	 * @param component
-	 * @param changedProps List of changed properties which caused component update
-	 * @param changedState List of changed state which caused component update
+	 * @param changes List of changed properties which caused component update
 	 */
 	willUpdate?(component: Component, changes: Changes): void;
 
 	/**
 	 * Component just updated (next renders after mount)
 	 * @param component
-	 * @param changedProps List of changed properties which caused component update
-	 * @param changedState List of changed state which caused component update
+	 * @param changes List of changed properties which caused component update
 	 */
 	didUpdate?(component: Component, changes: Changes): void;
 
@@ -262,10 +259,9 @@ export interface ComponentDefinition {
 	 * Component is about to be rendered. If `false` value is returned, component
 	 * rendering will be cancelled
 	 * @param component
-	 * @param changedProps List of changed properties which caused component update
-	 * @param changedState List of changed state which caused component update
+	 * @param changes List of changed properties which caused component update
 	 */
-	willRender?(component: Component, changes: Changes): boolean;
+	willRender?(component: Component, changes: Changes): void;
 
 	/**
 	 * Component just rendered
@@ -288,7 +284,7 @@ export interface ComponentDefinition {
 	[key: string]: any;
 }
 
-export class Store<T = {}> {
+export class Store<T = Data> {
 	constructor(data: T);
 	data: T;
 	get(): T;
@@ -313,7 +309,7 @@ interface Injector {
 	/**
 	 * Current insertion pointer
 	 */
-	ptr: LinkedListItem<any>;
+	ptr: LinkedListItem<any> | null;
 
 	/**
 	 * Current block context
@@ -401,8 +397,8 @@ interface BaseBlock<T = any> {
 	/** A function to dispose block contents */
 	dispose: UnmountBlock | null;
 
-	start: LinkedListItem<T>;
-	end: LinkedListItem<T>;
+	start: LinkedListItem<T> | null;
+	end: LinkedListItem<T> | null;
 }
 
 type RenderItems = (host: Component, scope: Scope) => any[];

@@ -44,7 +44,7 @@ type FilterCallback<T> = (host: Component, value: T, key: string | number) => bo
  * matched items
  */
 export function filter<T>(host: Component, collection: T[], fn: FilterCallback<T>): T[] {
-	const result = [];
+	const result: T[] = [];
 	if (collection && collection.forEach) {
 		collection.forEach((value, key) => {
 			if (fn(host, value, key)) {

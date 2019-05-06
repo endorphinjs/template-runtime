@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import { deepStrictEqual, ok } from 'assert';
 import document, { ElementShim } from './assets/document';
 import { createInjector, run, insert, move, emptyBlockContent, injectBlock, disposeBlock } from '../src/injector';
 import { Injector, RunCallback, FunctionBlock, LinkedList, LinkedListItem } from '../types';
@@ -55,21 +55,21 @@ describe('Injector', () => {
 
 		insert(injector, elem('9'));
 
-		assert.deepEqual(children(parent), ['1', '2', '3', '4', '5', '8', '9']);
+		deepStrictEqual(children(parent), ['1', '2', '3', '4', '5', '8', '9']);
 
 		// Empty rendered block
 		emptyBlockContent(block1);
-		assert.deepEqual(children(parent), ['1', '2', '8', '9']);
+		deepStrictEqual(children(parent), ['1', '2', '8', '9']);
 
 		emptyBlockContent(block3);
-		assert.deepEqual(children(parent), ['1', '2', '9']);
+		deepStrictEqual(children(parent), ['1', '2', '9']);
 
 		// Render previously empty blocks
 		run(block2, content2);
-		assert.deepEqual(children(parent), ['1', '2', '6', '7', '9']);
+		deepStrictEqual(children(parent), ['1', '2', '6', '7', '9']);
 
 		run(block3, content3);
-		assert.deepEqual(children(parent), ['1', '2', '6', '7', '8', '9']);
+		deepStrictEqual(children(parent), ['1', '2', '6', '7', '8', '9']);
 	});
 
 	it('nested blocks', () => {
@@ -100,23 +100,23 @@ describe('Injector', () => {
 			});
 		});
 
-		assert.deepEqual(children(parent), ['1', '2', '3', '4']);
+		deepStrictEqual(children(parent), ['1', '2', '3', '4']);
 
 		// Empty deepest block
 		emptyBlockContent(block3);
 
-		assert.deepEqual(children(parent), ['1', '2', '3']);
-		assert(listHas(injector.items, block1));
-		assert(listHas(injector.items, block2));
-		assert(listHas(injector.items, block3));
+		deepStrictEqual(children(parent), ['1', '2', '3']);
+		ok(listHas(injector.items, block1));
+		ok(listHas(injector.items, block2));
+		ok(listHas(injector.items, block3));
 
 		// Empty outer block
 		emptyBlockContent(block1);
 
-		assert.deepEqual(children(parent), []);
-		assert(listHas(injector.items, block1));
-		assert(!listHas(injector.items, block2));
-		assert(!listHas(injector.items, block3));
+		deepStrictEqual(children(parent), []);
+		ok(listHas(injector.items, block1));
+		ok(!listHas(injector.items, block2));
+		ok(!listHas(injector.items, block3));
 	});
 
 	it('dispose', () => {
@@ -147,23 +147,23 @@ describe('Injector', () => {
 			});
 		});
 
-		assert.deepEqual(children(parent), ['1', '2', '3', '4']);
+		deepStrictEqual(children(parent), ['1', '2', '3', '4']);
 
 		// Empty deepest block
 		emptyBlockContent(block3);
 
-		assert.deepEqual(children(parent), ['1', '2', '3']);
-		assert(listHas(injector.items, block1));
-		assert(listHas(injector.items, block2));
-		assert(listHas(injector.items, block3));
+		deepStrictEqual(children(parent), ['1', '2', '3']);
+		ok(listHas(injector.items, block1));
+		ok(listHas(injector.items, block2));
+		ok(listHas(injector.items, block3));
 
 		// Completely remove second block
 		disposeBlock(block2);
 
-		assert.deepEqual(children(parent), ['1']);
-		assert(listHas(injector.items, block1));
-		assert(!listHas(injector.items, block2));
-		assert(!listHas(injector.items, block3));
+		deepStrictEqual(children(parent), ['1']);
+		ok(listHas(injector.items, block1));
+		ok(!listHas(injector.items, block2));
+		ok(!listHas(injector.items, block3));
 	});
 
 	it('move', () => {
@@ -194,14 +194,14 @@ describe('Injector', () => {
 		const block3 = render(injector, content3);
 		const block4 = render(injector, content4);
 
-		assert.deepEqual(children(parent), ['1', '2', '3', '4', '5', '6', '7', '8']);
+		deepStrictEqual(children(parent), ['1', '2', '3', '4', '5', '6', '7', '8']);
 
 		// move as first item
 		move(injector, block4);
-		assert.deepEqual(children(parent), ['6', '7', '8', '1', '2', '3', '4', '5']);
+		deepStrictEqual(children(parent), ['6', '7', '8', '1', '2', '3', '4', '5']);
 
 		// TODO something’s not right here
 		move(injector, block2, block3 as any as LinkedListItem<any>);
-		assert.deepEqual(children(parent), ['6', '7', '8', '1', '4', '5', '2', '3']);
+		deepStrictEqual(children(parent), ['6', '7', '8', '1', '4', '5', '2', '3']);
 	});
 });

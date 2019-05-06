@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import { strictEqual } from 'assert';
 import read from './assets/read-file';
 import document from './assets/document';
 import iterate from './samples/iterate';
@@ -27,7 +27,7 @@ describe('Iterate', () => {
 		});
 
 		mountComponent(component);
-		assert.equal(component.innerHTML, read('fixtures/iterate1.html'));
+		strictEqual(component.innerHTML, read('fixtures/iterate1.html'));
 
 		// Render same content but in different order: must keep the same `<li>`
 		// nodes in original order and update its contents
@@ -40,10 +40,10 @@ describe('Iterate', () => {
 				{ id: 4, marked: true }
 			]
 		});
-		assert.equal(component.innerHTML, read('fixtures/iterate2.html'));
+		strictEqual(component.innerHTML, read('fixtures/iterate2.html'));
 
 		cur = listNodes();
-		cur.forEach((node, i) => assert.strictEqual(node, prev[i]));
+		cur.forEach((node, i) => strictEqual(node, prev[i]));
 
 		// Render less elements
 		component.setProps({
@@ -54,9 +54,9 @@ describe('Iterate', () => {
 		});
 
 		cur = listNodes();
-		assert.equal(component.innerHTML, read('fixtures/iterate3.html'));
-		assert.strictEqual(cur[0], prev[0]);
-		assert.strictEqual(cur[1], prev[1]);
+		strictEqual(component.innerHTML, read('fixtures/iterate3.html'));
+		strictEqual(cur[0], prev[0]);
+		strictEqual(cur[1], prev[1]);
 
 		// Render more elements
 		component.setProps({
@@ -69,8 +69,8 @@ describe('Iterate', () => {
 		});
 
 		cur = listNodes();
-		assert.equal(component.innerHTML, read('fixtures/iterate2.html'));
-		assert.strictEqual(cur[0], prev[0]);
-		assert.strictEqual(cur[1], prev[1]);
+		strictEqual(component.innerHTML, read('fixtures/iterate2.html'));
+		strictEqual(cur[0], prev[0]);
+		strictEqual(cur[1], prev[1]);
 	});
 });

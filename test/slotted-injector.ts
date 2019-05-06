@@ -1,6 +1,6 @@
 import assert from 'assert';
 import document from './assets/document';
-import { createInjector, run, insert, move, injectBlock, emptyBlockContent, disposeBlock } from '../src/injector';
+import { createInjector, run, insert, injectBlock, emptyBlockContent, disposeBlock } from '../src/injector';
 import { obj } from '../src/utils';
 import { Injector, FunctionBlock, MountBlock, LinkedList } from '../types';
 
@@ -189,53 +189,5 @@ describe('Slotted injector', () => {
 		assert(listHas(injector.items, block1));
 		assert(!listHas(injector.items, block2));
 		assert(!listHas(injector.items, block3));
-	});
-
-	it('move', () => {
-		const parent = elem('div');
-		const injector = createInjector(parent);
-		injector.slots = obj();
-
-		const content1 = () => {
-			insert(injector, elem('1'));
-		};
-
-		const content2 = () => {
-			insert(injector, elem('2'), 'slot1');
-			insert(injector, elem('3'));
-		};
-
-		const content3 = () => {
-			insert(injector, elem('4'), 'slot1');
-			insert(injector, elem('5'));
-		};
-
-		const content4 = () => {
-			insert(injector, elem('6'));
-			insert(injector, elem('7'), 'slot2');
-			insert(injector, elem('8'), 'slot1');
-		};
-
-		render(injector, content1);
-		const block2 = render(injector, content2);
-		const block3 = render(injector, content3);
-		const block4 = render(injector, content4);
-
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '3', '5', '6']);
-		assert.deepEqual(children(injector.slots['slot1']), ['2', '4', '8']);
-		assert.deepEqual(children(injector.slots['slot2']), ['7']);
-
-		move(injector, block4);
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['6', '1', '3', '5']);
-		assert.deepEqual(children(injector.slots['slot1']), ['8', '2', '4']);
-		assert.deepEqual(children(injector.slots['slot2']), ['7']);
-
-		move(injector, block2, block3);
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['6', '1', '5', '3']);
-		assert.deepEqual(children(injector.slots['slot1']), ['8', '4', '2']);
-		assert.deepEqual(children(injector.slots['slot2']), ['7']);
 	});
 });

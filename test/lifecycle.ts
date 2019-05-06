@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import { strictEqual, deepStrictEqual } from 'assert';
 import document from './assets/document';
 import {
 	createComponent, mountComponent, mountBlock, updateBlock, updateComponent,
@@ -55,7 +55,7 @@ describe('Component lifecycle', () => {
 		});
 
 		component.setProps({ p2: 'p2Value0' });
-		assert.deepEqual(dfn1.calls.willRender, [{
+		deepStrictEqual(dfn1.calls.willRender, [{
 			p1: { current: 'p1Value0', prev: undefined }
 		}, {
 			p2: { current: 'p2Value0', prev: undefined}
@@ -227,8 +227,8 @@ function createDefinition(template: MountTemplate) {
 	return definition;
 }
 
-function assertCalls(dfn, map) {
+function assertCalls(dfn: DefinitionShim, map: { [K in LifecycleMethods]?: number }) {
 	Object.keys(map).forEach(name => {
-		assert.equal(dfn.calls[name].length, map[name], name);
+		strictEqual(dfn.calls[name].length, map[name], name);
 	});
 }

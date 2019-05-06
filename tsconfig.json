@@ -11,5 +11,5 @@
     "declaration": true,
     "allowJs": true
   },
-  "files": ["index.ts"]
+  "files": ["runtime.ts"]
 }

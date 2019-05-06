@@ -1,4 +1,5 @@
-const callbacks = [];
+type Callback = (elem: NodeShim) => void;
+const callbacks: Callback[] = [];
 
 interface AttributeShim {
 	name: string;
@@ -19,7 +20,7 @@ class NodeShim {
 	style: { [name: string]: string } = { animation: '' };
 	childNodes: NodeShim[] = [];
 	attributes: AttributeShim[] = [];
-	parentNode?: NodeShim;
+	parentNode?: NodeShim | null;
 	attached = 0;
 	detached = 0;
 	listeners: { [name: string]: EventHandlerShim[] } = {};
@@ -34,7 +35,7 @@ class NodeShim {
 		return this.childNodes.indexOf(node);
 	}
 
-	get nextSibling(): NodeShim {
+	get nextSibling(): NodeShim | null {
 		if (this.parentNode) {
 			const siblings = this.parentNode.childNodes;
 			const ix = this._index;
@@ -46,7 +47,7 @@ class NodeShim {
 		return null;
 	}
 
-	get previousSibling(): NodeShim {
+	get previousSibling(): NodeShim | null{
 		if (this.parentNode) {
 			const siblings = this.parentNode.childNodes;
 			const ix = this._index;
@@ -74,7 +75,7 @@ class NodeShim {
 		return attr ? attr.value : null;
 	}
 
-	setAttribute(name: string, value: string) {
+	setAttribute(name: string, value: string | null) {
 		const attr = this.attributes.find(a => a.name === name);
 		if (attr) {
 			attr.value = value;
@@ -91,7 +92,7 @@ class NodeShim {
 		return !!this.attributes.find(attr => attr.name === name);
 	}
 
-	appendChild(node: NodeShim): NodeShim {
+	appendChild<T extends NodeShim>(node: T): T {
 		if (node.nodeType === NodeShim.DOCUMENT_FRAGMENT_NODE) {
 			while (node.firstChild) {
 				this.appendChild(node.firstChild);
@@ -275,9 +276,9 @@ export class ElementShim extends NodeShim {
 	 * @param {string} name
 	 * @returns {ElementShim}
 	 */
-	findByName(name: string): ElementShim {
+	findByName(name: string): ElementShim | undefined {
 		let ctx = this.firstChild as ElementShim;
-		let child: ElementShim;
+		let child: ElementShim | undefined;
 		while (ctx) {
 			if (ctx.nodeName === name) {
 				return ctx;
@@ -348,7 +349,7 @@ function stringifyChildren(node: NodeShim, indent = '\t', level = 0): string {
 
 export default new DocumentShim();
 
-export function setCallback(fn) {
+export function setCallback(fn: Callback) {
 	callbacks.push(fn);
 }
 
@@ -358,12 +359,10 @@ export function clearCallbacks() {
 
 /**
  * Parses given HTML code into dom
- * @param {string} html
- * @returns {ElementShim[]}
  */
-function parseHTML(ctx, html: string): ElementShim[] {
+function parseHTML(ctx: ElementShim, html: string): ElementShim {
 	let pos = 0;
-	let m: RegExpExecArray;
+	let m: RegExpExecArray | null;
 	const re = /<\/?(\w+)>/g;
 
 	// For testing purposes, parse XML nodes without attributes
@@ -373,7 +372,7 @@ function parseHTML(ctx, html: string): ElementShim[] {
 		}
 
 		if (m[0][1] === '/') {
-			ctx = ctx.parentNode;
+			ctx = ctx.parentNode as ElementShim;
 		} else {
 			ctx = ctx.appendChild(new ElementShim(m[1]));
 		}

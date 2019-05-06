@@ -8,7 +8,7 @@ import { getScope } from './scope';
 import { updateSlots } from './slot';
 import { Changes, Component, ComponentDefinition, AttachedStaticEvents, ComponentEventHandler, StaticEventHandler } from '../types';
 
-let renderQueue: Array<Component | Changes> = null;
+let renderQueue: Array<Component | Changes> | null = null;
 
 /**
  * Creates internal lightweight Endorphin component with given definition
@@ -92,10 +92,10 @@ export function createComponent(name: string, definition: ComponentDefinition, h
 		mounted: false,
 		rendering: false,
 		finalizing: false,
-		update: null,
+		update: void 0,
 		queued: false,
 		events,
-		dispose: null,
+		dispose: void 0,
 		defaultProps: props
 	};
 

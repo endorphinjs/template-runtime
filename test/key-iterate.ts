@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import { strictEqual, ok } from 'assert';
 import read from './assets/read-file';
 import document from './assets/document';
 import keyIterate from './samples/key-iterate';
@@ -27,7 +27,7 @@ describe('Key iterate', () => {
 		});
 
 		mountComponent(component);
-		assert.equal(component.innerHTML, read('fixtures/key-iterate1.html'));
+		strictEqual(component.innerHTML, read('fixtures/key-iterate1.html'));
 
 		// Render same content but in different order: must keep the same `<li>` nodes,
 		// but they should be reordered
@@ -41,20 +41,20 @@ describe('Key iterate', () => {
 				{ id: 4, marked: true }
 			]
 		});
-		assert.equal(component.innerHTML, read('fixtures/key-iterate2.html'));
+		strictEqual(component.innerHTML, read('fixtures/key-iterate2.html'));
 
 		cur = listNodes();
 
-		assert.strictEqual(cur[0], prev[2]);
-		assert.strictEqual(cur[1], prev[1]);
-		assert.strictEqual(cur[2], prev[0]);
-		assert.strictEqual(cur[4], prev[4]);
+		strictEqual(cur[0], prev[2]);
+		strictEqual(cur[1], prev[1]);
+		strictEqual(cur[2], prev[0]);
+		strictEqual(cur[4], prev[4]);
 
 		// Both 2 and 3 should be reordered (detached and attached)
-		assert(cur[0]['attached'] > cur[2]['attached']);
-		assert(cur[0]['detached'] > cur[2]['detached']);
-		assert(cur[0]['attached'] === cur[1]['attached']);
-		assert(cur[0]['detached'] === cur[1]['detached']);
+		ok(cur[0]['attached'] > cur[2]['attached']);
+		ok(cur[0]['detached'] > cur[2]['detached']);
+		ok(cur[0]['attached'] === cur[1]['attached']);
+		ok(cur[0]['detached'] === cur[1]['detached']);
 
 		// Render less elements
 		component.setProps({
@@ -65,9 +65,9 @@ describe('Key iterate', () => {
 		});
 
 		cur = listNodes();
-		assert.equal(component.innerHTML, read('fixtures/key-iterate3.html'));
-		assert.strictEqual(cur[0], prev[0]);
-		assert.strictEqual(cur[1], prev[1]);
+		strictEqual(component.innerHTML, read('fixtures/key-iterate3.html'));
+		strictEqual(cur[0], prev[0]);
+		strictEqual(cur[1], prev[1]);
 
 		// Render more elements
 		component.setProps({
@@ -80,11 +80,11 @@ describe('Key iterate', () => {
 		});
 
 		cur = listNodes();
-		assert.equal(component.innerHTML, read('fixtures/key-iterate2.html'));
-		assert(cur[1] === prev[1]);
-		assert(cur[2] === prev[0]);
-		assert(cur[0] !== prev[2]);
-		assert(cur[3] !== prev[3]);
+		strictEqual(component.innerHTML, read('fixtures/key-iterate2.html'));
+		ok(cur[1] === prev[1]);
+		ok(cur[2] === prev[0]);
+		ok(cur[0] !== prev[2]);
+		ok(cur[3] !== prev[3]);
 
 		prev = cur;
 
@@ -99,10 +99,10 @@ describe('Key iterate', () => {
 		});
 
 		cur = listNodes();
-		assert.equal(component.innerHTML, read('fixtures/key-iterate1.html'));
-		assert.strictEqual(cur[0], prev[2]);
-		assert.strictEqual(cur[1], prev[1]);
-		assert.strictEqual(cur[2], prev[0]);
-		assert.strictEqual(cur[4], prev[4]);
+		strictEqual(component.innerHTML, read('fixtures/key-iterate1.html'));
+		strictEqual(cur[0], prev[2]);
+		strictEqual(cur[1], prev[1]);
+		strictEqual(cur[2], prev[0]);
+		strictEqual(cur[4], prev[4]);
 	});
 });

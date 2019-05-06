@@ -17,10 +17,10 @@ export function animateIn(elem: HTMLElement | Component, animation: string, cssS
  */
 export function animateOut(elem: HTMLElement | Component, animation: string, cssScope: string): void;
 export function animateOut<T>(elem: HTMLElement | Component, animation: string, scope: T, callback: (scope: T) => void, cssScope: string): void;
-export function animateOut<T>(elem: HTMLElement | Component, animation: string, scope: T | string, callback?: (scope: T) => void, cssScope?: string): void {
+export function animateOut<T>(elem: HTMLElement | Component, animation: string, scope: T | string | undefined, callback?: (scope: T) => void, cssScope?: string): void {
 	if (typeof scope === 'string') {
 		cssScope = scope;
-		scope = callback = null;
+		scope = callback = undefined;
 	}
 
 	if (animation = createAnimation(animation, cssScope)) {
