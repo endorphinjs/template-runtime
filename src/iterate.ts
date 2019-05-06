@@ -1,14 +1,14 @@
 import { run, injectBlock, disposeBlock } from './injector';
 import { setScope, getScope } from './scope';
 import { obj } from './utils';
-import { Component, Injector, RenderMount, IteratorBlock, IteratorItemBlock, LinkedListItem, RenderItems } from '../types';
+import { Component, Injector, IteratorBlock, IteratorItemBlock, LinkedListItem, RenderItems, Scope, MountBlock } from '../types';
 
 /**
  * Mounts iterator block
  * @param get A function that returns collection to iterate
  * @param body A function that renders item of iterated collection
  */
-export function mountIterator(host: Component, injector: Injector, get: RenderItems, body: RenderMount): IteratorBlock {
+export function mountIterator(host: Component, injector: Injector, get: RenderItems, body: MountBlock): IteratorBlock {
 	const block: IteratorBlock = injectBlock(injector, {
 		$$block: true,
 		host,
@@ -50,7 +50,7 @@ function iteratorHost(host: Component, injector: Injector, block: IteratorBlock)
 	trimIteratorItems(block);
 }
 
-export function prepareScope(scope: any, index: number, key: any, value: any) {
+export function prepareScope(scope: Scope, index: number, key: any, value: any): Scope {
 	scope.index = index;
 	scope.key = key;
 	scope.value = value;

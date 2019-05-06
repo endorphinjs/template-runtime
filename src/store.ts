@@ -4,7 +4,7 @@ import { StoreUpdateEntry, StoreUpdateHandler, Component } from '../types';
 
 const prefix = '$';
 
-export class Store<T extends any> {
+export class Store<T = {}> {
 	data: T;
 	sync: boolean = false;
 	private listeners: StoreUpdateEntry[] = [];

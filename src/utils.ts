@@ -1,4 +1,4 @@
-import { Component, Injector, Changes, ChangeSet, DisposeCallback } from '../types';
+import { Component, Injector, Changes, ChangeSet, UnmountBlock } from '../types';
 
 export const animatingKey = '$$animating';
 
@@ -7,7 +7,7 @@ type ChangeCallback = (name: string, prev: any, next: any, ctx?: any) => void;
 /**
  * Creates fast object
  */
-export function obj(proto: object = null): any {
+export function obj(proto: object = null): {} {
 	return Object.create(proto);
 }
 
@@ -181,7 +181,7 @@ export function representAttributeValue(elem: Element, name: string, value: any)
 /**
  * Marks given item as explicitly disposable for given host
  */
-export function addDisposeCallback(host: Component | Injector, callback: DisposeCallback): Component | Injector {
+export function addDisposeCallback(host: Component | Injector, callback: UnmountBlock): Component | Injector {
 	if ('componentModel' in host) {
 		host.componentModel.dispose = callback;
 	} else {

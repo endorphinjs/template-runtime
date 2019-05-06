@@ -10,7 +10,7 @@ describe('Injector', () => {
 	const elem = (name: string) => document.createElement(name) as any as Element;
 	const children = (node: Element) => (node as any as ElementShim).childNodes.map((el: ElementShim) => el.nodeName);
 
-	function render(injector: Injector, fn?: RunCallback<any>) {
+	function render(injector: Injector, fn?: RunCallback<any, void>) {
 		const b = injectBlock(injector, { $$block: true, injector, fn } as FunctionBlock);
 		fn && run(b, fn, b);
 		injector.ptr = b.end;

@@ -1,23 +1,24 @@
 import assert from 'assert';
 import document from './assets/document';
-import { createInjector, run, insert, move, injectBlock, emptyBlockContent, disposeBlock } from '../lib/injector';
-import { obj } from '../lib/utils';
+import { createInjector, run, insert, move, injectBlock, emptyBlockContent, disposeBlock } from '../src/injector';
+import { obj } from '../src/utils';
+import { Injector, FunctionBlock, MountBlock, LinkedList } from '../types';
 
 describe('Slotted injector', () => {
-	before(() => global.document = document);
-	after(() => delete global.document);
+	before(() => global['document'] = document);
+	after(() => delete global['document']);
 
-	const elem = name => document.createElement(name);
-	const children = node => node.childNodes.map(elem => elem.nodeName);
+	const elem = (name: string) => document.createElement(name) as any as HTMLElement;
+	const children = (node: Element | DocumentFragment) => Array.from(node.childNodes).map(el => el.nodeName);
 
-	function render(injector, fn) {
-		const b = injectBlock(injector, { $$block: true, injector, fn });
+	function render(injector: Injector, fn?: MountBlock): FunctionBlock {
+		const b = injectBlock(injector, { $$block: true, injector, fn } as FunctionBlock);
 		fn && run(b, fn, b);
 		injector.ptr = b.end;
 		return b;
 	}
 
-	function listHas(list, value) {
+	function listHas<T>(list: LinkedList<T>, value: T): boolean {
 		let item = list.head;
 		while (item) {
 			if (item.value === value) {
@@ -30,7 +31,7 @@ describe('Slotted injector', () => {
 
 	it('flat blocks', () => {
 		const parent = elem('div');
-		const injector = createInjector(parent);
+		const injector = createInjector(parent as Element);
 		injector.slots = obj();
 
 		const content1 = () => {
@@ -107,7 +108,9 @@ describe('Slotted injector', () => {
 			insert(injector, elem('4'), 'slot1');
 		};
 
-		let block1, block2, block3;
+		let block1: FunctionBlock;
+		let block2: FunctionBlock;
+		let block3: FunctionBlock;
 
 		block1 = render(injector, () => {
 			content1();
@@ -161,7 +164,9 @@ describe('Slotted injector', () => {
 			insert(injector, elem('4'));
 		};
 
-		let block1, block2, block3;
+		let block1: FunctionBlock;
+		let block2: FunctionBlock;
+		let block3: FunctionBlock;
 
 		block1 = render(injector, () => {
 			content1();

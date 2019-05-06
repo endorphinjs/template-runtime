@@ -1,9 +1,9 @@
-import assert from 'assert';
-import { createList, listPrependValue, listInsertValueAfter, listRemove, listMoveFragmentAfter, listMoveFragmentFirst } from '../lib/linked-list';
+import { deepStrictEqual, strictEqual } from 'assert';
+import { createList, listPrependValue, listInsertValueAfter, listRemove, listMoveFragmentAfter, listMoveFragmentFirst } from '../src/linked-list';
+import { LinkedList } from '../types';
 
 describe('Linked list', () => {
-	/** @param {LinkedList} */
-	function toArray(list) {
+	function toArray(list: LinkedList) {
 		const result = [];
 		let guard = 15;
 		let item = list.head;
@@ -15,7 +15,7 @@ describe('Linked list', () => {
 		return result;
 	}
 
-	function verify(list) {
+	function verify(list: LinkedList) {
 		let prev = null;
 		let item = list.head;
 		let pos = 0;
@@ -34,18 +34,18 @@ describe('Linked list', () => {
 		const list = createList();
 
 		const item1 = listPrependValue(list, 1);
-		assert(list.head === item1);
+		strictEqual(list.head, item1);
 		verify(list);
 
 		const item2 = listPrependValue(list, 2);
-		assert(list.head === item2);
+		strictEqual(list.head, item2);
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [2, 1]);
+		deepStrictEqual(toArray(list), [2, 1]);
 
 		const item3 = listPrependValue(list, 3);
-		assert(list.head === item3);
+		strictEqual(list.head, item3);
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [3, 2, 1]);
+		deepStrictEqual(toArray(list), [3, 2, 1]);
 	});
 
 	it('should insert value after', () => {
@@ -54,15 +54,15 @@ describe('Linked list', () => {
 		const item1 = listPrependValue(list, 1);
 
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [1, 2]);
+		deepStrictEqual(toArray(list), [1, 2]);
 
 		listInsertValueAfter(3, item1);
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [1, 3, 2]);
+		deepStrictEqual(toArray(list), [1, 3, 2]);
 
 		listInsertValueAfter(4, item2);
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [1, 3, 2, 4]);
+		deepStrictEqual(toArray(list), [1, 3, 2, 4]);
 	});
 
 	it('should remove', () => {
@@ -71,24 +71,24 @@ describe('Linked list', () => {
 		const item2 = listPrependValue(list, 2);
 		const item1 = listPrependValue(list, 1);
 
-		assert.deepStrictEqual(toArray(list), [1, 2, 3]);
+		deepStrictEqual(toArray(list), [1, 2, 3]);
 		verify(list);
 
 		listRemove(list, item2);
-		assert.deepStrictEqual(toArray(list), [1, 3]);
-		assert(item2.prev === null);
-		assert(item2.next === null);
+		deepStrictEqual(toArray(list), [1, 3]);
+		strictEqual(item2.prev, null);
+		strictEqual(item2.next, null);
 
 		listRemove(list, item3);
-		assert.deepStrictEqual(toArray(list), [1]);
-		assert(item3.prev === null);
-		assert(item3.next === null);
+		deepStrictEqual(toArray(list), [1]);
+		strictEqual(item3.prev, null);
+		strictEqual(item3.next, null);
 
 		listRemove(list, item1);
-		assert.deepStrictEqual(toArray(list), []);
-		assert(item1.prev === null);
-		assert(item1.next === null);
-		assert(list.head === null);
+		deepStrictEqual(toArray(list), []);
+		strictEqual(item1.prev, null);
+		strictEqual(item1.next, null);
+		strictEqual(list.head, null);
 	});
 
 	it('should move', () => {
@@ -99,18 +99,18 @@ describe('Linked list', () => {
 		const item2 = listPrependValue(list, 2);
 		const item1 = listPrependValue(list, 1);
 
-		assert.deepStrictEqual(toArray(list), [1, 2, 3, 4, 5]);
+		deepStrictEqual(toArray(list), [1, 2, 3, 4, 5]);
 
 		listMoveFragmentAfter(list, item1, item2, item5);
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [3, 4, 5, 1, 2]);
+		deepStrictEqual(toArray(list), [3, 4, 5, 1, 2]);
 
 		listMoveFragmentAfter(list, item5, item1, item3);
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [3, 5, 1, 4, 2]);
+		deepStrictEqual(toArray(list), [3, 5, 1, 4, 2]);
 
 		listMoveFragmentFirst(list, item4, item2);
 		verify(list);
-		assert.deepStrictEqual(toArray(list), [4, 2, 3, 5, 1]);
+		deepStrictEqual(toArray(list), [4, 2, 3, 5, 1]);
 	});
 });

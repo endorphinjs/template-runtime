@@ -4,17 +4,19 @@ type ComponentEventHandler = (component: Component, event: Event, target: HTMLEl
 type StaticEventHandler = (evt: Event) => void;
 type Scope = { [key: string]: any };
 
-interface DisposeCallback {
-	(scope: Scope): void
-}
+type RunCallback<D = any, R = undefined | null> = (host: Component, injector: Injector, data?: D) => R;
+type GetMount = (host: Component, scope: Scope) => MountBlock | undefined;
+type MountTemplate = (host: Component, scope: Scope) => UpdateTemplate | undefined;
+type UpdateTemplate = (host: Component, scope: Scope) => number | void;
+type MountBlock<D = Scope> = (host: Component, injector: Injector, data: D) => UpdateBlock | void;
+type UpdateBlock<D = Scope> = (host: Component, injector: Injector, data: D) => number | void;
+type UnmountBlock = (scope: Scope) => void;
 
-type BlockDisposeCallback = (scope: Scope) => void;
-type RunCallback<T> = (host: Component, injector: Injector, data?: any) => T;
-interface ComponentData {
+interface Data {
 	[key: string]: any;
 }
 
-export interface Component extends HTMLElement {
+export interface Component<P = {}, S = {}, T = Store> extends HTMLElement {
 	/**
 	 * Pointer to component view container. By default, it’s the same as component
 	 * element, but for native Web Components it points to shadow root
@@ -29,12 +31,12 @@ export interface Component extends HTMLElement {
 	/**
 	 * Component properties (external contract)
 	 */
-	props: ComponentData;
+	props: P;
 
 	/**
 	 * Component state (internal props)
 	 */
-	state: ComponentData;
+	state: S;
 
 	/**
 	 * Named references to elements rendered inside current component
@@ -44,7 +46,7 @@ export interface Component extends HTMLElement {
 	/**
 	 * A store, bound to current component
 	 */
-	store?: Store<any>;
+	store?: T;
 
 	/**
 	 * References to component slot containers. Default slot is available as `slot['']`
@@ -69,10 +71,6 @@ export interface Component extends HTMLElement {
 	 * @returns Final state
 	 */
 	setState(value: object): void;
-}
-
-export interface ComponentWithStore<T> extends Component {
-
 }
 
 /**
@@ -105,7 +103,7 @@ export interface ComponentModel {
 	 * A function for updating rendered component content. Might be available
 	 * after component was mounted and only if component has update cycle
 	 */
-	update?: UpdateView;
+	update?: UpdateTemplate | undefined;
 
 	/**
 	 * List of attached event handlers
@@ -114,7 +112,7 @@ export interface ComponentModel {
 
 	/** Slot output for component */
 	slots: {
-		[name: string]: BaseBlock<any>
+		[name: string]: BaseBlock
 	}
 
 	/**
@@ -157,7 +155,7 @@ export interface ComponentModel {
 	/**
 	 * A function for disposing component contents
 	 */
-	dispose?: DisposeCallback
+	dispose?: UnmountBlock
 }
 
 /**
@@ -167,17 +165,17 @@ export interface ComponentDefinition {
 	/**
 	 * Initial props factory
 	 */
-	props?(component: Component): object;
+	props?(component: Component): {};
 
 	/**
 	 * Initial state factory
 	 */
-	state?(component: Component): object;
+	state?(component: Component): {};
 
 	/**
 	 * Returns instance of store used for components
 	 */
-	store?(): Store<any>;
+	store?(): Store;
 
 	/**
 	 * Returns pointer to element where contents of component should be rendered
@@ -221,7 +219,7 @@ export interface ComponentDefinition {
 	 * If rendered result must be updated, should return function that will be
 	 * invoked for update
 	 */
-	default(component: Component, scope: Scope): UpdateView;
+	default?: MountTemplate;
 
 	/**
 	 * Component created
@@ -290,7 +288,7 @@ export interface ComponentDefinition {
 	[key: string]: any;
 }
 
-export class Store<T extends any> {
+export class Store<T = {}> {
 	constructor(data: T);
 	data: T;
 	get(): T;
@@ -367,15 +365,11 @@ export interface Changes {
 	}
 }
 
-interface UpdateView {
-	(host: Component, scope: Scope): void;
-}
-
 interface SlotContext {
 	host: Component;
 	name: string;
 	isDefault: boolean;
-	defaultContent?: RenderUpdate;
+	defaultContent?: MountBlock;
 }
 
 interface StoreUpdateHandler {
@@ -388,43 +382,41 @@ interface StoreUpdateEntry {
 	handler?: StoreUpdateHandler;
 }
 
-interface LinkedList<T> {
+interface LinkedList<T = any> {
 	head: LinkedListItem<T>;
 }
 
 interface LinkedListItem<T> {
 	value: T;
-	next: LinkedListItem<any> | null;
-	prev: LinkedListItem<any> | null;
+	next: LinkedListItem<T> | null;
+	prev: LinkedListItem<T> | null;
 }
 
-interface BaseBlock<T> {
+interface BaseBlock<T = any> {
 	$$block: true;
 	host: Component;
 	injector: Injector;
 	scope: Scope;
 
 	/** A function to dispose block contents */
-	dispose: BlockDisposeCallback | null;
+	dispose: UnmountBlock | null;
 
 	start: LinkedListItem<T>;
 	end: LinkedListItem<T>;
 }
 
-type RenderMount = (host: Component, injector: Injector, scope: Scope) => RenderUpdate | null;
-type RenderUpdate = (host: Component, injector: Injector, scope: Scope) => null;
 type RenderItems = (host: Component, scope: Scope) => any[];
 type KeyExpr = (host: Component, scope?: Scope) => string;
 
 interface FunctionBlock extends BaseBlock<FunctionBlock> {
-	get: (host: Component, scope: Scope) => RenderMount | null;
-	update: RenderUpdate | null;
-	fn: RenderMount | null;
+	get: GetMount;
+	fn?: MountBlock | void;
+	update?: UpdateBlock | void;
 }
 
 interface IteratorBlock extends BaseBlock<IteratorBlock> {
 	get: RenderItems;
-	body: RenderMount;
+	body: MountBlock;
 	index: number;
 	updated: number;
 }
@@ -443,23 +435,23 @@ interface KeyIteratorBlock extends IteratorBlock {
 }
 
 interface IteratorItemBlock extends BaseBlock<IteratorItemBlock> {
-	update: RenderUpdate;
+	update: UpdateBlock | void;
 	owner: IteratorBlock | KeyIteratorBlock;
 }
 
 interface InnerHtmlBlock extends BaseBlock<InnerHtmlBlock> {
-	get: Function;
+	get: GetMount;
 	code: any;
 	slotName: string;
 }
 
 interface PartialBlock extends BaseBlock<PartialBlock> {
-	update: RenderUpdate;
+	update: UpdateBlock | void;
 	partial: PartialDefinition | null;
 }
 
 interface PartialDefinition {
 	host: Component;
-	body: RenderMount;
+	body: MountBlock;
 	defaults: object;
 }

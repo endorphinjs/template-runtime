@@ -5,7 +5,14 @@ import {
 	insert, setAttribute, elem, text, updateText, mountSlot, elemWithText,
 	unmountComponent, addDisposeCallback, disposeBlock
 } from '../runtime';
-import { Component, RenderMount, Scope, RenderUpdate } from '../types';
+import { Component, Scope, Injector, Changes, MountTemplate } from '../types';
+
+type LifecycleMethods = 'init' | 'willMount' | 'didMount' | 'didChange' | 'willUpdate' | 'didUpdate' | 'willRender' | 'didRender' | 'willUnmount' | 'didUnmount';
+
+interface DefinitionShim {
+	calls: { [K in LifecycleMethods]: any[] };
+	default: MountTemplate;
+}
 
 describe('Component lifecycle', () => {
 	before(() => global['document'] = document);
@@ -107,7 +114,7 @@ describe('Component lifecycle', () => {
 		});
 	});
 
-	function mount1(host: Component, scope: Scope): RenderUpdate | void {
+	function mount1(host: Component, scope: Scope) {
 		const target0 = host.componentView;
 		const testInner10 = scope.$_testInner10 = target0.appendChild(createComponent('component2', dfn2, host));
 		const injector0 = scope.$_injector0 = testInner10.componentModel.input;
@@ -123,14 +130,15 @@ describe('Component lifecycle', () => {
 		setAttribute(injector0, 'p1', host.props.p1);
 		updateBlock(scope.$_block0);
 		updateComponent(scope.$_testInner10);
+		return null;
 	}
 
-	function dispose1(scope) {
+	function dispose1(scope: Scope) {
 		scope.$_testInner10 = unmountComponent(scope.$_testInner10);
 		scope.$_block0 = disposeBlock(scope.$_block0);
 	}
 
-	function component1Content0(host, injector, scope) {
+	function component1Content0(host: Component, injector: Injector, scope: Scope) {
 		const testInner20 = scope.$_testInner20 = insert(injector, createComponent('component3', dfn3, host));
 		const injector0 = scope.$_injector1 = testInner20.componentModel.input;
 		setAttribute(injector0, 'p3', host.props.p3);
@@ -139,40 +147,44 @@ describe('Component lifecycle', () => {
 		return component1Content0Update;
 	}
 
-	function component1Content0Update(host, injector, scope) {
+	function component1Content0Update(host: Component, injector: Injector, scope: Scope) {
 		const injector0 = scope.$_injector1;
 		setAttribute(injector0, 'p3', host.props.p3);
 		updateComponent(scope.$_testInner20);
+		return null;
 	}
 
-	function component1Content0Dispose(scope) {
+	function component1Content0Dispose(scope: Scope) {
 		scope.$_testInner20 = unmountComponent(scope.$_testInner20);
 		scope.$_injector1 = null;
 	}
 
-	function component1Entry0(host) {
+	function component1Entry0(host: Component) {
 		if (host.props.p2) {
 			return component1Content0;
 		}
+
+		return undefined;
 	}
 
-	function mount2(host, scope) {
+	function mount2(host: Component, scope: Scope) {
 		const target0 = host.componentView;
-		const p0 = target0.appendChild(elem('p', host));
+		const p0 = target0.appendChild(elem('p'));
 		p0.appendChild(text('Inner 2: '));
 		scope.$_text0 = p0.appendChild(text(scope.$_textValue0 = host.props.p1));
-		const slot0 = target0.appendChild(elem('slot', host));
-		mountSlot(host, '', slot0);
+		const slot0 = target0.appendChild(elem('slot'));
+		mountSlot(host, '', slot0 as HTMLElement);
 		return update2;
 	}
 
-	function update2(host, scope) {
-		scope.$_textValue0 = updateText(scope.$_text0, host.props.p1, scope.$_textValue0);
+	function update2(host: Component, scope: Scope) {
+		scope.$_textValue0 = updateText(scope.$_text0, host.props.p1);
+		return undefined;
 	}
 
-	function mount3(host, scope) {
+	function mount3(host: Component, scope: Scope) {
 		const target0 = host.componentView;
-		const p0 = target0.appendChild(elem('p', host));
+		const p0 = target0.appendChild(elem('p'));
 		p0.appendChild(text('Inner 3: '));
 		scope.$_text0 = p0.appendChild(text(scope.$_textValue0 = host.props.p3));
 		const testInner30 = scope.$_testInner30 = target0.appendChild(createComponent('component4', dfn4, host));
@@ -181,31 +193,33 @@ describe('Component lifecycle', () => {
 		return update3;
 	}
 
-	function update3(host, scope) {
-		scope.$_textValue0 = updateText(scope.$_text0, host.props.p3, scope.$_textValue0);
+	function update3(host: Component, scope: Scope) {
+		scope.$_textValue0 = updateText(scope.$_text0, host.props.p3);
 		updateComponent(scope.$_testInner30);
+		return undefined;
 	}
 
-	function dispose3(scope) {
+	function dispose3(scope: Scope) {
 		scope.$_testInner30 = unmountComponent(scope.$_testInner30);
 		scope.$_text0 = null;
 		scope.$_textValue0 = null;
 	}
 
-	function mount4(host) {
+	function mount4(host: Component) {
 		const target0 = host.componentView;
-		target0.appendChild(elemWithText('p', 'Inner 4', host));
+		target0.appendChild(elemWithText('p', 'Inner 4'));
+		return undefined;
 	}
 });
 
-function createDefinition(template: RenderMount) {
+function createDefinition(template: MountTemplate) {
 	const definition = {
 		calls: {},
 		default: template
-	};
+	} as DefinitionShim;
 	['init', 'willMount', 'didMount', 'didChange', 'willUpdate', 'didUpdate', 'willRender', 'didRender', 'willUnmount', 'didUnmount'].forEach(name => {
 		definition.calls[name] = [];
-		definition[name] = (host: Component, changes) => {
+		definition[name] = (host: Component, changes: Changes) => {
 			definition.calls[name].push(changes);
 		};
 	});

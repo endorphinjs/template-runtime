@@ -2,12 +2,12 @@ import { run, move, injectBlock, disposeBlock } from './injector';
 import { setScope, getScope } from './scope';
 import { obj } from './utils';
 import { prepareScope } from './iterate';
-import { Component, Injector, RenderMount, KeyIteratorBlock, IteratorItemBlock, RenderItems, KeyExpr } from '../types';
+import { Component, Injector, KeyIteratorBlock, IteratorItemBlock, RenderItems, KeyExpr, MountBlock } from '../types';
 
 /**
  * Renders key iterator block
  */
-export function mountKeyIterator(host: Component, injector: Injector, get: RenderItems, keyExpr: KeyExpr, body: RenderMount): KeyIteratorBlock {
+export function mountKeyIterator(host: Component, injector: Injector, get: RenderItems, keyExpr: KeyExpr, body: MountBlock): KeyIteratorBlock {
 	const parentScope = getScope(host);
 	const block: KeyIteratorBlock = injectBlock(injector, {
 		$$block: true,

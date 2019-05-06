@@ -25,7 +25,7 @@ export function createInjector(target: Element): Injector {
 /**
  * Inserts given node into current context
  */
-export function insert(injector: Injector, node: Node, slotName = ''): Node {
+export function insert<T extends Node>(injector: Injector, node: T, slotName = ''): T {
 	let target: Node;
 	const { items, slots, ptr } = injector;
 
@@ -43,12 +43,8 @@ export function insert(injector: Injector, node: Node, slotName = ''): Node {
 
 /**
  * Injects given block
- * @template {BaseBlock} T
- * @param {Injector} injector
- * @param {T} block
- * @returns {T}
  */
-export function injectBlock<T extends BaseBlock<any>>(injector: Injector, block: T): T {
+export function injectBlock<T extends BaseBlock>(injector: Injector, block: T): T {
 	const { items, ptr } = injector;
 
 	if (ptr) {
@@ -66,7 +62,7 @@ export function injectBlock<T extends BaseBlock<any>>(injector: Injector, block:
 /**
  * Runs `fn` template function in context of given `block`
  */
-export function run<U>(block: BaseBlock<any>, fn: RunCallback<U>, data?: any): U {
+export function run<D, R>(block: BaseBlock, fn: RunCallback<D, R>, data?: D): R {
 	const { host, injector } = block;
 	const { ctx } = injector;
 	injector.ctx = block;
@@ -108,7 +104,7 @@ export function emptyBlockContent(block: BaseBlock<any>): void {
 /**
  * Moves contents of `block` after `ref` list item
  */
-export function move(injector: Injector, block: BaseBlock<any>, ref?: LinkedListItem<any>) {
+export function move<T extends Node, B extends BaseBlock>(injector: Injector, block: B, ref?: LinkedListItem<T | BaseBlock>) {
 	if (ref && ref.next && ref.next.value === block) {
 		return;
 	}
@@ -149,7 +145,7 @@ export function disposeBlock(block: BaseBlock<any>) {
 /**
  * Check if given value is a block
  */
-function isBlock(obj: any): boolean {
+function isBlock(obj: any): obj is BaseBlock {
 	return '$$block' in obj;
 }
 

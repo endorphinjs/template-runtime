@@ -2,18 +2,18 @@ import { moveContents } from './utils';
 import { createInjector } from './injector';
 import { mountBlock, updateBlock, unmountBlock } from './block';
 import { runHook } from './hooks';
-import { Component, SlotContext, RenderMount, RenderUpdate, FunctionBlock, Injector } from '../types';
+import { Component, SlotContext, FunctionBlock, Injector, MountBlock, GetMount } from '../types';
 
 /**
  * Registers given element as output slot for `host` component
  * @param defaultContent Function for rendering default slot content
  */
-export function mountSlot(host: Component, name: string, elem: HTMLElement, defaultContent?: RenderUpdate): SlotContext {
+export function mountSlot(host: Component, name: string, elem: HTMLElement, defaultContent?: MountBlock): SlotContext {
 	const ctx: SlotContext = { host, name, defaultContent, isDefault: false };
 	const { slots } = host.componentModel;
 	const injector = createInjector(elem);
 
-	const blockEntry: RenderMount = () => {
+	const blockEntry: GetMount = () => {
 		ctx.isDefault = !renderSlot(host, injector);
 		return ctx.isDefault ? ctx.defaultContent : null;
 	};

@@ -1,11 +1,12 @@
-import assert from 'assert';
+import { deepEqual } from 'assert';
 import document from './assets/document';
 import template from './samples/props';
 import { createComponent, mountComponent, renderComponent, updateComponent, setAttribute} from '../runtime';
+import { Component } from '../types';
 
 describe('Props', () => {
-	before(() => global.document = document);
-	after(() => delete global.document);
+	before(() => global['document'] = document);
+	after(() => delete global['document']);
 
 	it('should update props', () => {
 		const component = createComponent('my-component', {
@@ -17,17 +18,17 @@ describe('Props', () => {
 
 		// Initial render
 		mountComponent(component);
-		const sub = component.firstChild;
-		assert.deepEqual(sub.props, { p1: 1, id: 'foo', p3: 3 });
+		const sub = component.firstChild as Component;
+		deepEqual(sub.props, { p1: 1, id: 'foo', p3: 3 });
 
 		component.setProps({ id: 'bar', c1: true });
-		assert.deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
+		deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
 
 		renderComponent(component);
-		assert.deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
+		deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: 2 });
 
 		component.setProps({ c1: false });
-		assert.deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: null });
+		deepEqual(sub.props, { p1: 1, id: 'bar', p3: 3, p2: null });
 	});
 
 	it('should init with default props', () => {
@@ -40,10 +41,10 @@ describe('Props', () => {
 
 		setAttribute(component.componentModel.input, 'c1', true);
 		mountComponent(component, { id: 'bar' });
-		assert.deepEqual(component.props, { id: 'bar', c1: true });
+		deepEqual(component.props, { id: 'bar', c1: true });
 
 		setAttribute(component.componentModel.input, 'c1', false);
 		updateComponent(component);
-		assert.deepEqual(component.props, { id: 'bar', c1: false });
+		deepEqual(component.props, { id: 'bar', c1: false });
 	});
 });

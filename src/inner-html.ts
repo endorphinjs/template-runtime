@@ -1,12 +1,12 @@
 import { run, insert, injectBlock, disposeBlock, emptyBlockContent } from './injector';
 import { isDefined } from './utils';
 import { getScope } from './scope';
-import { Component, Injector, RenderMount, InnerHtmlBlock } from '../types';
+import { Component, Injector, InnerHtmlBlock, GetMount } from '../types';
 
 /**
  * Renders code, returned from `get` function, as HTML
  */
-export function mountInnerHTML(host: Component, injector: Injector, get: RenderMount, slotName: string): InnerHtmlBlock {
+export function mountInnerHTML(host: Component, injector: Injector, get: GetMount, slotName: string): InnerHtmlBlock {
 	const block: InnerHtmlBlock = injectBlock(injector, {
 		$$block: true,
 		host,
