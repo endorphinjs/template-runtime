@@ -1,4 +1,4 @@
-import { elemWithText, insert, elem, createComponent, setAttribute, mountComponent, updateComponent, unmountComponent, addDisposeCallback, markSlotUpdate, mountIterator, updateIterator, unmountIterator, createInjector } from "../../../runtime";
+import { elemWithText, insert, elem, createComponent, setAttribute, mountComponent, updateComponent, unmountComponent, addDisposeCallback, markSlotUpdate, mountIterator, updateIterator, unmountIterator, createInjector } from "../../../src/runtime";
 import * as UnmountBeacon from "./unmount-beacon.js";
 
 export default function $$template0(host, scope) {

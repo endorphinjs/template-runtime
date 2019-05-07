@@ -1,7 +1,7 @@
 import {
 	createInjector, elem, getProp, insert, mountBlock, updateBlock,
 	finalizeRefs, setRef, setStaticRef
-} from '../../runtime';
+} from '../../src/runtime';
 
 export default function(host, scope) {
 	const injector = createInjector(host.componentView);

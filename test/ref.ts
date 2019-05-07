@@ -1,7 +1,7 @@
 import { deepStrictEqual, strictEqual, ok } from 'assert';
 import document from './assets/document';
 import template from './samples/refs';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent } from '../src/runtime';
 
 describe('Refs', () => {
 	before(() => global['document'] = document);

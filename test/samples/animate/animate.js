@@ -1,4 +1,4 @@
-import { elemWithText, insert, addStaticEvent, animateIn, animateOut, addDisposeCallback, mountBlock, updateBlock, unmountBlock, createComponent, mountComponent, updateComponent, createInjector } from "../../../runtime";
+import { elemWithText, insert, addStaticEvent, animateIn, animateOut, addDisposeCallback, mountBlock, updateBlock, unmountBlock, createComponent, mountComponent, updateComponent, createInjector } from "../../../src/runtime";
 import * as SubComponent from "./sub-component.js";
 
 export default function $$template0(host, scope) {
@@ -47,7 +47,7 @@ function $$conditionContent0Unmount(scope) {
 function $$conditionEntry0(host) {
 	if (host.state.active) {
 		return $$conditionContent0;
-	} 
+	}
 }
 
 function $$conditionContent1(host, injector, scope) {
@@ -70,7 +70,7 @@ function $$conditionContent1Unmount(scope) {
 function $$conditionEntry1(host) {
 	if (host.state.active2) {
 		return $$conditionContent1;
-	} 
+	}
 }
 
 

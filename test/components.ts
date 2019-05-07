@@ -2,7 +2,7 @@ import { strictEqual, ok } from 'assert';
 import document, { ElementShim } from './assets/document';
 import read from './assets/read-file';
 import * as MyComponent from './samples/set1/my-component';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent } from '../src/runtime';
 
 describe('Full component render', () => {
 	before(() => global['document'] = document);

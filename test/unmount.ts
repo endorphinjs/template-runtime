@@ -1,6 +1,6 @@
 import { strictEqual, deepStrictEqual } from 'assert';
 import document from './assets/document';
-import { createComponent, mountComponent, unmountComponent } from '../runtime';
+import { createComponent, mountComponent, unmountComponent } from '../src/runtime';
 import { mounted } from './samples/unmount/unmount-beacon';
 import * as UnmountCondition from './samples/unmount/unmount-condition';
 import * as UnmountIterator from './samples/unmount/unmount-iterator';

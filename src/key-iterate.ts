@@ -2,7 +2,7 @@ import { run, move, injectBlock, disposeBlock } from './injector';
 import { setScope, getScope } from './scope';
 import { obj } from './utils';
 import { prepareScope } from './iterate';
-import { Component, Injector, KeyIteratorBlock, IteratorItemBlock, RenderItems, KeyExpr, MountBlock } from '../types';
+import { Component, Injector, KeyIteratorBlock, IteratorItemBlock, RenderItems, KeyExpr, MountBlock } from './types';
 
 /**
  * Renders key iterator block

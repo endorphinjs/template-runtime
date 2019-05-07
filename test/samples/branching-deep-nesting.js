@@ -1,6 +1,6 @@
 import {
 	createInjector, text, insert, getProp, mountBlock, updateBlock
-} from '../../runtime';
+} from '../../src/runtime';
 
 export default function template(component, scope) {
 	const target = component.componentView;

@@ -2,7 +2,7 @@ import { moveContents } from './utils';
 import { createInjector } from './injector';
 import { mountBlock, updateBlock, unmountBlock } from './block';
 import { runHook } from './hooks';
-import { Component, SlotContext, FunctionBlock, Injector, MountBlock, GetMount } from '../types';
+import { Component, SlotContext, FunctionBlock, Injector, MountBlock, GetMount } from './types';
 
 /**
  * Registers given element as output slot for `host` component

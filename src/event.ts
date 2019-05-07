@@ -1,5 +1,5 @@
 import { finalizeItems } from './utils';
-import { Injector, Component } from '../types';
+import { Injector, Component } from './types';
 
 type Handler = (...args: any[]) => any;
 

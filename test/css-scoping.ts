@@ -2,7 +2,7 @@ import { strictEqual, ok } from 'assert';
 import read from './assets/read-file';
 import document from './assets/document';
 import branching from './samples/branching-scoped';
-import { createComponent, mountComponent, updateComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../src/runtime';
 
 describe('CSS scoping', () => {
 	before(() => global['document'] = document);

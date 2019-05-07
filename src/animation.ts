@@ -1,7 +1,7 @@
 import { unmountComponent } from './component';
 import { domRemove } from './dom';
 import { animatingKey, assign, obj } from './utils';
-import { Component } from '../types';
+import { Component } from './types';
 
 /**
  * Animates element appearance

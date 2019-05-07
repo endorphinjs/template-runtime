@@ -3,7 +3,7 @@ import read from './assets/read-file';
 import document from './assets/document';
 import partials from './samples/partials';
 import * as OuterComponent from './samples/set2/outer-component';
-import { createComponent, mountComponent, renderComponent } from '../runtime';
+import { createComponent, mountComponent, renderComponent } from '../src/runtime';
 
 describe('Partials', () => {
 	before(() => global['document'] = document);

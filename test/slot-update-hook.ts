@@ -3,7 +3,7 @@ import document from './assets/document';
 import sample1 from './samples/slots/outer-component1';
 import sample2 from './samples/slots/outer-component2';
 import sample3 from './samples/slots/outer-component3';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent } from '../src/runtime';
 
 describe('Slot Update Hook', () => {
 	const slotCallbacks = [];

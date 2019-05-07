@@ -1,7 +1,7 @@
 import { setScope, getScope } from './scope';
 import { assign, obj } from './utils';
 import { run, injectBlock, emptyBlockContent, disposeBlock } from './injector';
-import { Component, Injector, PartialDefinition, PartialBlock } from '../types';
+import { Component, Injector, PartialDefinition, PartialBlock } from './types';
 
 /**
  * Mounts given partial into injector context

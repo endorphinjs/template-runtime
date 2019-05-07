@@ -1,7 +1,7 @@
 import { run, insert, injectBlock, disposeBlock, emptyBlockContent } from './injector';
 import { isDefined } from './utils';
 import { getScope } from './scope';
-import { Component, Injector, InnerHtmlBlock, GetMount } from '../types';
+import { Component, Injector, InnerHtmlBlock, GetMount } from './types';
 
 /**
  * Renders code, returned from `get` function, as HTML

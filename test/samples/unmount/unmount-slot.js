@@ -1,4 +1,4 @@
-import { createComponent, setAttribute, insert, mountComponent, updateComponent, unmountComponent, addDisposeCallback, mountBlock, updateBlock, unmountBlock, markSlotUpdate } from "../../../runtime";
+import { createComponent, setAttribute, insert, mountComponent, updateComponent, unmountComponent, addDisposeCallback, mountBlock, updateBlock, unmountBlock, markSlotUpdate } from "../../../src/runtime";
 import * as UnmountBeacon from "./unmount-beacon.js";
 import * as UnmountSlotInner from "./unmount-slot-inner.js";
 
@@ -51,5 +51,5 @@ function $$conditionContent0Unmount(scope) {
 function $$conditionEntry0(host) {
 	if (host.props.outer) {
 		return $$conditionContent0;
-	} 
+	}
 }

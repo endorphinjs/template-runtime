@@ -1,6 +1,6 @@
 import {
 	createInjector, elem, elemWithText, text, insert, getProp, mountBlock, updateBlock
-} from '../../runtime';
+} from '../../src/runtime';
 
 const cssScope = 'end1';
 

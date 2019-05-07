@@ -1,7 +1,7 @@
 import {
 	createInjector, elemWithText, getProp, insert,
 	mountInnerHTML, updateInnerHTML, mountBlock, updateBlock
-} from '../../runtime';
+} from '../../src/runtime';
 
 export const cssScope = 'ih';
 

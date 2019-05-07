@@ -1,4 +1,4 @@
-import { elemWithText, elem, insert, text, mountSlot } from "../../../runtime";
+import { elemWithText, elem, insert, text, mountSlot } from "../../../src/runtime";
 
 export default function $$template0(host) {
 	const target0 = host.componentView;

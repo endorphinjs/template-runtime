@@ -1,5 +1,5 @@
 import { safeCall } from './utils';
-import { ComponentDefinition, Component } from '../types';
+import { ComponentDefinition, Component } from './types';
 
 type HookCallback = (dfn: ComponentDefinition) => void;
 

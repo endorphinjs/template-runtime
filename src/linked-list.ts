@@ -1,4 +1,4 @@
-import { LinkedList, LinkedListItem } from '../types';
+import { LinkedList, LinkedListItem } from './types';
 
 /**
  * Creates linted list

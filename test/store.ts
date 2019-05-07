@@ -2,7 +2,7 @@ import { deepEqual, strictEqual } from 'assert';
 import document from './assets/document';
 import { Store } from '../src/store';
 import storeTemplate from './samples/store';
-import { createComponent, mountComponent, unmountComponent } from '../runtime';
+import { createComponent, mountComponent, unmountComponent } from '../src/runtime';
 
 interface StoreData {
 	foo?: string;

@@ -1,6 +1,6 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import { createList, listPrependValue, listInsertValueAfter, listRemove, listMoveFragmentAfter, listMoveFragmentFirst } from '../src/linked-list';
-import { LinkedList } from '../types';
+import { LinkedList } from '../src/types';
 
 describe('Linked list', () => {
 	function toArray(list: LinkedList) {

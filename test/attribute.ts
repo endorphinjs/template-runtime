@@ -2,7 +2,7 @@ import { strictEqual } from 'assert';
 import document from './assets/document';
 import attribute1 from './samples/attribute1';
 import attribute2 from './samples/attribute2';
-import { createComponent, mountComponent, renderComponent } from '../runtime';
+import { createComponent, mountComponent, renderComponent } from '../src/runtime';
 
 describe('Attribute', () => {
 	before(() => global['document'] = document);

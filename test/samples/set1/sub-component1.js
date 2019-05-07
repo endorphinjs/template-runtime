@@ -1,7 +1,7 @@
 import {
 	elem, elemWithText, text, insert,
 	mountBlock, updateBlock, createInjector, mountSlot, getProp
-} from '../../../runtime';
+} from '../../../src/runtime';
 
 /**
  * @param {Component} host

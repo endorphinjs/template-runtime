@@ -1,4 +1,4 @@
-import { elemWithText, elem, mountPartial, updatePartial, unmountPartial, addDisposeCallback, mountIterator, updateIterator, unmountIterator, createInjector, finalizeRefs, insert, setAttribute, text, updateText, finalizeAttributes } from '../../../runtime';
+import { elemWithText, elem, mountPartial, updatePartial, unmountPartial, addDisposeCallback, mountIterator, updateIterator, unmountIterator, createInjector, finalizeRefs, insert, setAttribute, text, updateText, finalizeAttributes } from '../../../src/runtime';
 
 export const partials = {
 	item: {

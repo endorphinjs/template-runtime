@@ -1,4 +1,4 @@
-import { Component, Injector, Changes, ChangeSet, UnmountBlock } from '../types';
+import { Component, Injector, Changes, ChangeSet, UnmountBlock } from './types';
 
 export const animatingKey = '$$animating';
 

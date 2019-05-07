@@ -6,7 +6,10 @@
   "module": "./dist/runtime.es.js",
   "types": "./types.d.ts",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "tslint ./src/**/*.ts",
+    "build": "rollup -c && npm run types",
+    "types": "cp ./src/*.d.ts ./dist"
   },
   "keywords": [
     "template",
@@ -21,7 +24,7 @@
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.13.7",
     "mocha": "^6.1.4",
-    "rollup": "^1.10.1",
+    "rollup": "^1.11.3",
     "rollup-plugin-typescript": "^1.0.1",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",

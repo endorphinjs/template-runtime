@@ -2,7 +2,6 @@ type InjectorNode = Node;
 type InjectorItem = any;
 type ComponentEventHandler = (component: Component, event: Event, target: HTMLElement) => void;
 type StaticEventHandler = (evt: Event) => void;
-type Scope = { [key: string]: any };
 
 type RunCallback<D = any, R = undefined | null> = (host: Component, injector: Injector, data?: D) => R;
 type GetMount = (host: Component, scope: Scope) => MountBlock | undefined;
@@ -11,6 +10,10 @@ type UpdateTemplate = (host: Component, scope: Scope) => number | void;
 type MountBlock<D = Scope> = (host: Component, injector: Injector, data: D) => UpdateBlock | void;
 type UpdateBlock<D = Scope> = (host: Component, injector: Injector, data: D) => number | void;
 type UnmountBlock = (scope: Scope) => void;
+
+interface Scope {
+	[key: string]: any;
+}
 
 interface Data {
 	[key: string]: any;
@@ -113,7 +116,7 @@ export interface ComponentModel {
 	/** Slot output for component */
 	slots: {
 		[name: string]: BaseBlock
-	}
+	};
 
 	/**
 	 * Slots update status
@@ -155,33 +158,13 @@ export interface ComponentModel {
 	/**
 	 * A function for disposing component contents
 	 */
-	dispose?: UnmountBlock
+	dispose?: UnmountBlock;
 }
 
 /**
  * A definition of component, written as ES module
  */
 export interface ComponentDefinition {
-	/**
-	 * Initial props factory
-	 */
-	props?(component: Component): {};
-
-	/**
-	 * Initial state factory
-	 */
-	state?(component: Component): {};
-
-	/**
-	 * Returns instance of store used for components
-	 */
-	store?(): Store;
-
-	/**
-	 * Returns pointer to element where contents of component should be rendered
-	 */
-	componentView?(component: Component, parentComponent?: Component | Element): Element;
-
 	/**
 	 * Listeners for events bubbling from component contents
 	 */
@@ -220,6 +203,26 @@ export interface ComponentDefinition {
 	 * invoked for update
 	 */
 	default?: MountTemplate;
+
+	/**
+	 * Initial props factory
+	 */
+	props?(component: Component): {};
+
+	/**
+	 * Initial state factory
+	 */
+	state?(component: Component): {};
+
+	/**
+	 * Returns instance of store used for components
+	 */
+	store?(): Store;
+
+	/**
+	 * Returns pointer to element where contents of component should be rendered
+	 */
+	componentView?(component: Component, parentComponent?: Component | Element): Element;
 
 	/**
 	 * Component created
@@ -285,8 +288,8 @@ export interface ComponentDefinition {
 }
 
 export class Store<T = Data> {
-	constructor(data: T);
 	data: T;
+	constructor(data: T);
 	get(): T;
 	set(value: T): void;
 	subscribe(handler: StoreUpdateHandler, keys?: string[]): StoreUpdateEntry;
@@ -330,7 +333,7 @@ interface Injector {
 
 	attributesNS?: {
 		[uri: string]: ChangeSet
-	}
+	};
 
 	/**
 	 * Current event handlers
@@ -342,7 +345,7 @@ interface AttachedStaticEvents {
 	handler: StaticEventHandler;
 	listeners: {
 		[event: string]: ComponentEventHandler[];
-	}
+	};
 }
 
 interface RefMap {
@@ -358,7 +361,7 @@ export interface Changes {
 	[key: string]: {
 		current: any,
 		prev: any
-	}
+	};
 }
 
 interface SlotContext {
@@ -368,9 +371,7 @@ interface SlotContext {
 	defaultContent?: MountBlock;
 }
 
-interface StoreUpdateHandler {
-	(state: any, changes: object): void
-}
+type StoreUpdateHandler = (state: any, changes: object) => void;
 
 interface StoreUpdateEntry {
 	keys?: string[];

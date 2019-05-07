@@ -1,4 +1,4 @@
-import { elem, insert, createComponent, mountComponent, updateComponent, unmountComponent, addDisposeCallback, mountSlot, unmountSlot, mountBlock, updateBlock, unmountBlock, createInjector } from "../../../runtime";
+import { elem, insert, createComponent, mountComponent, updateComponent, unmountComponent, addDisposeCallback, mountSlot, unmountSlot, mountBlock, updateBlock, unmountBlock, createInjector } from "../../../src/runtime";
 import * as UnmountBeacon from "./unmount-beacon.js";
 
 export default function $$template0(host, scope) {
@@ -49,5 +49,5 @@ function $$conditionContent0Unmount(scope) {
 function $$conditionEntry0(host) {
 	if (host.props.inner) {
 		return $$conditionContent0;
-	} 
+	}
 }

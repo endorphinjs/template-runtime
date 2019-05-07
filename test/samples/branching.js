@@ -1,6 +1,6 @@
 import {
 	createInjector, elem, elemWithText, text, insert, getProp, mountBlock, updateBlock
-} from '../../runtime';
+} from '../../src/runtime';
 
 export default function(host, scope) {
 	const target = host.componentView;

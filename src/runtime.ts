@@ -1,21 +1,21 @@
 import { Component } from './types';
 
-export * from './src/block';
-export * from './src/iterate';
-export * from './src/key-iterate';
-export * from './src/injector';
-export * from './src/scope';
-export * from './src/attribute';
-export * from './src/event';
-export * from './src/slot';
-export * from './src/ref';
-export * from './src/component';
-export * from './src/inner-html';
-export * from './src/dom';
-export * from './src/partial';
-export * from './src/store';
-export * from './src/animation';
-export { addDisposeCallback, assign } from './src/utils';
+export * from './block';
+export * from './iterate';
+export * from './key-iterate';
+export * from './injector';
+export * from './scope';
+export * from './attribute';
+export * from './event';
+export * from './slot';
+export * from './ref';
+export * from './component';
+export * from './inner-html';
+export * from './dom';
+export * from './partial';
+export * from './store';
+export * from './animation';
+export { addDisposeCallback, assign } from './utils';
 
 /**
  * Safe property getter

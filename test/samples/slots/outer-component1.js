@@ -1,4 +1,4 @@
-import { elem, text, updateText, createComponent, insert, mountComponent, updateComponent, markSlotUpdate } from "../../../runtime";
+import { elem, text, updateText, createComponent, insert, mountComponent, updateComponent, markSlotUpdate } from "../../../src/runtime";
 import * as InnerComponent from "./inner-component.js";
 
 export default function $$template0(host, scope) {

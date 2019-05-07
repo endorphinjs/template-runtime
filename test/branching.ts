@@ -3,7 +3,7 @@ import read from './assets/read-file';
 import document from './assets/document';
 import branching from './samples/branching';
 import deepBranching from './samples/branching-deep-nesting';
-import { createComponent, mountComponent, updateComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../src/runtime';
 
 describe('Branching', () => {
 	before(() => global['document'] = document);

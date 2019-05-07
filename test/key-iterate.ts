@@ -2,7 +2,7 @@ import { strictEqual, ok } from 'assert';
 import read from './assets/read-file';
 import document from './assets/document';
 import keyIterate from './samples/key-iterate';
-import { createComponent, mountComponent } from '../runtime';
+import { createComponent, mountComponent } from '../src/runtime';
 
 describe('Key iterate', () => {
 	before(() => global['document'] = document);

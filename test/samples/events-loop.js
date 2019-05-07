@@ -2,7 +2,7 @@ import {
 	createInjector, elem, elemWithText, getProp,
 	addStaticEvent, getEventHandler,
 	mountIterator, updateIterator, insert
-} from '../../runtime';
+} from '../../src/runtime';
 
 export default function template(host, scope) {
 	const target = host.componentView;

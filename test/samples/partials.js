@@ -1,7 +1,7 @@
 import {
 	createInjector, elem, text, insert, getProp, mountIterator, updateIterator,
 	getVar, updateText, addClass, finalizeAttributes, mountPartial, updatePartial
-} from '../../runtime';
+} from '../../src/runtime';
 
 export default function partialsTemplate(host) {
 	const target = host.componentView;

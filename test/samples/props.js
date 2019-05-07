@@ -1,7 +1,7 @@
 import {
 	createInjector, setAttribute, mountBlock, updateBlock,
 	insert, getProp, createComponent, mountComponent, updateComponent
-} from '../../runtime';
+} from '../../src/runtime';
 
 import * as SubComponent1 from './set1/sub-component1';
 

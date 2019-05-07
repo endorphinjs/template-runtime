@@ -6,7 +6,7 @@ import { createInjector, disposeBlock } from './injector';
 import { runHook, reverseWalkDefinitions } from './hooks';
 import { getScope } from './scope';
 import { updateSlots } from './slot';
-import { Changes, Component, ComponentDefinition, AttachedStaticEvents, ComponentEventHandler, StaticEventHandler } from '../types';
+import { Changes, Component, ComponentDefinition, AttachedStaticEvents, ComponentEventHandler, StaticEventHandler } from './types';
 
 let renderQueue: Array<Component | Changes | undefined> | null = null;
 

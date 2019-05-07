@@ -1,8 +1,8 @@
 import { deepEqual } from 'assert';
 import document from './assets/document';
 import template from './samples/props';
-import { createComponent, mountComponent, renderComponent, updateComponent, setAttribute} from '../runtime';
-import { Component } from '../types';
+import { createComponent, mountComponent, renderComponent, updateComponent, setAttribute } from '../src/runtime';
+import { Component } from '../src/types';
 
 describe('Props', () => {
 	before(() => global['document'] = document);

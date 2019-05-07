@@ -1,5 +1,5 @@
 import { isDefined, finalizeItems, obj, representAttributeValue, changeSet } from './utils';
-import { Injector, Component } from '../types';
+import { Injector, Component } from './types';
 
 interface NSCtx {
 	node: Element;

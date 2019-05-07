@@ -1,4 +1,4 @@
-import { createComponent, insert, mountComponent, updateComponent, unmountComponent, addDisposeCallback, mountBlock, updateBlock, unmountBlock, createInjector } from '../../runtime';
+import { createComponent, insert, mountComponent, updateComponent, unmountComponent, addDisposeCallback, mountBlock, updateBlock, unmountBlock, createInjector } from '../../src/runtime';
 import * as SubComponent1 from 'sub-component1.html';
 import * as SubComponent2 from 'sub-component2.html';
 

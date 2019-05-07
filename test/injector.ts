@@ -1,7 +1,7 @@
 import { deepStrictEqual, ok } from 'assert';
 import document, { ElementShim } from './assets/document';
 import { createInjector, run, insert, move, emptyBlockContent, injectBlock, disposeBlock } from '../src/injector';
-import { Injector, RunCallback, FunctionBlock, LinkedList, LinkedListItem } from '../types';
+import { Injector, RunCallback, FunctionBlock, LinkedList, LinkedListItem } from '../src/types';
 
 describe('Injector', () => {
 	before(() => global['document'] = document);

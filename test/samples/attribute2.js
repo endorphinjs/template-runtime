@@ -1,6 +1,6 @@
 import {
 	createInjector, elem, getProp, finalizeAttributes, setAttribute, addClass
-} from '../../runtime';
+} from '../../src/runtime';
 
 export default function(host, scope) {
 	const target = host.componentView;

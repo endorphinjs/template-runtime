@@ -1,7 +1,7 @@
 import { createList, listInsertValueAfter, listPrependValue, listMoveFragmentAfter, listMoveFragmentFirst, listDetachFragment } from './linked-list';
 import { changeSet, animatingKey } from './utils';
 import { domInsert, domRemove } from './dom';
-import { Injector, BaseBlock, LinkedListItem, RunCallback } from '../types';
+import { Injector, BaseBlock, LinkedListItem, RunCallback } from './types';
 
 /**
  * Creates injector instance for given target, if required

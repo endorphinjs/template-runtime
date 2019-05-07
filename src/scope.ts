@@ -1,5 +1,5 @@
 import { obj, assign } from './utils';
-import { Component, Scope } from '../types';
+import { Component, Scope } from './types';
 
 /**
  * Enters new variable scope context

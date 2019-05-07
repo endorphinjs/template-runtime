@@ -3,7 +3,7 @@ import document, { ElementShim, EventShim } from './assets/document';
 import template from './samples/events';
 import loopTemplate from './samples/events-loop';
 import branching from './samples/branching';
-import { createComponent, mountComponent, updateComponent } from '../runtime';
+import { createComponent, mountComponent, updateComponent } from '../src/runtime';
 
 describe('Event handler', () => {
 	before(() => global['document'] = document);

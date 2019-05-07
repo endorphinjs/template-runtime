@@ -2,7 +2,7 @@ import {
 	elemWithText, text, insert, setAttribute, getProp,
 	createComponent, mountComponent, updateComponent, createInjector,
 	mountBlock, updateBlock, Store
-} from '../../../runtime';
+} from '../../../src/runtime';
 
 import * as SubComponent1 from './sub-component1';
 import * as SubComponent2 from './sub-component2';

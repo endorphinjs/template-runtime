@@ -2,7 +2,7 @@ import { deepEqual, ok } from 'assert';
 import document from './assets/document';
 import { createInjector, run, insert, injectBlock, emptyBlockContent, disposeBlock } from '../src/injector';
 import { obj } from '../src/utils';
-import { Injector, FunctionBlock, MountBlock, LinkedList } from '../types';
+import { Injector, FunctionBlock, MountBlock, LinkedList } from '../src/types';
 
 describe('Slotted injector', () => {
 	before(() => global['document'] = document);

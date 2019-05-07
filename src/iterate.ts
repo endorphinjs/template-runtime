@@ -1,7 +1,7 @@
 import { run, injectBlock, disposeBlock } from './injector';
 import { setScope, getScope } from './scope';
 import { obj } from './utils';
-import { Component, Injector, IteratorBlock, IteratorItemBlock, LinkedListItem, RenderItems, Scope, MountBlock } from '../types';
+import { Component, Injector, IteratorBlock, IteratorItemBlock, LinkedListItem, RenderItems, Scope, MountBlock } from './types';
 
 /**
  * Mounts iterator block

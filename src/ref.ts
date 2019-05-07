@@ -1,5 +1,5 @@
 import { finalizeItems } from './utils';
-import { Component } from '../types';
+import { Component } from './types';
 
 /**
  * Sets runtime ref (e.g. ref which will be changed over time) to given host

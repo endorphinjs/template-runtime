@@ -1,7 +1,7 @@
 import {
 	createInjector, mountKeyIterator, updateKeyIterator, elem, elemWithText,
 	text, get, insert, getProp, updateAttribute, mountBlock, updateBlock
-} from '../../runtime';
+} from '../../src/runtime';
 
 export default function template(host, scope) {
 	const injector = createInjector(host.componentView);

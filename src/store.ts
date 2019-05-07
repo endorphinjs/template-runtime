@@ -1,6 +1,6 @@
 import { assign, changed } from './utils';
 import { scheduleRender, renderComponent } from './component';
-import { StoreUpdateEntry, StoreUpdateHandler, Component } from '../types';
+import { StoreUpdateEntry, StoreUpdateHandler, Component } from './types';
 
 const prefix = '$';
 

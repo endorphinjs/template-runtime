@@ -1,6 +1,6 @@
 import { injectBlock, emptyBlockContent, run, disposeBlock } from './injector';
 import { getScope } from './scope';
-import { Component, Injector, FunctionBlock, GetMount } from '../types';
+import { Component, Injector, FunctionBlock, GetMount } from './types';
 
 export function mountBlock(host: Component, injector: Injector, get: GetMount): FunctionBlock {
 	const block = injectBlock<FunctionBlock>(injector, {

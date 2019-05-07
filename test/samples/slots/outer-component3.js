@@ -1,4 +1,4 @@
-import { elem, text, updateText, createComponent, insert, updateBlock, mountBlock, createInjector, elemWithText, mountComponent, updateComponent, markSlotUpdate } from "../../../runtime";
+import { elem, text, updateText, createComponent, insert, updateBlock, mountBlock, createInjector, elemWithText, mountComponent, updateComponent, markSlotUpdate } from "../../../src/runtime";
 import * as InnerComponent from "./inner-component.js";
 
 export default function $$template0(host, scope) {
@@ -51,7 +51,7 @@ function $$conditionContent0Update(host, injector, scope) {
 function $$conditionEntry0(host) {
 	if (host.props.enabled) {
 		return $$conditionContent0;
-	} 
+	}
 }
 
 function $$conditionContent1(host, injector) {
@@ -61,5 +61,5 @@ function $$conditionContent1(host, injector) {
 function $$conditionEntry1(host) {
 	if (host.props.active) {
 		return $$conditionContent1;
-	} 
+	}
 }

@@ -1,4 +1,4 @@
-import { elemWithText } from '../../../runtime';
+import { elemWithText } from '../../../src/runtime';
 
 /**
  * @param {Component} component

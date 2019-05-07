@@ -4,8 +4,8 @@ import {
 	createComponent, mountComponent, mountBlock, updateBlock, updateComponent,
 	insert, setAttribute, elem, text, updateText, mountSlot, elemWithText,
 	unmountComponent, addDisposeCallback, disposeBlock
-} from '../runtime';
-import { Component, Scope, Injector, Changes, MountTemplate } from '../types';
+} from '../src/runtime';
+import { Component, Scope, Injector, Changes, MountTemplate } from '../src/types';
 
 type LifecycleMethods = 'init' | 'willMount' | 'didMount' | 'didChange' | 'willUpdate' | 'didUpdate' | 'willRender' | 'didRender' | 'willUnmount' | 'didUnmount';
 

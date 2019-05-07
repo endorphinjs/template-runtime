@@ -1,4 +1,4 @@
-import { elem, text, updateText, subscribeStore } from '../../runtime';
+import { elem, text, updateText, subscribeStore } from '../../src/runtime';
 
 export default function template(host, scope) {
 	const target = host.componentView;
