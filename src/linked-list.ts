@@ -36,7 +36,7 @@ export function listInsertValueAfter<T>(value: T, ref: LinkedListItem<any>): Lin
 	item.prev = ref;
 
 	if (item.next = next) {
-		next.prev = item;
+		next!.prev = item;
 	}
 
 	return item;

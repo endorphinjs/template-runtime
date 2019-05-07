@@ -7,7 +7,7 @@ type ChangeCallback = (name: string, prev: any, next: any, ctx?: any) => void;
 /**
  * Creates fast object
  */
-export function obj(proto: object = null): {} {
+export function obj(proto: any = null): {} {
 	return Object.create(proto);
 }
 
@@ -55,7 +55,7 @@ export function changeSet(): ChangeSet {
  * Returns properties from `next` which were changed since `prev` state.
  * Returns `null` if there are no changes
  */
-export function changed(next: any, prev: any, prefix = ''): Changes {
+export function changed(next: any, prev: any, prefix = ''): Changes | null {
 	const result: Changes = obj();
 	let dirty = false;
 
@@ -83,7 +83,7 @@ export function moveContents(from: Element | DocumentFragment, to: Element): Ele
 			to.appendChild(from);
 		} else {
 			let node: Node;
-			while (node = from.firstChild) {
+			while (node = from.firstChild!) {
 				to.appendChild(node);
 			}
 		}
@@ -131,7 +131,7 @@ const getObjectDescriptors = Object['getOwnPropertyDescriptors'] || function(sou
 	const descriptors = obj();
 	const props = Object.getOwnPropertyNames(source);
 
-	for (let i = 0, prop: string, descriptor: PropertyDescriptor; i < props.length; i++) {
+	for (let i = 0, prop: string, descriptor: PropertyDescriptor | void; i < props.length; i++) {
 		prop = props[i];
 		descriptor = Object.getOwnPropertyDescriptor(source, prop);
 		if (descriptor != null) {
@@ -154,6 +154,8 @@ export function assignIfNeeded(prev: any, next: any): boolean {
 			return assign(prev, next);
 		}
 	}
+
+	return false;
 }
 
 /**
@@ -184,14 +186,14 @@ export function representAttributeValue(elem: Element, name: string, value: any)
 export function addDisposeCallback(host: Component | Injector, callback: UnmountBlock): Component | Injector {
 	if ('componentModel' in host) {
 		host.componentModel.dispose = callback;
-	} else {
+	} else if (host.ctx) {
 		host.ctx.dispose = callback;
 	}
 
 	return host;
 }
 
-export function safeCall<T, U, Y>(fn: (p1?: T, p2?: U) => Y, arg1?: T, arg2?: U) {
+export function safeCall<T, U, Y>(fn?: (p1?: T, p2?: U) => Y, arg1?: T, arg2?: U): Y | undefined {
 	try {
 		return fn && fn(arg1, arg2);
 	} catch (err) {

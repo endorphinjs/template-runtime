@@ -7,16 +7,14 @@ import { Component, Injector, PartialDefinition, PartialBlock } from '../types';
  * Mounts given partial into injector context
  */
 export function mountPartial(host: Component, injector: Injector, partial: PartialDefinition, args: object): PartialBlock {
-	const block: PartialBlock = injectBlock(injector, {
+	const block = injectBlock<PartialBlock>(injector, {
 		$$block: true,
 		host,
 		injector,
 		scope: getScope(host),
 		dispose: null,
-		update: null,
-		partial: null,
-		start: null,
-		end: null
+		update: void 0,
+		partial: null
 	});
 	updatePartial(block, partial, args);
 	return block;
@@ -42,7 +40,7 @@ export function updatePartial(ctx: PartialBlock, partial: PartialDefinition, arg
 		// Mount new partial
 		const scope = ctx.scope = assign(obj(prevScope), partial.defaults, args);
 		setScope(host, scope);
-		ctx.update = partial ? run(ctx, partial.body, scope) : null;
+		ctx.update = partial ? run(ctx, partial.body, scope) : void 0;
 		ctx.partial = partial;
 		setScope(host, prevScope);
 		updated = 1;

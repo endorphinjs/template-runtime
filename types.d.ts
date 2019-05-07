@@ -108,7 +108,7 @@ export interface ComponentModel {
 	/**
 	 * List of attached event handlers
 	 */
-	events: AttachedStaticEvents;
+	events?: AttachedStaticEvents;
 
 	/** Slot output for component */
 	slots: {
@@ -314,14 +314,14 @@ interface Injector {
 	/**
 	 * Current block context
 	 */
-	ctx: BaseBlock<any>;
+	ctx: BaseBlock<any> | null;
 
 	/**
 	 * Slots container
 	 */
 	slots?: {
 		[name: string]: DocumentFragment | Element
-	};
+	} | null;
 
 	/**
 	 * Pending attributes updates
@@ -379,7 +379,7 @@ interface StoreUpdateEntry {
 }
 
 interface LinkedList<T = any> {
-	head: LinkedListItem<T>;
+	head: LinkedListItem<T> | null;
 }
 
 interface LinkedListItem<T> {
@@ -397,8 +397,8 @@ interface BaseBlock<T = any> {
 	/** A function to dispose block contents */
 	dispose: UnmountBlock | null;
 
-	start: LinkedListItem<T> | null;
-	end: LinkedListItem<T> | null;
+	start: LinkedListItem<T>;
+	end: LinkedListItem<T>;
 }
 
 type RenderItems = (host: Component, scope: Scope) => any[];

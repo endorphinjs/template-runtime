@@ -8,7 +8,7 @@ import { getScope } from './scope';
 import { updateSlots } from './slot';
 import { Changes, Component, ComponentDefinition, AttachedStaticEvents, ComponentEventHandler, StaticEventHandler } from '../types';
 
-let renderQueue: Array<Component | Changes> | null = null;
+let renderQueue: Array<Component | Changes | undefined> | null = null;
 
 /**
  * Creates internal lightweight Endorphin component with given definition
@@ -155,7 +155,7 @@ export function updateComponent(component: Component) {
 	updateSlots(component);
 
 	if (changes || component.componentModel.queued) {
-		renderNext(component, changes);
+		renderNext(component, changes!);
 	}
 }
 
@@ -194,6 +194,8 @@ export function unmountComponent(component: Component): void {
 	}
 
 	runHook(component, 'didUnmount');
+
+	// @ts-ignore: Nulling disposed object
 	component.componentModel = null;
 }
 
@@ -281,7 +283,7 @@ function kebabCase(ch: string): string {
 	return '-' + ch.toLowerCase();
 }
 
-function setPropsInternal(component: Component, prevProps: object, nextProps: object): Changes {
+function setPropsInternal(component: Component, prevProps: object, nextProps: object): Changes | null {
 	const changes: Changes = {};
 	let didChanged = false;
 	const { props } = component;
@@ -327,6 +329,8 @@ function hasChanges(prev: object, next: object): boolean {
 			return true;
 		}
 	}
+
+	return false;
 }
 
 /**
@@ -338,7 +342,7 @@ function prepare(component: Component, definition: ComponentDefinition) {
 	const props = obj();
 	const state = obj();
 	const methods = obj();
-	let events: AttachedStaticEvents;
+	let events: AttachedStaticEvents | undefined = void 0;
 	let extend: any;
 
 	reverseWalkDefinitions(definition, dfn => {
@@ -401,7 +405,7 @@ function attachEventHandlers(component: Component, events: { [name: string]: Com
 }
 
 function drainQueue() {
-	const pending = renderQueue;
+	const pending = renderQueue!;
 	renderQueue = null;
 
 	for (let i = 0, component: Component; i < pending.length; i += 2) {

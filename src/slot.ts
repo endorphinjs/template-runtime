@@ -15,7 +15,7 @@ export function mountSlot(host: Component, name: string, elem: HTMLElement, defa
 
 	const blockEntry: GetMount = () => {
 		ctx.isDefault = !renderSlot(host, injector);
-		return ctx.isDefault ? ctx.defaultContent : null;
+		return ctx.isDefault ? ctx.defaultContent : void 0;
 	};
 
 	slots[name] = mountBlock(host, injector, blockEntry);
@@ -35,7 +35,7 @@ export function unmountSlot(ctx: SlotContext) {
 		unmountBlock(slots[name] as FunctionBlock);
 	}
 
-	ctx.defaultContent = null;
+	ctx.defaultContent = void 0;
 	delete slots[name];
 }
 
@@ -50,7 +50,7 @@ export function updateSlots(host: Component) {
 
 	for (const name in slotStatus) {
 		if (slotStatus[name]) {
-			runHook(host, 'didSlotUpdate', name, input.slots[name]);
+			runHook(host, 'didSlotUpdate', name, input.slots![name]);
 			slotStatus[name] = 0;
 		}
 	}
@@ -66,13 +66,13 @@ function renderSlot(host: Component, target: Injector): boolean {
 	const name = parentNode.getAttribute('name') || '';
 	const slotted = parentNode.hasAttribute('slotted');
 	const { input } = host.componentModel;
-	const source: Element | DocumentFragment = input.slots[name];
+	const source: Element | DocumentFragment = input.slots![name];
 
 	if (source && source.childNodes.length) {
 		// There’s incoming slot content
 		if (!slotted) {
 			parentNode.setAttribute('slotted', '');
-			input.slots[name] = moveContents(source, parentNode);
+			input.slots![name] = moveContents(source, parentNode);
 		}
 
 		return true;
@@ -92,9 +92,9 @@ function renderSlot(host: Component, target: Injector): boolean {
  */
 export function markSlotUpdate(component: Component, slotName: string, status: number) {
 	const { slotStatus } = component.componentModel;
-	if (slotName in slotStatus) {
-		slotStatus[slotName] |= status;
+	if (slotName in slotStatus!) {
+		slotStatus![slotName] |= status;
 	} else {
-		slotStatus[slotName] = status;
+		slotStatus![slotName] = status;
 	}
 }

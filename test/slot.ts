@@ -1,6 +1,6 @@
 import { strictEqual, ok } from 'assert';
 import read from './assets/read-file';
-import document, { setCallback, clearCallbacks } from './assets/document';
+import document, { setCallback, clearCallbacks, ElementShim } from './assets/document';
 import parentTemplate from './samples/slot';
 import { createComponent, mountComponent, renderComponent } from '../runtime';
 import { Component } from '../types';
@@ -21,9 +21,9 @@ describe('Slots', () => {
 			}
 		});
 
-		setCallback((elem: HTMLElement) => {
+		setCallback((elem: ElementShim) => {
 			if (elem.nodeName === 'sub-component') {
-				subComponent = elem as Component;
+				subComponent = elem as any as Component;
 			}
 		});
 

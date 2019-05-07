@@ -35,16 +35,19 @@ export function insert<T extends Node>(injector: Injector, node: T, slotName = '
 		target = injector.parentNode;
 	}
 
-	domInsert(node, target, ptr && getAnchorNode(ptr.next, target));
+	domInsert(node, target, ptr ? getAnchorNode(ptr.next!, target) : void 0);
 	injector.ptr = ptr ? listInsertValueAfter(node, ptr) : listPrependValue(items, node);
 
 	return node;
 }
 
+type Diff<T, U> = T extends U ? never : T;
+type BlockInput<T, TOptional extends keyof T> = Pick<T, Diff<keyof T, TOptional>> & Partial<T>;
+
 /**
  * Injects given block
  */
-export function injectBlock<T extends BaseBlock>(injector: Injector, block: T): T {
+export function injectBlock<T extends BaseBlock>(injector: Injector, block: BlockInput<T, 'start' | 'end' | '$$block'>): T {
 	const { items, ptr } = injector;
 
 	if (ptr) {
@@ -55,8 +58,9 @@ export function injectBlock<T extends BaseBlock>(injector: Injector, block: T): 
 		block.start = listPrependValue(items, block);
 	}
 
+	block.$$block = true;
 	injector.ptr = block.end;
-	return block;
+	return block as T;
 }
 
 /**
@@ -77,7 +81,7 @@ export function run<D, R>(block: BaseBlock, fn: RunCallback<D, R>, data?: D): R 
 /**
  * Empties content of given block
  */
-export function emptyBlockContent(block: BaseBlock<any>): void {
+export function emptyBlockContent(block: BaseBlock): void {
 	if (block.dispose) {
 		block.dispose(block.scope);
 		block.dispose = null;
@@ -95,8 +99,10 @@ export function emptyBlockContent(block: BaseBlock<any>): void {
 			domRemove(value);
 		}
 
-		prev.next = next;
-		next.prev = prev;
+		// NB: Block always contains `.next` and `.prev` items which are block
+		// bounds so we can safely skip null check here
+		prev!.next = next;
+		next!.prev = prev;
 		item = next;
 	}
 }
@@ -121,13 +127,13 @@ export function move<T extends Node, B extends BaseBlock>(injector: Injector, bl
 	// Move block contents in DOM
 	let item = start.next;
 	let node: Node;
-	while (item !== end) {
+	while (item && item !== end) {
 		if (!isBlock(item.value)) {
 			node = item.value;
 
 			// NB it’s possible that a single block contains nodes from different
 			// slots so we have to find anchor for each node individually
-			domInsert(node, node.parentNode, getAnchorNode(end.next, node.parentNode));
+			domInsert(node, node.parentNode!, getAnchorNode(end.next!, node.parentNode!));
 		}
 		item = item.next;
 	}
@@ -139,6 +145,8 @@ export function move<T extends Node, B extends BaseBlock>(injector: Injector, bl
 export function disposeBlock(block: BaseBlock<any>) {
 	emptyBlockContent(block);
 	listDetachFragment(block.injector.items, block.start, block.end);
+
+	// @ts-ignore: Nulling disposed object
 	block.start = block.end = null;
 }
 
@@ -152,12 +160,12 @@ function isBlock(obj: any): obj is BaseBlock {
 /**
  * Get DOM node nearest to given position of items list
  */
-function getAnchorNode(item: LinkedListItem<any>, parent: Node): Node {
+function getAnchorNode(item: LinkedListItem<Node>, parent: Node): Node | undefined {
 	while (item) {
 		if (item.value.parentNode === parent) {
 			return item.value;
 		}
 
-		item = item.next;
+		item = item.next!;
 	}
 }

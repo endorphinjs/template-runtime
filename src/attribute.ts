@@ -1,6 +1,11 @@
 import { isDefined, finalizeItems, obj, representAttributeValue, changeSet } from './utils';
 import { Injector, Component } from '../types';
 
+interface NSCtx {
+	node: Element;
+	ns: string | null;
+}
+
 /**
  * Sets value of attribute `name` to `value`
  * @return  Update status. Always returns `0` since actual attribute value
@@ -89,7 +94,7 @@ export function finalizeAttributes(injector: Injector): number {
 	let updated = finalizeItems(attributes, changeAttribute, injector.parentNode);
 
 	if (attributesNS) {
-		const ctx = { node: injector.parentNode, ns: null };
+		const ctx: NSCtx = { node: injector.parentNode, ns: null };
 		for (const ns in attributesNS) {
 			ctx.ns = ns;
 			updated |= finalizeItems(attributesNS[ns], changeAttributeNS, ctx);
@@ -130,7 +135,7 @@ function changeAttribute(name: string, prevValue: any, newValue: any, elem: Elem
 /**
  * Callback for changing attribute value
  */
-function changeAttributeNS(name: string, prevValue: any, newValue: any, ctx: { node: Element; ns: string; }): void {
+function changeAttributeNS(name: string, prevValue: any, newValue: any, ctx: NSCtx): void {
 	if (isDefined(newValue)) {
 		ctx.node.setAttributeNS(ctx.ns, name, newValue);
 	} else if (isDefined(prevValue)) {

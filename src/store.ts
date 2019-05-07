@@ -36,9 +36,9 @@ export class Store<T = {}> {
 				item = this.listeners[i];
 				if (!item.keys || !item.keys.length || hasChange(item.keys, updated)) {
 					if ('component' in item) {
-						render(item.component, updated);
+						render(item.component!, updated);
 					} else if ('handler' in item) {
-						item.handler(next, updated);
+						item.handler!(next, updated);
 					}
 				}
 			}
@@ -114,6 +114,6 @@ function hasChange(keys: string[], updated: object): boolean {
 /**
  * Adds given prefix to keys
  */
-function scopeKeys(keys: string[], pfx: string): string[] {
+function scopeKeys(keys?: string[], pfx?: string): string[] | undefined {
 	return keys && pfx ? keys.map(key => pfx + key) : keys;
 }

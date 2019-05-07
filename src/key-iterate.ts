@@ -9,8 +9,7 @@ import { Component, Injector, KeyIteratorBlock, IteratorItemBlock, RenderItems, 
  */
 export function mountKeyIterator(host: Component, injector: Injector, get: RenderItems, keyExpr: KeyExpr, body: MountBlock): KeyIteratorBlock {
 	const parentScope = getScope(host);
-	const block: KeyIteratorBlock = injectBlock(injector, {
-		$$block: true,
+	const block = injectBlock<KeyIteratorBlock>(injector, {
 		host,
 		injector,
 		scope: obj(parentScope),
@@ -24,9 +23,7 @@ export function mountKeyIterator(host: Component, injector: Injector, get: Rende
 		needReorder: false,
 		parentScope,
 		order: [],
-		used: null,
-		start: null,
-		end: null
+		used: null
 	});
 	updateKeyIterator(block);
 	return block;
@@ -124,8 +121,8 @@ function reorder(block: KeyIteratorBlock) {
 		item = order[i];
 		expectedPrev = i > 0 ? order[i - 1] : null;
 		expectedNext = i < maxIx ? order[i + 1] : null;
-		actualPrev = getItem(item.start.prev.value, block);
-		actualNext = getItem(item.end.next.value, block);
+		actualPrev = getItem(item.start.prev!.value, block);
+		actualNext = getItem(item.end.next!.value, block);
 
 		if (expectedPrev !== actualPrev && expectedNext !== actualNext) {
 			// Blocks must be reordered
@@ -137,10 +134,10 @@ function reorder(block: KeyIteratorBlock) {
 function markUsed(iter: KeyIteratorBlock, id: string, block: IteratorItemBlock) {
 	const { used } = iter;
 	// We allow multiple items key in case of poorly prepared data.
-	if (id in used) {
-		used[id].push(block);
+	if (id in used!) {
+		used![id].push(block);
 	} else {
-		used[id] = [block];
+		used![id] = [block];
 	}
 
 	iter.order.push(block);
@@ -151,15 +148,13 @@ function getId(iter: KeyIteratorBlock, index: number, key: any, value: any): str
 }
 
 function createItem(iter: KeyIteratorBlock, scope: object): IteratorItemBlock {
-	return injectBlock(iter.injector, {
+	return injectBlock<IteratorItemBlock>(iter.injector, {
 		$$block: true,
 		host: iter.host,
 		injector: iter.injector,
 		scope,
 		dispose: null,
 		update: undefined,
-		owner: iter,
-		start: null,
-		end: null
+		owner: iter
 	});
 }

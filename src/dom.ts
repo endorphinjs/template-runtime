@@ -66,7 +66,7 @@ export function updateText(node: TextNode, value: any): number {
 /**
  * @returns Inserted item
  */
-export function domInsert<T extends Node>(node: T, parent: Node, anchor: Node): T {
+export function domInsert<T extends Node>(node: T, parent: Node, anchor?: Node): T {
 	return anchor
 		? parent.insertBefore(node, anchor)
 		: parent.appendChild(node);

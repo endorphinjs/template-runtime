@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/endorphinjs/template-runtime#readme",
   "mocha": {
-    "require": "ts-node/register",
+    "require": "./test/register",
     "spec": "./test/*.ts"
   }
 }

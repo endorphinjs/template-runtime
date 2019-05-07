@@ -3,18 +3,15 @@ import { getScope } from './scope';
 import { Component, Injector, FunctionBlock, GetMount } from '../types';
 
 export function mountBlock(host: Component, injector: Injector, get: GetMount): FunctionBlock {
-	const block = injectBlock(injector, {
-		$$block: true,
+	const block = injectBlock<FunctionBlock>(injector, {
 		host,
 		injector,
 		scope: getScope(host),
 		dispose: null,
 		get,
 		fn: undefined,
-		update: undefined,
-		start: null,
-		end: null
-	}) as FunctionBlock;
+		update: undefined
+	});
 	updateBlock(block);
 	return block;
 }

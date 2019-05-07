@@ -7,7 +7,7 @@ import { Component, Injector, InnerHtmlBlock, GetMount } from '../types';
  * Renders code, returned from `get` function, as HTML
  */
 export function mountInnerHTML(host: Component, injector: Injector, get: GetMount, slotName: string): InnerHtmlBlock {
-	const block: InnerHtmlBlock = injectBlock(injector, {
+	const block = injectBlock<InnerHtmlBlock>(injector, {
 		$$block: true,
 		host,
 		injector,
@@ -15,9 +15,7 @@ export function mountInnerHTML(host: Component, injector: Injector, get: GetMoun
 		dispose: null,
 		get,
 		code: null,
-		slotName,
-		start: null,
-		end: null
+		slotName
 	});
 	updateInnerHTML(block);
 	return block;

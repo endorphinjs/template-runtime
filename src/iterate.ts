@@ -9,8 +9,7 @@ import { Component, Injector, IteratorBlock, IteratorItemBlock, LinkedListItem, 
  * @param body A function that renders item of iterated collection
  */
 export function mountIterator(host: Component, injector: Injector, get: RenderItems, body: MountBlock): IteratorBlock {
-	const block: IteratorBlock = injectBlock(injector, {
-		$$block: true,
+	const block = injectBlock<IteratorBlock>(injector, {
 		host,
 		injector,
 		scope: getScope(host),
@@ -18,9 +17,7 @@ export function mountIterator(host: Component, injector: Injector, get: RenderIt
 		get,
 		body,
 		index: 0,
-		updated: 0,
-		start: null,
-		end: null
+		updated: 0
 	});
 	updateIterator(block);
 	return block;
@@ -61,9 +58,9 @@ export function prepareScope(scope: Scope, index: number, key: any, value: any):
  * Removes remaining iterator items from current context
  */
 function trimIteratorItems(block: IteratorBlock) {
-	let item: LinkedListItem<IteratorItemBlock> = block.injector.ptr.next;
+	let item: LinkedListItem<IteratorItemBlock> | null = block.injector.ptr!.next;
 	let listItem: IteratorItemBlock;
-	while (item.value.owner === block) {
+	while (item && item.value.owner === block) {
 		block.updated = 1;
 		listItem = item.value;
 		item = listItem.end.next;
@@ -76,7 +73,7 @@ function iterator(this: IteratorBlock, value: any, key: any) {
 	const { ptr } = injector;
 	const prevScope = getScope(host);
 
-	let rendered: IteratorItemBlock = ptr.next.value;
+	let rendered: IteratorItemBlock = ptr!.next!.value;
 
 	if (rendered.owner === this) {
 		// We have rendered item, update it
@@ -92,17 +89,13 @@ function iterator(this: IteratorBlock, value: any, key: any) {
 		// Create & render new block
 		const scope = prepareScope(obj(prevScope), index, key, value);
 
-		/** @type {IteratorItemBlock} */
-		rendered = injectBlock(injector, {
-			$$block: true,
+		rendered = injectBlock<IteratorItemBlock>(injector, {
 			host,
 			injector,
 			scope,
 			dispose: null,
 			update: undefined,
-			owner: this,
-			start: null,
-			end: null
+			owner: this
 		});
 
 		setScope(host, scope);

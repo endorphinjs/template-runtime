@@ -11,7 +11,8 @@ describe('Injector', () => {
 	const children = (node: Element) => (node as any as ElementShim).childNodes.map((el: ElementShim) => el.nodeName);
 
 	function render(injector: Injector, fn?: RunCallback<any, void>) {
-		const b = injectBlock(injector, { $$block: true, injector, fn } as FunctionBlock);
+		// @ts-ignore
+		const b = injectBlock<FunctionBlock>(injector, { injector, fn });
 		fn && run(b, fn, b);
 		injector.ptr = b.end;
 		return b;

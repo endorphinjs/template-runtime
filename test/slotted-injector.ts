@@ -1,4 +1,4 @@
-import assert from 'assert';
+import { deepEqual, ok } from 'assert';
 import document from './assets/document';
 import { createInjector, run, insert, injectBlock, emptyBlockContent, disposeBlock } from '../src/injector';
 import { obj } from '../src/utils';
@@ -11,8 +11,9 @@ describe('Slotted injector', () => {
 	const elem = (name: string) => document.createElement(name) as any as HTMLElement;
 	const children = (node: Element | DocumentFragment) => Array.from(node.childNodes).map(el => el.nodeName);
 
-	function render(injector: Injector, fn?: MountBlock): FunctionBlock {
-		const b = injectBlock(injector, { $$block: true, injector, fn } as FunctionBlock);
+	function render(injector: Injector, fn: MountBlock | null = null): FunctionBlock {
+		// @ts-ignore
+		const b = injectBlock<FunctionBlock>(injector, { injector, fn });
 		fn && run(b, fn, b);
 		injector.ptr = b.end;
 		return b;
@@ -60,34 +61,34 @@ describe('Slotted injector', () => {
 
 		// In slotted injector, parent node should be empty, all nodes should
 		// be spreaded across slots
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '2', '3', '5', '8', '9']);
-		assert.deepEqual(children(injector.slots['slot1']), ['4']);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '2', '3', '5', '8', '9']);
+		deepEqual(children(injector.slots['slot1']), ['4']);
 
 		// Empty rendered block
 		emptyBlockContent(block1);
 
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '2', '8', '9']);
-		assert.deepEqual(children(injector.slots['slot1']), []);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '2', '8', '9']);
+		deepEqual(children(injector.slots['slot1']), []);
 
 		emptyBlockContent(block3);
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '2', '9']);
-		assert.deepEqual(children(injector.slots['slot1']), []);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '2', '9']);
+		deepEqual(children(injector.slots['slot1']), []);
 
 		// Render previously empty blocks
 		run(block2, content2);
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '2', '9']);
-		assert.deepEqual(children(injector.slots['slot1']), ['6']);
-		assert.deepEqual(children(injector.slots['slot2']), ['7']);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '2', '9']);
+		deepEqual(children(injector.slots['slot1']), ['6']);
+		deepEqual(children(injector.slots['slot2']), ['7']);
 
 		run(block1, content1);
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '2', '3', '5', '9']);
-		assert.deepEqual(children(injector.slots['slot1']), ['4', '6']);
-		assert.deepEqual(children(injector.slots['slot2']), ['7']);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '2', '3', '5', '9']);
+		deepEqual(children(injector.slots['slot1']), ['4', '6']);
+		deepEqual(children(injector.slots['slot2']), ['7']);
 	});
 
 	it('nested blocks', () => {
@@ -120,30 +121,30 @@ describe('Slotted injector', () => {
 			});
 		});
 
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '2']);
-		assert.deepEqual(children(injector.slots['slot1']), ['3', '4']);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '2']);
+		deepEqual(children(injector.slots['slot1']), ['3', '4']);
 
 		// Empty deepest block
 		emptyBlockContent(block3);
 
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '2']);
-		assert.deepEqual(children(injector.slots['slot1']), ['3']);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '2']);
+		deepEqual(children(injector.slots['slot1']), ['3']);
 
-		assert(listHas(injector.items, block1));
-		assert(listHas(injector.items, block2));
-		assert(listHas(injector.items, block3));
+		ok(listHas(injector.items, block1));
+		ok(listHas(injector.items, block2));
+		ok(listHas(injector.items, block3));
 
 		// Empty outer block
 		emptyBlockContent(block1);
 
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), []);
-		assert.deepEqual(children(injector.slots['slot1']), []);
-		assert(listHas(injector.items, block1));
-		assert(!listHas(injector.items, block2));
-		assert(!listHas(injector.items, block3));
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), []);
+		deepEqual(children(injector.slots['slot1']), []);
+		ok(listHas(injector.items, block1));
+		ok(!listHas(injector.items, block2));
+		ok(!listHas(injector.items, block3));
 	});
 
 	it('dispose', () => {
@@ -176,18 +177,18 @@ describe('Slotted injector', () => {
 			});
 		});
 
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1', '3', '4']);
-		assert.deepEqual(children(injector.slots['slot1']), ['2']);
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1', '3', '4']);
+		deepEqual(children(injector.slots['slot1']), ['2']);
 
 		// Completely remove second block
 		disposeBlock(block2);
 
-		assert.deepEqual(children(parent), []);
-		assert.deepEqual(children(injector.slots['']), ['1']);
-		assert.deepEqual(children(injector.slots['slot1']), []);
-		assert(listHas(injector.items, block1));
-		assert(!listHas(injector.items, block2));
-		assert(!listHas(injector.items, block3));
+		deepEqual(children(parent), []);
+		deepEqual(children(injector.slots['']), ['1']);
+		deepEqual(children(injector.slots['slot1']), []);
+		ok(listHas(injector.items, block1));
+		ok(!listHas(injector.items, block2));
+		ok(!listHas(injector.items, block3));
 	});
 });

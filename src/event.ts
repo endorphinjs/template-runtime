@@ -27,8 +27,8 @@ export function finalizeEvents(injector: Injector): number {
 /**
  * Returns function that must be invoked as event handler for given component
  */
-export function getEventHandler(component: Component, name: string, ctx: HTMLElement): Handler | null {
-	let fn: Handler;
+export function getEventHandler(component: Component, name: string, ctx: HTMLElement): Handler | undefined {
+	let fn: Handler | undefined = void 0;
 
 	if (typeof component[name] === 'function') {
 		fn = component[name].bind(component);
