@@ -166,7 +166,7 @@ export function updateComponent(component: Component) {
  */
 export function unmountComponent(component: Component): void {
 	const { componentModel } = component;
-	const { slots, input, dispose, events } = componentModel;
+	const { slots, dispose, events } = componentModel;
 	const scope = getScope(component);
 
 	runHook(component, 'willUnmount');
@@ -178,13 +178,6 @@ export function unmountComponent(component: Component): void {
 
 	if (component.store) {
 		component.store.unwatch(component);
-	}
-
-	// Detach own handlers
-	// XXX doesn’t remove static events (via direct call of `addStaticEvent()`)
-	const ownHandlers = input.events.prev;
-	for (const p in ownHandlers) {
-		component.removeEventListener(p, ownHandlers[p]);
 	}
 
 	safeCall(dispose, scope);

@@ -1,3 +1,5 @@
+import { EventBinding } from '../../src/types';
+
 type Callback = (elem: NodeShim) => void;
 const callbacks: Callback[] = [];
 
@@ -5,8 +7,6 @@ interface AttributeShim {
 	name: string;
 	value: string | null;
 }
-
-type EventHandlerShim = (evt: Event) => void;
 
 export interface EventShim {
 	type: string;
@@ -23,7 +23,7 @@ class NodeShim {
 	parentNode?: NodeShim | null;
 	attached = 0;
 	detached = 0;
-	listeners: { [name: string]: EventHandlerShim[] } = {};
+	listeners: { [name: string]: Array<EventBinding | EventListener> } = {};
 
 	constructor(public nodeName: string, public nodeType: number = 0, public nodeValue?: string) {}
 
@@ -47,7 +47,7 @@ class NodeShim {
 		return null;
 	}
 
-	get previousSibling(): NodeShim | null{
+	get previousSibling(): NodeShim | null {
 		if (this.parentNode) {
 			const siblings = this.parentNode.childNodes;
 			const ix = this._index;
@@ -149,7 +149,7 @@ class NodeShim {
 		}
 	}
 
-	addEventListener(name: string, listener: EventHandlerShim) {
+	addEventListener(name: string, listener: EventBinding) {
 		if (!this.listeners[name]) {
 			this.listeners[name] = [listener];
 		} else if (!this.listeners[name].includes(listener)) {
@@ -157,7 +157,7 @@ class NodeShim {
 		}
 	}
 
-	removeEventListener(name: string, listener: EventHandlerShim) {
+	removeEventListener(name: string, listener: EventBinding) {
 		if (name in this.listeners) {
 			this.listeners[name] = this.listeners[name].filter(item => item !== listener);
 			if (!this.listeners[name].length) {
@@ -170,7 +170,12 @@ class NodeShim {
 		const listeners = this.listeners[event.type];
 		if (listeners) {
 			for (let i = listeners.length - 1; i >= 0; i--) {
-				listeners[i].call(this, event);
+				const listener = listeners[i];
+				if (typeof listener === 'function') {
+					listener(event as Event);
+				} else {
+					listener.handleEvent(event as Event);
+				}
 			}
 		}
 

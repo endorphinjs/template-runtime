@@ -338,7 +338,7 @@ interface Injector {
 	/**
 	 * Current event handlers
 	 */
-	events: ChangeSet;
+	events: ChangeSet<EventBinding>;
 }
 
 interface AttachedStaticEvents {
@@ -352,9 +352,9 @@ interface RefMap {
 	[key: string]: Element;
 }
 
-interface ChangeSet {
-	prev: any;
-	cur: any;
+interface ChangeSet<T = any> {
+	prev: { [name: string]: T | null };
+	cur: { [name: string]: T | null };
 }
 
 export interface Changes {
@@ -451,4 +451,11 @@ interface PartialDefinition {
 	host: Component;
 	body: MountBlock;
 	defaults: object;
+}
+
+interface EventBinding extends EventListenerObject {
+	host: Component;
+	scope: Scope;
+	type: string;
+	target: Element;
 }

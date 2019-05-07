@@ -1,20 +1,37 @@
 import { finalizeItems } from './utils';
-import { Injector, Component } from './types';
+import { Injector, Component, Scope, EventBinding } from './types';
 
-type Handler = (...args: any[]) => any;
+/**
+ * Registers given event listener on `target` element and returns event binding
+ * object to unregister event
+ */
+export function addStaticEvent(target: Element, type: string, handleEvent: EventListener, host: Component, scope: Scope): EventBinding {
+	return registerBinding({ host, scope, type, handleEvent, target });
+}
+
+/**
+ * Unregister given event binding
+ */
+export function removeStaticEvent(binding: EventBinding): void {
+	binding.target.removeEventListener(binding.type, binding);
+}
 
 /**
  * Adds pending event `name` handler
  */
-export function addEvent(injector: Injector, name: string, handler: Handler): void {
-	injector.events.cur[name] = handler;
-}
+export function addEvent(injector: Injector, type: string, handleEvent: EventListener, host: Component, scope: Scope): void {
+	// We’ll use `ChangeSet` to bind and unbind events only: once binding is registered,
+	// we will mutate binding props
+	const { prev, cur } = injector.events;
+	const binding = cur[type] || prev[type];
 
-/**
- * Adds given `handler` as event `name` listener
- */
-export function addStaticEvent(elem: Element, name: string, handler: EventListener): void {
-	handler && elem.addEventListener(name, handler);
+	if (binding) {
+		binding.scope = scope;
+		binding.handleEvent = handleEvent;
+		cur[type] = binding;
+	} else {
+		cur[type] = { host, scope, type, handleEvent, target: injector.parentNode };
+	}
 }
 
 /**
@@ -24,28 +41,19 @@ export function finalizeEvents(injector: Injector): number {
 	return finalizeItems(injector.events, changeEvent, injector.parentNode);
 }
 
-/**
- * Returns function that must be invoked as event handler for given component
- */
-export function getEventHandler(component: Component, name: string, ctx: HTMLElement): Handler | undefined {
-	let fn: Handler | undefined = void 0;
-
-	if (typeof component[name] === 'function') {
-		fn = component[name].bind(component);
-	} else {
-		const handler = component.componentModel.definition[name];
-		if (typeof handler === 'function') {
-			fn = handler.bind(ctx);
-		}
-	}
-
-	return fn;
+function registerBinding(binding: EventBinding): EventBinding {
+	binding.target.addEventListener(binding.type, binding);
+	return binding;
 }
 
 /**
  * Invoked when event handler was changed
  */
-function changeEvent(name: string, prevValue: EventListener, newValue: EventListener, elem: Element): void {
-	prevValue && elem.removeEventListener(name, prevValue);
-	addStaticEvent(elem, name, newValue);
+function changeEvent(name: string, prevValue: EventBinding | null, newValue: EventBinding | null): void {
+	if (!prevValue && newValue) {
+		// Should register new binding
+		registerBinding(newValue);
+	} else if (prevValue && !newValue) {
+		removeStaticEvent(prevValue);
+	}
 }

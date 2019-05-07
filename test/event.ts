@@ -4,6 +4,7 @@ import template from './samples/events';
 import loopTemplate from './samples/events-loop';
 import branching from './samples/branching';
 import { createComponent, mountComponent, updateComponent } from '../src/runtime';
+import { Component } from '../src/types';
 
 describe('Event handler', () => {
 	before(() => global['document'] = document);
@@ -24,11 +25,11 @@ describe('Event handler', () => {
 			props() {
 				return { foo: 'foo1', bar: 'bar2', c1: false };
 			},
-			method1(arg1: any, arg2: any, evt: Event) {
+			method1(arg1: any, arg2: any, host: Component, evt: Event) {
 				strictEqual(evt.type, 'click');
 				calls.method1.push([arg1, arg2]);
 			},
-			method2(arg1: any, arg2: any, evt: Event) {
+			method2(arg1: any, arg2: any, host: Component, evt: Event) {
 				strictEqual(evt.type, 'click');
 				calls.method2.push([arg1, arg2]);
 			}
@@ -66,7 +67,7 @@ describe('Event handler', () => {
 					items: [1, 2, 3]
 				};
 			},
-			handleClick(arg1: any, arg2: any, arg3: any, evt: Event) {
+			handleClick(arg1: any, arg2: any, arg3: any, host: Component, evt: Event) {
 				strictEqual(evt.type, 'click');
 				calls.push([arg1, arg2, arg3]);
 			}

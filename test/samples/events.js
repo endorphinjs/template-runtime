@@ -1,35 +1,33 @@
 import {
-	createInjector, elem, getProp, addEvent, getEventHandler, finalizeEvents
+	createInjector, elem, getProp, addEvent, finalizeEvents
 } from '../../src/runtime';
 
 export default function template(host, scope) {
 	const target = host.componentView;
 	const elem1 = target.appendChild(elem('main'));
-	scope.injector = createInjector(elem1);
-
-	scope.onClick1 = function(event) {
-		getEventHandler(host, 'method1', this)(getProp(host, 'foo'), getProp(host, 'bar'), event, host);
-	};
-
-	scope.onClick2 = function(event) {
-		getEventHandler(host, 'method2', this)(getProp(host, 'foo'), getProp(host, 'bar'), event, host);
-	};
-
-	addEvent(scope.injector, 'click', scope.onClick1);
-	ifEvent(host, scope.injector, scope.onClick2);
-	finalizeEvents(scope.injector);
-
+	const injector = scope.injector = createInjector(elem1);
+	addEvent(injector, 'click', onClick1, host, scope);
+	ifEvent(host, injector, scope);
+	finalizeEvents(injector);
 	return updateTemplate;
 }
 
 function updateTemplate(host, scope) {
-	addEvent(scope.injector, 'click', scope.onClick1);
-	ifEvent(host, scope.injector, scope.onClick2);
+	addEvent(scope.injector, 'click', onClick1, host, scope);
+	ifEvent(host, scope.injector, scope);
 	finalizeEvents(scope.injector);
 }
 
-function ifEvent(host, injector, handler) {
+function ifEvent(host, injector, scope) {
 	if (getProp(host, 'c1')) {
-		addEvent(injector, 'click', handler);
+		addEvent(injector, 'click', onClick2, host, scope);
 	}
+}
+
+function onClick1(evt) {
+	this.host.componentModel.definition.method1(this.host.props.foo, this.host.props.bar, this.host, evt, this.target);
+}
+
+function onClick2(evt) {
+	this.host.componentModel.definition.method2(this.host.props.foo, this.host.props.bar, this.host, evt, this.target);
 }
