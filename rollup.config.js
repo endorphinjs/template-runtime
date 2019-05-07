@@ -1,5 +1,8 @@
+import typescript from 'rollup-plugin-typescript';
+
 export default {
-	input: './runtime.js',
+	input: './src/runtime.ts',
+	plugins: [typescript()],
 	output: [{
 		file: './dist/runtime.es.js',
 		format: 'es',
